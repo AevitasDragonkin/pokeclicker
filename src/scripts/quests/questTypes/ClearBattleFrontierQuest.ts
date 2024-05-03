@@ -23,8 +23,8 @@ class ClearBattleFrontierQuest extends Quest implements QuestInterface {
     }
 
     get description(): string {
-        const suffix = this.amount > 1 ? 's' : '';
-        return `Clear ${this.amount.toLocaleString('en-US')} Stages in the Battle Frontier.`;
+        const suffix = this.amount() > 1 ? 's' : '';
+        return `Clear ${this.amount().toLocaleString('en-US')} Stages in the Battle Frontier.`;
     }
 
     toJSON() {

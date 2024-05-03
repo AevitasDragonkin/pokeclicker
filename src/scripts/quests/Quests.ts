@@ -171,7 +171,7 @@ class Quests implements Saveable {
         this.lastRefreshLevel = level;
         this.lastRefreshRegion = player.highestRegion();
         this.currentQuests().forEach(quest => quest.quit());
-        this.questList(QuestHelper.generateQuestList(this.generateSeed(date, level), GameConstants.QUESTS_PER_SET));
+        this.questList(QuestHelper.generateQuestList(this.generateSeed(date, level), GameConstants.QUESTS_PER_SET, false));
     }
 
     private generateSeed(date = new Date(), level = this.level()): number {

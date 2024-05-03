@@ -16,28 +16,30 @@
 /// <reference path="./questTypes/UsePokeballQuest.ts" />
 /// <reference path="./questTypes/UseOakItemQuest.ts" />
 /// <reference path="./questTypes/HarvestBerriesQuest.ts" />
+/// <reference path="./tieredQuestTypes/CatchShiniesTieredQuest.ts" />
 
 class QuestHelper {
 
     public static quests = {
-        DefeatPokemonsQuest,
-        CapturePokemonsQuest,
-        CapturePokemonTypesQuest,
-        ClearBattleFrontierQuest,
-        GainFarmPointsQuest,
-        GainMoneyQuest,
-        GainTokensQuest,
-        GainGemsQuest,
-        HatchEggsQuest,
-        MineLayersQuest,
-        MineItemsQuest,
-        CatchShiniesQuest,
-        CatchShadowsQuest,
-        DefeatGymQuest,
-        DefeatDungeonQuest,
-        UsePokeballQuest,
-        UseOakItemQuest,
-        HarvestBerriesQuest,
+        // DefeatPokemonsQuest,
+        // CapturePokemonsQuest,
+        // CapturePokemonTypesQuest,
+        // ClearBattleFrontierQuest,
+        // GainFarmPointsQuest,
+        // GainMoneyQuest,
+        // GainTokensQuest,
+        // GainGemsQuest,
+        // HatchEggsQuest,
+        // MineLayersQuest,
+        // MineItemsQuest,
+        // CatchShiniesQuest,
+        // CatchShadowsQuest,
+        // DefeatGymQuest,
+        // DefeatDungeonQuest,
+        // UsePokeballQuest,
+        // UseOakItemQuest,
+        // HarvestBerriesQuest,
+        CatchShiniesTieredQuest,
     }
 
     public static createQuest(questType: string, data?: any[]): Quest {
@@ -85,5 +87,18 @@ class QuestHelper {
         }
 
         return 0;
+    }
+
+    public static defaultQuestTier(): QuestTier {
+        return 'Easy';
+    }
+
+    public static availableQuestTiers(): QuestTier[] {
+        return [
+            'Easy',
+            'Medium',
+            'Hard',
+            'Insane',
+        ];
     }
 }
