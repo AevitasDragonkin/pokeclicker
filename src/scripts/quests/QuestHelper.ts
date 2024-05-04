@@ -1,44 +1,42 @@
-/// <reference path="./questTypes/DefeatPokemonsQuest.ts" />
-/// <reference path="./questTypes/CapturePokemonsQuest.ts" />
-/// <reference path="./questTypes/CapturePokemonTypesQuest.ts" />
-/// <reference path="./questTypes/ClearBattleFrontierQuest.ts" />
-/// <reference path="./questTypes/GainFarmPointsQuest.ts" />
-/// <reference path="./questTypes/GainMoneyQuest.ts" />
-/// <reference path="./questTypes/GainTokensQuest.ts" />
-/// <reference path="./questTypes/GainGemsQuest.ts" />
-/// <reference path="./questTypes/HatchEggsQuest.ts" />
-/// <reference path="./questTypes/MineLayersQuest.ts" />
-/// <reference path="./questTypes/MineItemsQuest.ts" />
-/// <reference path="./questTypes/CatchShiniesQuest.ts" />
-/// <reference path="./questTypes/CatchShadowsQuest.ts" />
-/// <reference path="./questTypes/DefeatGymQuest.ts" />
-/// <reference path="./questTypes/DefeatDungeonQuest.ts" />
-/// <reference path="./questTypes/UsePokeballQuest.ts" />
-/// <reference path="./questTypes/UseOakItemQuest.ts" />
-/// <reference path="./questTypes/HarvestBerriesQuest.ts" />
+/// <reference path="./tieredQuestTypes/DefeatPokemonsTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/CapturePokemonsTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/CapturePokemonTypesTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/ClearBattleFrontierTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/GainFarmPointsTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/GainMoneyTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/GainTokensTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/GainGemsTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/HatchEggsTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/MineLayersTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/MineItemsTieredQuest.ts" />
 /// <reference path="./tieredQuestTypes/CatchShiniesTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/CatchShadowsTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/DefeatGymTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/DefeatDungeonTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/UsePokeballTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/UseOakItemTieredQuest.ts" />
 /// <reference path="./tieredQuestTypes/HarvestBerriesTieredQuest.ts" />
 
 class QuestHelper {
 
     public static quests = {
-        // DefeatPokemonsQuest,
-        // CapturePokemonsQuest,
-        // CapturePokemonTypesQuest,
-        // ClearBattleFrontierQuest,
-        // GainFarmPointsQuest,
-        // GainMoneyQuest,
-        // GainTokensQuest,
-        // GainGemsQuest,
-        // HatchEggsQuest,
-        // MineLayersQuest,
-        // MineItemsQuest,
-        // CatchShadowsQuest,
-        // DefeatGymQuest,
-        // DefeatDungeonQuest,
-        // UsePokeballQuest,
-        // UseOakItemQuest,
+        DefeatPokemonsTieredQuest,
+        CapturePokemonsTieredQuest,
+        CapturePokemonTypesTieredQuest,
+        ClearBattleFrontierTieredQuest,
+        GainFarmPointsTieredQuest,
+        GainMoneyTieredQuest,
+        GainTokensTieredQuest,
+        GainGemsTieredQuest,
+        HatchEggsTieredQuest,
+        MineLayersTieredQuest,
+        MineItemsTieredQuest,
         CatchShiniesTieredQuest,
+        CatchShadowsTieredQuest,
+        DefeatGymTieredQuest,
+        DefeatDungeonTieredQuest,
+        UsePokeballTieredQuest,
+        UseOakItemTieredQuest,
         HarvestBerriesTieredQuest,
     }
 
