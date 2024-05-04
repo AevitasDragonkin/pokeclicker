@@ -43,30 +43,31 @@
                         <table class='table table-hover m-0'>
                             <thead>
                             <tr>
-                                <td class="align-middle"><h5 class="mb-0">Description</h5></td>
-                                <td class="align-middle"><h5 class="mb-0">Reward</h5></td>
-                                <td class="align-middle"><h5 class="mb-0">Experience</h5></td>
-                                <td class="align-middle"><h5 class="mb-0">Status</h5></td>
+                                <td class="align-middle text-left"><h5 class="mb-0">Description</h5></td>
+                                <td class="align-middle text-left"><h5 class="mb-0">Reward</h5></td>
+                                <td class="align-middle text-left"><h5 class="mb-0">Experience</h5></td>
+                                <td class="align-middle text-left"><h5 class="mb-0">Status</h5></td>
                             </tr>
                             </thead>
                             <tbody data-bind="foreach: App.game.quests.sortedQuestList" >
                             <tr>
-                                <td class="align-middle" style="text-align:left" data-bind='text: description'></td>
-                                <td class="align-middle text-center py-0" style="text-align:left">
+                                <td class="align-middle text-left" data-bind='text: description'></td>
+                                <td class="align-middle text-left py-0" style="text-align:left">
                                     <span data-bind="template: { name: 'currencyTemplate', data: {'amount':  $data.pointsReward(), 'currency': GameConstants.Currency.questPoint}}"></span>
                                 </td>
-                                <td class="align-middle" style="text-align:left" data-bind='text: xpReward'></td>
-                                <td class="align-middle text-center py-0">
-                                    <button class='btn btn-primary btn-sm btn-block'
-                                        data-bind='visible: App.game.quests.canStartNewQuest() && !$data.inProgress() && !$data.isCompleted() && !$data.claimed(),
-                                        click: function(){
-                                            App.game.quests.beginQuest($data.index);
-                                        }'>
-                                        Start
-                                    </button>
-                                    <button type="button" data-bind="text: $data.tier" class="btn btn-success dropdown-toggle dropdown-toggle-split active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                    <div class="dropdown-menu" data-bind="foreach: QuestHelper.availableQuestTiers()">
-                                        <button class="dropdown-item" type="button" data-bind="click: () => { $parent.changeQuestTier($data); }, text: $data"></button>
+                                <td class="align-middle text-left" style="text-align:left" data-bind="text: xpReward.toLocaleString('en-US')"></td>
+                                <td class="align-middle text-left py-0">
+                                    <div class="btn-group btn-block" data-bind="visible: App.game.quests.canStartNewQuest() && !$data.inProgress() && !$data.isCompleted() && !$data.claimed()">
+                                        <button class='btn btn-primary btn-sm btn-block'
+                                            data-bind='click: function(){
+                                                App.game.quests.beginQuest($data.index);
+                                            }'>
+                                            Start
+                                        </button>
+                                        <button type="button" data-bind="text: $data.tier" class="btn btn-success dropdown-toggle dropdown-toggle-split active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                        <div class="dropdown-menu" data-bind="foreach: QuestHelper.availableQuestTiers()">
+                                            <button class="dropdown-item" type="button" data-bind="click: () => { $parent.changeQuestTier($data); }, text: $data"></button>
+                                        </div>
                                     </div>
                                     <button class='btn btn-success btn-sm btn-block' data-bind='visible: !$data.claimed() && $data.isCompleted(),
                                                                         click: () => { App.game.quests.claimQuest($data.index) }'>
