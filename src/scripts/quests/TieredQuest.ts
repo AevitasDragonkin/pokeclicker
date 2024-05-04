@@ -26,11 +26,6 @@ abstract class TieredQuest extends Quest {
         return 100 + (this.pointsReward() / 10);
     }
 
-    public consoleLog() {
-        console.log('TESTING TIERED QUEST LOG');
-        console.log(this.description);
-    }
-
     public changeQuestTier(tier: QuestTier) {
         if (!this.inProgress() && !this.isCompleted()) {
             this.tier(tier);
