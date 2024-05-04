@@ -2618,6 +2618,11 @@ class Update implements Saveable {
                 }
             });
         },
+
+        '0.10.20': ({ playerData, saveData, settingsData }) => {
+            // Clear the current quest list because we'll generate all new ones for the Tiered system
+            saveData.quests.questList.length = 0;
+        },
     };
 
     constructor() {
