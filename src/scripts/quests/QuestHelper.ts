@@ -17,6 +17,7 @@
 /// <reference path="./questTypes/UseOakItemQuest.ts" />
 /// <reference path="./questTypes/HarvestBerriesQuest.ts" />
 /// <reference path="./tieredQuestTypes/CatchShiniesTieredQuest.ts" />
+/// <reference path="./tieredQuestTypes/HarvestBerriesTieredQuest.ts" />
 
 class QuestHelper {
 
@@ -32,14 +33,13 @@ class QuestHelper {
         // HatchEggsQuest,
         // MineLayersQuest,
         // MineItemsQuest,
-        // CatchShiniesQuest,
         // CatchShadowsQuest,
         // DefeatGymQuest,
         // DefeatDungeonQuest,
         // UsePokeballQuest,
         // UseOakItemQuest,
-        // HarvestBerriesQuest,
         CatchShiniesTieredQuest,
+        HarvestBerriesTieredQuest,
     }
 
     public static createQuest(questType: string, data?: any[]): Quest {
