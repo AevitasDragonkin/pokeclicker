@@ -55,7 +55,7 @@
                                 <td class="align-middle text-left py-0" style="text-align:left">
                                     <span data-bind="template: { name: 'currencyTemplate', data: {'amount':  $data.pointsReward(), 'currency': GameConstants.Currency.questPoint}}"></span>
                                 </td>
-                                <td class="align-middle text-left" style="text-align:left" data-bind="text: xpReward.toLocaleString('en-US')"></td>
+                                <td class="align-middle text-left" style="text-align:left" data-bind="text: xpReward.toLocaleString('en-US', { maximumFractionDigits: 0 })"></td>
                                 <td class="align-middle text-left py-0">
                                     <div class="btn-group btn-block" data-bind="visible: App.game.quests.canStartNewQuest() && !$data.inProgress() && !$data.isCompleted() && !$data.claimed()">
                                         <button class='btn btn-primary btn-sm btn-block'

@@ -23,8 +23,7 @@ abstract class TieredQuest extends Quest {
     }
 
     get xpReward(): number {
-        console.warn('TODO: IMPLEMENT TIERED QUEST XP');
-        return this.amounts[this.tier()];
+        return 100 + (this.pointsReward() / 10);
     }
 
     public consoleLog() {
