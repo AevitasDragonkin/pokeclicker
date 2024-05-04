@@ -96,9 +96,9 @@ class QuestHelper {
     public static availableQuestTiers(): QuestTier[] {
         return [
             'Easy',
-            'Medium',
-            'Hard',
-            'Insane',
+            ...true ? ['Medium' as QuestTier] : [],
+            ...true ? ['Hard' as QuestTier] : [],
+            ...true ? ['Insane' as QuestTier] : [],
         ];
     }
 }
