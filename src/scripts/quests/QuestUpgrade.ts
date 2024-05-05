@@ -5,9 +5,9 @@ enum Upgrades {
     'Tier_Medium',
     'Tier_Hard',
     'Tier_Insane',
-    'Experience_Multiplier',
-    'Extra_Completion',
-    'Max_Refreshes',
+    // 'Experience_Multiplier',
+    // 'Extra_Completion',
+    // 'Max_Refreshes',
 }
 
 class QuestUpgrade extends Upgrade {
