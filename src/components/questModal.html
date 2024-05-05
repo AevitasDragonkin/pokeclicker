@@ -4,6 +4,7 @@
             <div class="modal-header p-0">
                 <ul class="nav nav-tabs nav-fill w-100">
                     <li class="nav-item" onclick="$('#refreshQuests').show()"><a class="nav-link active" href="#questsModalQuestsPane" data-toggle="tab">Quests</a></li>
+                    <li class="nav-item" onclick="$('#refreshQuests').hide()"><a class="nav-link" href="#questsUpgradesPane" data-toggle="tab">Upgrades</a></li>
                     <li class="nav-item" onclick="$('#refreshQuests').hide()">
                         <a class="nav-link position-relative" href="#questsModalQuestLinesPane" data-toggle="tab">
                             Quest Lines
@@ -77,6 +78,24 @@
                                     <button class='btn btn-success btn-sm btn-block' disabled data-bind='visible: $data.claimed()'>Completed</button>
                                 </td>
                             </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Quest upgrades-->
+                    <div class="tab-pane" id="questsUpgradesPane">
+                        <table class="table table-sm table-hover table-striped m-0">
+                            <thead>
+                            <tr>
+                                <td class="align-middle"><h5 class="mb-0">Upgrade</h5></td>
+                                <td class="align-middle"><h5 class="mb-0">Cost</h5></td>
+                                <td class="align-middle"><h5 class="mb-0"></h5></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-bind="template: { name: 'questUnlockTemplate', 'data': {'upgrade': App.game.quests.getUpgrade(QuestUpgrade.Upgrades.Tier_Medium)}}"></tr>
+                                <tr data-bind="template: { name: 'questUnlockTemplate', 'data': {'upgrade': App.game.quests.getUpgrade(QuestUpgrade.Upgrades.Tier_Hard)}}"></tr>
+                                <tr data-bind="template: { name: 'questUnlockTemplate', 'data': {'upgrade': App.game.quests.getUpgrade(QuestUpgrade.Upgrades.Tier_Insane)}}"></tr>
                             </tbody>
                         </table>
                     </div>
@@ -185,4 +204,25 @@
             </div>
         </div>
     </div>
+
+    <script type="text/html" id="questUnlockTemplate">
+        <td class='vertical-middle' data-bind='text: upgrade.displayName'></td>
+        <td class='vertical-middle'>
+            <!-- ko if: !upgrade.isMaxLevel() -->
+            <span data-bind="template: { name: 'currencyTemplate', data: {'amount': upgrade.calculateCost().amount, 'currency': upgrade.calculateCost().currency }}"></span>
+            <!-- /ko -->
+        </td>
+        <td class='vertical-middle'>
+            <!-- ko if: upgrade.isMaxLevel() -->
+            <span class='btn btn-block'>Unlocked</span>
+            <!-- /ko -->
+            <!-- ko if: !upgrade.isMaxLevel() -->
+            <button class='btn btn-success btn-block'
+                    data-bind='css: { disabled: !upgrade.canBuy() },
+                                text: "Purchase",
+                                click: function() { upgrade.buy(); }'>
+            </button>
+            <!-- /ko -->
+        </td>
+    </script>
 </div>

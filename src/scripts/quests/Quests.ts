@@ -10,6 +10,8 @@ class Quests implements Saveable {
         freeRefresh: false,
     };
 
+    upgradeList: Array<Upgrade>;
+
     public xp = ko.observable(0).extend({ numeric: 0 });
     public refreshes = ko.observable(0);
     public lastRefresh = new Date();
@@ -41,7 +43,25 @@ class Quests implements Saveable {
         return list.sort(Quests.questCompareBy);
     });
 
-    constructor() {}
+    constructor() {
+        this.upgradeList = [
+            new QuestUpgrade(
+                QuestUpgrade.Upgrades.Tier_Medium, 'Unlock Medium Quest Tier', 1,
+                AmountFactory.createArray(GameHelper.createArray(10000, 10000, 10000), GameConstants.Currency.questPoint),
+                GameHelper.createArray(0, 1, 1)
+            ),
+            new QuestUpgrade(
+                QuestUpgrade.Upgrades.Tier_Hard, 'Unlock Hard Quest Tier', 1,
+                AmountFactory.createArray(GameHelper.createArray(100000, 100000, 100000), GameConstants.Currency.questPoint),
+                GameHelper.createArray(0, 1, 1)
+            ),
+            new QuestUpgrade(
+                QuestUpgrade.Upgrades.Tier_Insane, 'Unlock Insane Quest Tier', 1,
+                AmountFactory.createArray(GameHelper.createArray(1000000, 1000000, 1000000), GameConstants.Currency.questPoint),
+                GameHelper.createArray(0, 1, 1)
+            ),
+        ];
+    }
 
     static questCompareBy(quest1, quest2): number {
         if (Quests.getQuestSortStatus(quest1) < Quests.getQuestSortStatus(quest2)) {
@@ -132,6 +152,14 @@ class Quests implements Saveable {
         }
     }
 
+    public getUpgrade(upgrade: Upgrades) {
+        for (let i = 0; i < this.upgradeList.length; ++i) {
+            if (this.upgradeList[i].name == upgrade) {
+                return this.upgradeList[i];
+            }
+        }
+    }
+
     public addXP(amount: number) {
         if (isNaN(amount)) {
             return;
@@ -163,7 +191,7 @@ class Quests implements Saveable {
         this.lastRefreshLevel = level;
         this.lastRefreshRegion = player.highestRegion();
         this.currentQuests().forEach(quest => quest.quit());
-        this.questList(QuestHelper.generateQuestList(this.generateSeed(date, level), GameConstants.QUESTS_PER_SET, false));
+        this.questList(QuestHelper.generateQuestList(this.generateSeed(date, level), GameConstants.QUESTS_PER_SET));
     }
 
     private generateSeed(date = new Date(), level = this.level()): number {
@@ -326,6 +354,13 @@ class Quests implements Saveable {
     }
 
     toJSON() {
+        const upgradesSave = {};
+        for (const item in QuestUpgrade.Upgrades) {
+            if (isNaN(Number(item))) {
+                upgradesSave[item] = this.getUpgrade((<any>QuestUpgrade.Upgrades)[item]).level;
+            }
+        }
+
         return {
             xp: this.xp(),
             refreshes: this.refreshes(),
@@ -335,6 +370,7 @@ class Quests implements Saveable {
             freeRefresh: this.freeRefresh(),
             questList: this.questList().map(quest => quest.toJSON()),
             questLines: this.questLines().filter(q => q.state()),
+            upgrades: upgradesSave,
         };
     }
 
@@ -370,6 +406,14 @@ class Quests implements Saveable {
         // Load our quest line progress
         if (json.questLines) {
             this.loadQuestLines(json.questLines);
+        }
+
+        if (json.upgrades) {
+            for (const item in QuestUpgrade.Upgrades) {
+                if (isNaN(Number(item))) {
+                    this.getUpgrade((<any>QuestUpgrade.Upgrades)[item]).level = json.upgrades[item] || 0;
+                }
+            }
         }
     }
 }

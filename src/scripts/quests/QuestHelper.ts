@@ -88,15 +88,16 @@ class QuestHelper {
     }
 
     public static defaultQuestTier(): QuestTier {
-        return 'Easy';
+        const availableQuestTiers = this.availableQuestTiers();
+        return availableQuestTiers.length > 0 ? availableQuestTiers[availableQuestTiers.length - 1] : 'Easy';
     }
 
     public static availableQuestTiers(): QuestTier[] {
         return [
             'Easy',
-            ...true ? ['Medium' as QuestTier] : [],
-            ...true ? ['Hard' as QuestTier] : [],
-            ...true ? ['Insane' as QuestTier] : [],
+            ...App.game.quests.getUpgrade(QuestUpgrade.Upgrades.Tier_Medium).isMaxLevel() ? ['Medium' as QuestTier] : [],
+            ...App.game.quests.getUpgrade(QuestUpgrade.Upgrades.Tier_Hard).isMaxLevel() ? ['Hard' as QuestTier] : [],
+            ...App.game.quests.getUpgrade(QuestUpgrade.Upgrades.Tier_Insane).isMaxLevel() ? ['Insane' as QuestTier] : [],
         ];
     }
 }
