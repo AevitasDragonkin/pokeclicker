@@ -37,8 +37,6 @@ abstract class TieredQuest extends Quest {
 
             this.amount(this.amounts[tier]);
             this.pointsReward(Math.ceil(this.amount() * this.pointsRewardPerSingleAmount));
-
-            console.log(`Changing tier for ${this.description} to ${this.tier()}, amount = ${this.amount}, points = ${this.pointsReward}`);
         } else {
             Notifier.notify({
                 message: 'You cannot change the tier of a quest in progress.',
