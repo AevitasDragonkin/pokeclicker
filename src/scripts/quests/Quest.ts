@@ -79,7 +79,7 @@ abstract class Quest {
             }
             this.deleteFocusSub();
             this.claimed(true);
-            if (this.pointsReward) {
+            if (this.pointsReward() > 0) {
                 App.game.wallet.gainQuestPoints(this.pointsReward());
                 Notifier.notify({
                     message: `You have completed your quest!\nYou claimed <img src="./assets/images/currency/questPoint.svg" height="24px"/> ${this.pointsReward().toLocaleString('en-US')}!`,
