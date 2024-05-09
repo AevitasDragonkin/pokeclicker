@@ -28,7 +28,7 @@ abstract class TieredQuest extends Quest {
     }
 
     get xpReward(): number {
-        return 100 + (this.pointsReward() / 10);
+        return super.xpReward * 1;
     }
 
     public changeQuestTier(tier: QuestTier) {
