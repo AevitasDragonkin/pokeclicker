@@ -3,7 +3,7 @@
 class CapturePokemonsTieredQuest extends TieredQuest implements QuestInterface {
     constructor(amounts: {[key in QuestTier]: number}, pointsRewardPerSingleAmount: number, tier: QuestTier = QuestHelper.defaultQuestTier()) {
         super(amounts, pointsRewardPerSingleAmount, tier);
-        this.focus = App.game.statistics.totalPokemonCaptured;
+        this.focus = ko.pureComputed(() => App.game.statistics.totalPokemonCaptured() - App.game.statistics.totalPokemonHatched());
     }
 
     public static generateData(): any[] {
@@ -20,7 +20,7 @@ class CapturePokemonsTieredQuest extends TieredQuest implements QuestInterface {
     }
 
     get description(): string {
-        return this.customDescription ?? `Capture or hatch ${this.amount().toLocaleString('en-US')} Pokémon.`;
+        return this.customDescription ?? `Capture ${this.amount().toLocaleString('en-US')} Pokémon.`;
     }
 
     toJSON() {
