@@ -59861,9 +59861,11 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                             <button onclick='Underground.addUndergroundExp(-10000)'>-10,000 XP</button>
                         </div>
                     </div>
-                    <div data-bind="visible: Mine.mineState === 3, class: Mine.itemsFound() === Mine.itemsBuried() ? 'disabled' : ''">
+                    <div>
                         <div id="mineBody" style="margin:auto; background-image: url('../assets/images/underground/rock0.png');"
-                             data-bind="css: `${UndergroundToolType[Mine.selectedTool()]}Selected`, style: {
+                             data-bind="css: { 'disabled': Mine.mineState !== 3 },
+                             class: `${UndergroundToolType[Mine.selectedTool()]}Selected`,
+                             style: {
                                 backgroundSize: `calc(100% / ${Mine.columnCount})`,
                              }">
                         </div>
@@ -59877,7 +59879,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                         <div class="d-flex flex-column align-items-center">
                                             <img src="../assets/images/underground/Chisel.png" alt="">
                                             <div>Chisel</div>
-                                            <div>Free uses: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Chisel).freeUses"></knockout></div>
+                                            <div>Free uses: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Chisel).storedUses"></knockout></div>
                                             <div>Cooldown: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Chisel).cooldownForDisplay().toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout></div>
                                             <div><knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Chisel).counter.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout> / <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Chisel).baseCooldown"></knockout></div>
                                         </div>
@@ -59889,7 +59891,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                         <div class="d-flex flex-column align-items-center">
                                             <img src="../assets/images/underground/Hammer.png" alt="">
                                             <div>Hammer</div>
-                                            <div>Free uses: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Hammer).freeUses"></knockout></div>
+                                            <div>Free uses: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Hammer).storedUses"></knockout></div>
                                             <div>Cooldown: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Hammer).cooldownForDisplay().toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout></div>
                                             <div><knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Hammer).counter.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout> / <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Hammer).baseCooldown"></knockout></div>
                                         </div>
@@ -59901,7 +59903,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                                         <div class="d-flex flex-column align-items-center">
                                             <img src="../assets/images/underground/Bomb.png" alt="">
                                             <div>Bomb</div>
-                                            <div>Free uses: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Bomb).freeUses"></knockout></div>
+                                            <div>Free uses: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Bomb).storedUses"></knockout></div>
                                             <div>Cooldown: <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Bomb).cooldownForDisplay().toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout></div>
                                             <div><knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Bomb).counter.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout> / <knockout data-bind="text: App.game.undergroundTools.getTool(UndergroundToolType.Bomb).baseCooldown"></knockout></div>
                                         </div>
@@ -59912,12 +59914,12 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                     </div>
 
                     <div data-bind="">
-                        <button onclick="Mine.generateMine()">Search for mine</button>
-                        <button onclick="Mine.generateMine(MineType.Diamond)">Search for Diamonds</button>
-                        <button onclick="Mine.generateMine(MineType.GemPlate)">Search for Gems</button>
-                        <button onclick="Mine.generateMine(MineType.Shard)">Search for Shards</button>
-                        <button onclick="Mine.generateMine(MineType.Fossil)">Search for Fossils</button>
-                        <button onclick="Mine.generateMine(MineType.EvolutionItem)">Search for Evolution Items</button>
+                        <button onclick="Underground.generateMine();">Search for mine</button>
+                        <button onclick="Underground.generateMine(MineType.Diamond)">Search for Diamonds</button>
+                        <button onclick="Underground.generateMine(MineType.GemPlate)">Search for Gems</button>
+                        <button onclick="Underground.generateMine(MineType.Shard)">Search for Shards</button>
+                        <button onclick="Underground.generateMine(MineType.Fossil)">Search for Fossils</button>
+                        <button onclick="Underground.generateMine(MineType.EvolutionItem)">Search for Evolution Items</button>
                     </div>
                 </div>
                 <div id="treasures" class="tab-pane fade">
