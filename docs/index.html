@@ -618,6 +618,91 @@
                             </div>
                         </div>
 
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-underground-treasure">
+                            <h5 class="m-0 text-light">Underground Treasure</h5>
+                        </div>
+                        <div id="itemBag-underground-treasure" class="collapse show mt-1">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: UndergroundItems.list.filter(item => item.valueType === UndergroundItemValueType.Diamond) -->
+                                    <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="cursor: default; padding-top: 1px; padding-bottom: 2px;"
+                                             data-bind="template: { name: 'otherItemTemplate', data: $data.itemName }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-gem-plates">
+                            <h5 class="m-0 text-light">Gem Plates</h5>
+                        </div>
+                        <div id="itemBag-gem-plates" class="collapse show mt-1">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: UndergroundItems.list.filter(item => item.valueType === UndergroundItemValueType.Gem) -->
+                                    <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="cursor: default; padding-top: 1px; padding-bottom: 2px;"
+                                             data-bind="template: { name: 'otherItemTemplate', data: $data.itemName }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-fossils">
+                            <h5 class="m-0 text-light">Fossils</h5>
+                        </div>
+                        <div id="itemBag-fossils" class="collapse show mt-1">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: UndergroundItems.list.filter(item => item.valueType === UndergroundItemValueType.Fossil) -->
+                                    <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="cursor: default; padding-top: 1px; padding-bottom: 2px;"
+                                             data-bind="template: { name: 'otherItemTemplate', data: $data.itemName }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-fossil-pieces">
+                            <h5 class="m-0 text-light">Fossil Pieces</h5>
+                        </div>
+                        <div id="itemBag-fossil-pieces" class="collapse show mt-1">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: UndergroundItems.list.filter(item => item.valueType === UndergroundItemValueType.FossilPiece) -->
+                                    <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="cursor: default; padding-top: 1px; padding-bottom: 2px;"
+                                             data-bind="template: { name: 'otherItemTemplate', data: $data.itemName }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-shards">
+                            <h5 class="m-0 text-light">Shards</h5>
+                        </div>
+                        <div id="itemBag-shards" class="collapse show mt-1">
+                            <div class="card-body pt-2 p-1">
+                                <div class="row justify-content-center">
+                                    <!-- ko foreach: UndergroundItems.list.filter(item => item.valueType === UndergroundItemValueType.Shard) -->
+                                    <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                        <div class="btn btn-secondary text-left w-100 px-1" style="cursor: default; padding-top: 1px; padding-bottom: 2px;"
+                                             data-bind="template: { name: 'otherItemTemplate', data: $data.itemName }">
+                                        </div>
+                                    </div>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- ko if: Object.values(ItemList).some((i) => i instanceof MegaStoneItem && player.itemList[i.name]()) -->
                         <div class="bg-primary text-left rounded-0 px-3 py-2 mb-1" data-toggle="collapse" data-target="#itemBag-megaStones">
                             <h5 class="m-0 text-light">Mega Stones</h5>
@@ -59825,6 +59910,9 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                     <li class='nav-item'>
                         <a data-toggle='tab' class='nav-link' href="#treasures">Treasures</a>
                     </li>
+                    <li class="nav-item">
+                        <a data-toggle='tab' class='nav-link' href="#undergroundHelpers">Helpers</a>
+                    </li>
                     <li class='nav-item'><a data-toggle='tab' class='nav-link' href="#help">Help</a></li>
                     <btn class="btn btn-primary">
                         <span id="diamondCounter" data-bind="text: App.game.wallet.currencies[GameConstants.Currency.diamond]().toLocaleString('en-US')">x</span>
@@ -59837,22 +59925,22 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                     <div>Discovering mine time: <knockout data-bind="text: App.game.underground.mine?.timeUntilDiscovery.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout></div>
                     <div>
                         <div>Lvl. <knockout data-bind='text: App.game.underground.undergroundLevel'></knockout></div>
-                        <div>Exp <knockout data-bind='text: App.game.underground.undergroundExp'></knockout> / <knockout data-bind='text: UndergroundController.convertLevelToExperience(App.game.underground.undergroundLevel + 1)'></knockout></div>
+                        <div>Exp <knockout data-bind='text: App.game.underground.undergroundExp'></knockout> / <knockout data-bind='text: Underground.convertLevelToExperience(App.game.underground.undergroundLevel + 1)'></knockout></div>
                         <div>
-                            <button onclick='App.game.underground.addUndergroundExp(10)'>+10 XP</button>
-                            <button onclick='App.game.underground.addUndergroundExp(100)'>+100 XP</button>
-                            <button onclick='App.game.underground.addUndergroundExp(1000)'>+1,000 XP</button>
-                            <button onclick='App.game.underground.addUndergroundExp(10000)'>+10,000 XP</button>
-                            <button onclick='App.game.underground.addUndergroundExp(-10)'>-10 XP</button>
-                            <button onclick='App.game.underground.addUndergroundExp(-100)'>-100 XP</button>
-                            <button onclick='App.game.underground.addUndergroundExp(-1000)'>-1,000 XP</button>
-                            <button onclick='App.game.underground.addUndergroundExp(-10000)'>-10,000 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(10)'>+10 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(100)'>+100 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(1000)'>+1,000 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(10000)'>+10,000 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(-10)'>-10 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(-100)'>-100 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(-1000)'>-1,000 XP</button>
+                            <button onclick='UndergroundController.addPlayerUndergroundExp(-10000)'>-10,000 XP</button>
                         </div>
                     </div>
                     <div>
                         <!-- ko if: App.game.underground.mine -->
                         <div id="mineBody" style="margin:auto; background-image: url('../assets/images/underground/rock0.png');"
-                             data-bind="css: { 'disabled': false },
+                             data-bind="css: { 'disabled': App.game.underground.mine.timeUntilDiscovery > 0 || App.game.underground.mine.completed },
                              class: `${UndergroundToolType[App.game.undergroundTools.selectedToolType]}Selected`,
                              style: {
                                 backgroundSize: `calc(100% / ${App.game.underground.mine?.columnCount})`,
@@ -59918,6 +60006,37 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                 </div>
                 <div id="treasures" class="tab-pane fade">
                 </div>
+                <div id="undergroundHelpers" class="tab-pane fade">
+                    <div class="row m-0 justify-content-center" data-bind="foreach: App.game.underground.helpers.available()" style="max-width: 100%;">
+                        <div class="card text-left col-md-3 col-sm-6 col-xs-12 p-0">
+                            <h5 class="card-header">
+                                <knockout data-bind="text: $data.name">Name</knockout>
+                            </h5>
+                            <div class="card-body p-2">
+                                <div>Experience: <knockout data-bind="text: $data.experience.toLocaleString('en-US')"></knockout></div>
+                                <div>Level: <knockout data-bind="text: $data.level.toLocaleString('en-US')"></knockout></div>
+                                <div>Auto-sell value: <knockout data-bind="text: $data.autoSellValue.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout></div>
+                                <div>Smart tool chance: <knockout data-bind="text: $data.smartToolUsageChance.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout></div>
+                                <div>Favorite chance: <knockout data-bind="text: $data.favoriteMineChance.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout></div>
+                                <div>Work cycle time: <knockout data-bind="text: $data.workCycleTime.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })"></knockout>s</div>
+                                <div>
+                                    Potion:
+                                    <div class="input-group input-group-sm">
+                                        <select autocomplete="off" class="custom-select" data-bind="options: [
+                                            { value: null, name: 'None' },
+                                            { value: 0, name: 'Small Restore' },
+                                            { value: 1, name: 'Medium Restore' },
+                                            { value: 2, name: 'Large Restore' },
+                                        ], optionsValue: 'value', optionsText: 'name', value: $data.selectedEnergyRestore"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer p-0">
+                                <button class="btn btn-block" data-bind="attr: { disabled: !$data.hired && !App.game.underground.helpers.canHire() }, css: { 'btn-success': !$data.hired, 'btn-danger': $data.hired }, click: () => !$data.hired ? $data.hire() : $data.fire(), text: !$data.hired ? 'Hire!' : 'Fire!'">Hire!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="help" class="tab-pane fade pl-5 pr-5">
                     <h4><u>Dig</u></h4>
                     <p>In the Underground you can mine for hidden treasures.</p>
@@ -59937,6 +60056,18 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
             </div>
 
             <div class="modal-footer">
+                <div class="flex-grow-1" data-bind="foreach: App.game.underground.helpers.hired()">
+                    <div>
+                        <div data-bind="text: $data.name"></div>
+                        <div class="progress" style='height: 5px'>
+                            <div class="progress-bar bg-info" role="progressbar"
+                                 data-bind="attr:{ style: 'width:' + ($data.timeSinceWork / $data.workCycleTime).toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }) }"
+                                 aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                        <div data-bind="text: `${$data.timeSinceWork.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}/${$data.workCycleTime.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}s`"></div>
+                    </div>
+                </div>
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div>
