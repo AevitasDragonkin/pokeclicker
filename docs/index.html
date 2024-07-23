@@ -57764,6 +57764,7 @@ aria-labelledby="AchievementsModalLabel" aria-hidden="true">
                                 <tr data-bind="template: { name: 'BooleanSettingTemplate', data: Settings.getSetting('useWebWorkerForGameTicks')}"></tr>
                                 <tr data-bind="template: { name: 'BooleanSettingTemplate', data: Settings.getSetting('disableOfflineProgress')}"></tr>
                                 <tr data-bind="template: { name: 'BooleanSettingTemplate', data: Settings.getSetting('disableBlinking')}"></tr>
+                                <tr data-bind="template: { name: 'BooleanSettingTemplate', data: Settings.getSetting('autoRestartUndergroundMine')}"></tr>
                                 <tr data-bind="with: Settings.getSetting('disableAutoSave')">
                                     <td class="p-2">
                                         <label class="m-0" data-bind="attr: { for: 'checkbox-' + $data.name }, text: `${$data.displayName}:`"></label>
@@ -57870,6 +57871,7 @@ aria-labelledby="AchievementsModalLabel" aria-hidden="true">
                                 <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.underground.hammer')}"></tr>
                                 <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.underground.chisel')}"></tr>
                                 <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.underground.bomb')}"></tr>
+                                <tr data-bind="template: { name: 'KeyChoiceSettingTemplate', data: Settings.getSetting('hotkey.underground.survey')}"></tr>
                                 <tr>
                                     <td class="p-2">
                                         <knockout data-bind="text: App.translation.get('hotkey.underground.useRestore', 'settings', { defaultValue: 'Use Restore'})"></knockout><span>:</span>
@@ -59910,22 +59912,23 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
             <div class="modal-body tab-content p-0">
                 <div id="dig" class="tab-pane fade in active show" data-bind="">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-6">
-                                <!-- ko if: App.game.underground.mine -->
-                                    <!-- ko if: App.game.underground.mine.timeUntilDiscovery > 0 -->
-                                    <div>Time until discovery</div>
-                                    <div data-bind="text: GameConstants.formatTime(App.game.underground.mine.timeUntilDiscovery)"></div>
-                                    <!-- /ko -->
+                        <div class="row p-2">
+                            <div class="col-6 d-flex">
+                                <button class="btn btn-info" data-bind="click: () => $('#findNewMineModal').modal('show');">Find new mine</button>
 
-                                    <!-- ko ifnot: App.game.underground.mine.timeUntilDiscovery > 0 -->
-                                    <div>Time since discovery</div>
-                                    <div data-bind="text: GameConstants.formatTime(-1 * App.game.underground.mine.timeUntilDiscovery)"></div>
-                                    <!-- /ko -->
-                                <!-- /ko -->
-
-                                <!-- ko ifnot: App.game.underground.mine -->
-                                <div>No active mine</div>
+                                <!-- ko let: { autoRestartUndergroundMine: Settings.getSetting('autoRestartUndergroundMine') } -->
+                                <button class="btn btn-danger p-2" style="min-width: 36px;" data-bind="
+                                    text: `↻ ${autoRestartUndergroundMine.observableValue() ? 'On' : 'Off'}`,
+                                    css: {
+                                        'btn-danger': !autoRestartUndergroundMine.observableValue(),
+                                        'btn-success': autoRestartUndergroundMine.observableValue()
+                                    },
+                                    tooltip: {
+                                        title: `${autoRestartUndergroundMine.displayName}: ${autoRestartUndergroundMine.observableValue() ? 'On' : 'Off'}`,
+                                        trigger: 'hover',
+                                        placement:'right'
+                                    },
+                                    click: () => autoRestartUndergroundMine.observableValue(!autoRestartUndergroundMine.observableValue())"></button>
                                 <!-- /ko -->
                             </div>
 
@@ -59946,21 +59949,38 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
 
                     <div>
                         <!-- ko if: App.game.underground.mine -->
-                        <div id="mineBody" style="margin:auto; background-image: url('../assets/images/underground/rock0.png');"
-                             data-bind="css: { 'disabled': App.game.underground.mine.timeUntilDiscovery > 0 || App.game.underground.mine.completed },
-                             class: `${UndergroundToolType[App.game.undergroundTools.selectedToolType]}Selected`,
-                             style: {
-                                backgroundSize: `calc(100% / ${App.game.underground.mine?.columnCount})`,
-                             },
-                             foreach: App.game.underground.mine.grid">
-                            <div class="mineSquare" data-bind="click: () => { UndergroundController.clickModalMineSquare($index()); }">
-                                <div class="rock" data-bind="class: `rock${$data.layerDepth}`, style: UndergroundController.calculateMineTileStyle($index())"></div>
+                        <div style="position: relative;">
+                            <div id="mineBody" style="margin:auto; background-image: url('../assets/images/underground/rock0.png');"
+                                 data-bind="css: { 'disabled': App.game.underground.mine.timeUntilDiscovery > 0 || App.game.underground.mine.completed },
+                                 class: `${UndergroundToolType[App.game.undergroundTools.selectedToolType]}Selected`,
+                                 style: {
+                                    backgroundSize: `calc(100% / ${App.game.underground.mine?.columnCount})`,
+                                 }">
+                                <!-- ko foreach: App.game.underground.mine.grid -->
+                                <div class="mineSquare" data-bind="click: () => { UndergroundController.clickModalMineSquare($index()); }">
+                                    <div class="rock" data-bind="class: `rock${$data.layerDepth}`, style: UndergroundController.calculateMineTileStyle($index())"></div>
 
-                                <!-- ko if: $data.survey > 0 -->
-                                <div class="survey" data-bind="class: `survey-${$data.survey}`"></div>
+                                    <!-- ko if: $data.survey > 0 -->
+                                    <div class="survey" data-bind="class: `survey-${$data.survey}`"></div>
+                                    <!-- /ko -->
+                                </div>
                                 <!-- /ko -->
                             </div>
+
+                            <!-- ko if: App.game.underground.mine && App.game.underground.mine.timeUntilDiscovery > 0 -->
+                            <div style="position: absolute; inset: 20%; display: grid; align-content: center;">
+                                <div>Searching for mine</div>
+                                <div class="progress" style='height: 5px'>
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         data-bind="attr:{ style: 'width:' + (1 - App.game.underground.mine.timeUntilDiscovery / App.game.underground.mine.initialTimeToDiscover).toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }) }"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <div data-bind="text: GameConstants.formatTime(App.game.underground.mine.timeUntilDiscovery)"></div>
+                            </div>
+                            <!-- /ko -->
                         </div>
+
                         <div class='row no-gutters'>
                             <div class="col-12" data-bind="text: 'Treasures found: ' + App.game.underground.mine?.itemsFound + ' / ' + App.game.underground.mine?.itemsBuried + ', Partially discovered: ' + App.game.underground.mine?.itemsPartiallyFound">
                             </div>
@@ -60017,86 +60037,6 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                         </div>
                         <!-- /ko -->
                     </div>
-
-                    <div class="container">
-                        <h4>Search new mine</h4>
-                        <div class="search-mine-display">
-                            <div class="mx-1 mb-1">
-                                <div class="card clickable" data-bind="click: () => App.game.underground.generateMine();">
-                                    <div class="card-body bg-secondary rounded text-center p1">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <div style="width: 32px; height: 32px;">?</div>
-                                            <div data-bind="text: GameConstants.formatTime(UndergroundController.calculateDiscoverMineTimeout())"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mx-1 mb-1">
-                                <div class="card clickable" data-bind="click: () => App.game.underground.generateMine(MineType.Diamond);">
-                                    <div class="card-body bg-secondary rounded text-center p1">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img style="width: 32px; height: 32px;" src="../assets/images/items/underground/Heart%20Scale.png" alt="">
-                                            <div data-bind="text: GameConstants.formatTime(UndergroundController.calculateDiscoverMineTimeout(MineType.Diamond))"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mx-1 mb-1">
-                                <div class="card clickable" data-bind="click: () => App.game.underground.generateMine(MineType.GemPlate);">
-                                    <div class="card-body bg-secondary rounded text-center p1">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img style="width: 32px; height: 32px;" src="../assets/images/items/underground/Blank%20Plate.png" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mx-1 mb-1">
-                                <div class="card clickable" data-bind="click: () => App.game.underground.generateMine(MineType.Shard);">
-                                    <div class="card-body bg-secondary rounded text-center p1">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img style="width: 32px; height: 32px;" src="../assets/images/items/underground/White%20Shard.png" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mx-1 mb-1">
-                                <div class="card clickable" data-bind="click: () => App.game.underground.generateMine(MineType.Fossil);">
-                                    <div class="card-body bg-secondary rounded text-center p1">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img style="width: 32px; height: 32px;" src="../assets/images/breeding/Helix%20Fossil.png" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mx-1 mb-1">
-                                <div class="card clickable" data-bind="click: () => App.game.underground.generateMine(MineType.EvolutionItem);">
-                                    <div class="card-body bg-secondary rounded text-center p1">
-                                        <div class="d-flex flex-column align-items-center">
-                                            <img style="width: 32px; height: 32px;" src="../assets/images/items/evolution/Fire_stone.png" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-<!--                    <div>-->
-<!--                        <div>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(10)'>+10 XP</button>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(100)'>+100 XP</button>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(1000)'>+1,000 XP</button>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(10000)'>+10,000 XP</button>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(-10)'>-10 XP</button>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(-100)'>-100 XP</button>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(-1000)'>-1,000 XP</button>-->
-<!--                            <button onclick='UndergroundController.addPlayerUndergroundExp(-10000)'>-10,000 XP</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
 
                 <div id="treasures" class="tab-pane fade">
@@ -60256,6 +60196,70 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
     <script type="text/html" id="cumulativeValueListTemplate">
         <tr></tr>
     </script>
+</div>
+
+<div aria-labelledby="findNewMineModalLabel" class="modal fade no-select mt-5" id="findNewMineModal" role="dialog" style="cursor: default;" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Select a mine</h4>
+                <div class="search-mine-display mb-2">
+                    <!-- ko foreach: [MineType.Random, MineType.Diamond, MineType.GemPlate, MineType.Shard, MineType.Fossil, MineType.EvolutionItem] -->
+                    <div class="mx-1 mb-1">
+                        <div class="card clickable" data-bind="click: () => { App.game.underground.autoSearchMineType = $data; }">
+                            <div class="card-body bg-secondary rounded text-center p-1" data-bind="css: { 'bg-info': App.game.underground.autoSearchMineType === $data }">
+                                <div class="d-flex flex-column align-items-center">
+                                    <h6 class="card-title m-0" data-bind="text: UndergroundController.getMineConfig($data).displayName"></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+
+                <div class="card mb-2">
+                    <div class="card-header d-flex align-items-center p-0">
+                        <span class="flex-grow-1 text-center font-weight-bold" data-bind="text: UndergroundController.getMineConfig(App.game.underground.autoSearchMineType).displayName"></span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="mb-3">
+                            Discovery time: <knockout data-bind="text: GameConstants.formatTime(UndergroundController.calculateDiscoverMineTimeout(App.game.underground.autoSearchMineType))"></knockout>
+                        </div>
+
+                        <h6>Potential treasures</h6>
+                        <div>
+                            <!-- ko foreach: UndergroundController.getMineConfig(App.game.underground.autoSearchMineType).getAvailableItems() -->
+                            <img width="24px" height="24px" data-bind="tooltip: { title: $data.displayName, trigger: 'hover' }, attr: { src: $data.image }" />
+                            <!-- /ko -->
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button class="btn btn-primary" data-bind="click: () => App.game.underground.generateMine(App.game.underground.autoSearchMineType);" data-dismiss="modal">Search for mine</button>
+                    </div>
+                </div>
+                
+                <div>
+                    <!-- ko let: { autoRestartUndergroundMine: Settings.getSetting('autoRestartUndergroundMine') } -->
+                    <label for="auto-restart-underground-mine" data-bind="text: autoRestartUndergroundMine.displayName"></label>
+                    <label class="form-check-label toggler-wrapper style-1 float-right">
+                        <input class="form-check-input" type="checkbox" id="auto-restart-underground-mine"
+                               data-bind="checked: autoRestartUndergroundMine.observableValue">
+                        <div class="toggler-slider">
+                            <div class="toggler-knob"></div>
+                        </div>
+                    </label>
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 
