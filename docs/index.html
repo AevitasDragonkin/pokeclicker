@@ -59903,7 +59903,6 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                 <ul class="nav nav-tabs nav-fill">
                     <li class="nav-item"><a data-toggle='tab' class='nav-link active' href="#dig">Dig</a></li>
                     <li class='nav-item'><a data-toggle='tab' class='nav-link' href="#treasures">Treasures</a></li>
-                    <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#trading">Trading</a></li>
                     <li class="nav-item"><a data-toggle='tab' class='nav-link' href="#undergroundHelpers">Helpers</a></li>
                     <li class='nav-item'><a data-toggle='tab' class='nav-link' href="#help">Help</a></li>
                     <li class="d-lg-block d-none"><button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 18px; font-weight: 700;">×</button></li>
@@ -60039,28 +60038,34 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                     </div>
                 </div>
 
-                <div id="treasures" class="tab-pane fade">
-                </div>
+                <div id="treasures" class="tab-pane fade p-2">
+                    <!-- ko foreach: [UndergroundItemValueType.Diamond, UndergroundItemValueType.Gem, UndergroundItemValueType.Shard, UndergroundItemValueType.Fossil, UndergroundItemValueType.FossilPiece, UndergroundItemValueType.EvolutionItem, UndergroundItemValueType.Other] -->
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold" data-bind="text: GameConstants.camelCaseToString(GameHelper.enumStrings(UndergroundItemValueType)[$data])"></span>
+                        </div>
 
-                <div id="trading" class="tab-pane fade">
-<!--                    <div data-bind="foreach: UndergroundTrading.availableItemsToTrade">-->
-<!--                        <div data-bind="text: $data.itemName"></div>-->
-<!--                    </div>-->
-
-                    <div class="input-group input-group-sm">
-                        <select autocomplete="off" class="custom-select" data-bind="options: [
-                            { name: 'None', value: null },
-                            ...UndergroundTrading.availableItemsToTrade.map(i => ({ name: i.name, value: i })),
-                        ], optionsValue: 'value', optionsText: 'name', value: UndergroundTrading.selectedTradeFromItem"></select>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- ko foreach: UndergroundItems.list.filter(item => item.valueType === $data) -->
+                                <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                    <div class="btn btn-secondary text-left w-100 px-1" style="cursor: default; padding-top: 1px; padding-bottom: 2px;"
+                                         data-bind="
+                                            css: { 'bg-info': UndergroundTrading.selectedTradeFromItem === $data },
+                                            template: { name: 'otherItemTemplate', data: $data.itemName },
+                                            click: () => {
+                                                UndergroundTrading.selectedTradeFromItem = $data;
+                                                UndergroundTrading.selectedTradeToItem = UndergroundTrading.tradeToItemList[0];
+                                                $('#treasureDetailModal').modal('show');
+                                            }
+                                         ">
+                                    </div>
+                                </div>
+                                <!-- /ko -->
+                            </div>
+                        </div>
                     </div>
-
-
-                    <div class="input-group input-group-sm">
-                        <select autocomplete="off" class="custom-select" data-bind="options: [
-                            { name: 'None', value: null },
-                            ...UndergroundTrading.tradeToItemList.map(i => ({ name: i.name, value: i })),
-                        ], optionsValue: 'value', optionsText: 'name', value: UndergroundTrading.selectedTradeToItem"></select>
-                    </div>
+                    <!-- /ko -->
                 </div>
 
                 <div id="undergroundHelpers" class="tab-pane fade">
@@ -60183,7 +60188,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
     </script>
 </div>
 
-<div aria-labelledby="mineSellAllTreasuresModalLabel" class="modal fade noselect mt-5" id="mineSellAllTreasuresModal" role="dialog"
+<div aria-labelledby="mineSellAllTreasuresModalLabel" class="modal fade noselect" id="mineSellAllTreasuresModal" role="dialog"
      style="cursor:default" tabindex="-1">
     <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document" data-bind="let: { filteredMineInventory: UndergroundItems.list.filter(item => item.hasSellValue() && player.itemList[item.itemName]()) }">
         <div class="modal-content">
@@ -60198,8 +60203,8 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
     </script>
 </div>
 
-<div aria-labelledby="findNewMineModalLabel" class="modal fade no-select mt-5" id="findNewMineModal" role="dialog" style="cursor: default;" tabindex="-1">
-    <div class="modal-dialog" role="document">
+<div aria-labelledby="findNewMineModalLabel" class="modal fade no-select" id="findNewMineModal" role="dialog" style="cursor: default;" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <h4>Select a mine</h4>
@@ -60239,7 +60244,7 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
                         <button class="btn btn-primary" data-bind="click: () => App.game.underground.generateMine(App.game.underground.autoSearchMineType);" data-dismiss="modal">Search for mine</button>
                     </div>
                 </div>
-                
+
                 <div>
                     <!-- ko let: { autoRestartUndergroundMine: Settings.getSetting('autoRestartUndergroundMine') } -->
                     <label for="auto-restart-underground-mine" data-bind="text: autoRestartUndergroundMine.displayName"></label>
@@ -60259,6 +60264,229 @@ aria-labelledby="breedingModalLabel" aria-hidden="true">
             </div>
         </div>
 
+    </div>
+</div>
+
+<div aria-labelledby="treasureDetailModalLabel" class="modal fade no-select" id="treasureDetailModal" role="dialog" style="cursor: default;" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header align-items-center">
+                <!-- ko if: UndergroundTrading.selectedTradeFromItem -->
+                <img class='mineInventoryItem' data-bind='attr: {src: UndergroundTrading.selectedTradeFromItem.image }'>
+                <div>
+                    <h4 class="m-0" data-bind="text: UndergroundTrading.selectedTradeFromItem.name"></h4>
+                    <small class="m-0" data-bind="text: player.itemList[UndergroundTrading.selectedTradeFromItem.itemName]().toLocaleString('en-US')"></small>
+                </div>
+                <img class='mineInventoryItem' data-bind='attr: {src: UndergroundTrading.selectedTradeFromItem.image }'>
+                <!-- /ko -->
+            </div>
+
+            <div class="modal-body">
+                <!-- ko if: UndergroundTrading.selectedTradeFromItem?.hasSellValue() -->
+                <div class="card mb-2">
+                    <div class="card-header d-flex align-items-center p-0">
+                        <span class="flex-grow-1 text-center font-weight-bold">Sell</span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-3 font-weight-bold" data-bind="css: { 'text-danger': UndergroundTrading.sellAmount > player.itemList[UndergroundTrading.selectedTradeFromItem.itemName]() }">
+                                <label data-bind="text: UndergroundTrading.sellAmount.toLocaleString('en-US')"></label>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <label data-bind="text: UndergroundTrading.selectedTradeFromItem.name"></label>
+                                <img class='mineInventoryItem' data-bind='attr: {src: UndergroundTrading.selectedTradeFromItem.image }'>
+                                →
+                                <!-- ko if: UndergroundTrading.selectedTradeFromItem.valueType === UndergroundItemValueType.Gem -->
+                                <img class='mineInventoryItem' data-bind='attr: { src: Gems.image(UndergroundTrading.selectedTradeFromItem.type) }'/>
+                                <label data-bind="text: `${UndergroundTrading.selectedTradeFromItem.value.toLocaleString('en-US')} × ${PokemonType[UndergroundTrading.selectedTradeFromItem.type]} Gems`"></label>
+                                <!-- /ko -->
+                                <!-- ko if: UndergroundTrading.selectedTradeFromItem.valueType === UndergroundItemValueType.Diamond -->
+                                <img class='mineInventoryItem' src="../assets/images/currency/diamond.svg"/>
+                                <label data-bind="text: `${UndergroundTrading.selectedTradeFromItem.value.toLocaleString('en-US')} × Diamonds`"></label>
+                                <!-- /ko -->
+                            </div>
+                            <div class="col-12 col-lg-3 font-weight-bold">
+                                <label data-bind="text: (UndergroundTrading.sellAmount * UndergroundTrading.selectedTradeFromItem.value).toLocaleString('en-US')"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12 col-lg-9 mb-2 mb-lg-0">
+                                <div class="input-group">
+                                    <button class="btn btn-warning btn-outline-dark smallButton smallFont" data-bind="click: () => UndergroundTrading.sellAmount = 1">Reset</button>
+
+                                    <input type="number" class="outline-dark form-control form-control-number" data-bind="textInput: UndergroundTrading.sellAmount">
+
+                                    <!-- ko if: Settings.getSetting('shopButtons').observableValue() == 'original' -->
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.sellAmount += 10">
+                                        +10
+                                    </button>
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.sellAmount += 100">
+                                        +100
+                                    </button>
+                                    <!-- /ko -->
+                                    <!-- ko if: Settings.getSetting('shopButtons').observableValue() == 'multiplication' -->
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.sellAmount *= 10">
+                                        &times;10
+                                    </button>
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.sellAmount /= 10">
+                                        &div;10
+                                    </button>
+                                    <!-- /ko -->
+                                    <!-- ko if: Settings.getSetting('shopButtons').observableValue() == 'bigplus' -->
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.sellAmount += 100">
+                                        +100
+                                    </button>
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.sellAmount += 1000">
+                                        +1,000
+                                    </button>
+                                    <!-- /ko -->
+
+                                    <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                    <div class="dropdown-menu text-center p-0">
+                                        <p class="small py-2 m-0">Set Trade Amount</p>
+                                        <div class="dropdown-divider m-0"></div>
+                                        <!-- ko foreach: [10, 100, 1000] -->
+                                        <button class="dropdown-item small py-1" type="button" data-bind="
+                                            text: `${$data.toLocaleString('en-US')}`,
+                                            click: () => { UndergroundTrading.sellAmount = $data }
+                                        "></button>
+                                        <!-- /ko -->
+                                        <div class="dropdown-divider m-0"></div>
+                                        <!-- ko foreach: [0.1, 0.25, 0.5, 0.75, 1] -->
+                                        <button class="dropdown-item small py-1" type="button" data-bind="
+                                            text: `${$data.toLocaleString('en-US', { style: 'percent' })}`,
+                                            click: () => { UndergroundTrading.sellAmount = player.itemList[UndergroundTrading.selectedTradeFromItem.itemName]() * $data }
+                                        "></button>
+                                        <!-- /ko -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-3">
+                                <button class="btn btn-block btn-primary" data-bind="
+                                    enable: UndergroundTrading.canSell,
+                                    click: () => UndergroundTrading.sell()
+                                ">Sell</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: UndergroundTrading.tradeToItemList?.length > 0 -->
+                <div class="card mb-2">
+                    <div class="card-header d-flex align-items-center p-0">
+                        <span class="flex-grow-1 text-center font-weight-bold">Trade</span>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- ko foreach: UndergroundTrading.tradeToItemList -->
+                            <div class="col-6 col-lg-3 mb-2" data-bind="visible: $data.isUnlocked()">
+                                <div class="btn btn-secondary text-left w-100 px-1" style="cursor: default; padding-top: 1px; padding-bottom: 2px;"
+                                     data-bind="
+                                        css: { 'bg-info': UndergroundTrading.selectedTradeToItem === $data },
+                                        template: { name: 'otherItemTemplate', data: $data.itemName },
+                                        click: () => { UndergroundTrading.selectedTradeToItem = $data; }
+                                     ">
+                                </div>
+                            </div>
+                            <!-- /ko -->
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-3 font-weight-bold" data-bind="css: { 'text-danger': UndergroundTrading.tradeFromAmount > player.itemList[UndergroundTrading.selectedTradeFromItem.itemName]() }">
+                                <label data-bind="text: UndergroundTrading.tradeFromAmount.toLocaleString('en-US')"></label>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <label data-bind="text: UndergroundTrading.selectedTradeFromItem.name"></label>
+                                <img class='mineInventoryItem' data-bind='attr: {src: UndergroundTrading.selectedTradeFromItem.image }'>
+                                →
+                                <img class='mineInventoryItem' data-bind='attr: {src: UndergroundTrading.selectedTradeToItem?.image || null }'>
+                                <label data-bind="text: UndergroundTrading.selectedTradeToItem?.name || '???'"></label>
+                            </div>
+                            <div class="col-12 col-lg-3 font-weight-bold">
+                                <label data-bind="text: UndergroundTrading.tradeAmount.toLocaleString('en-US')"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12 col-lg-9 mb-2 mb-lg-0">
+                                <div class="input-group">
+                                    <button class="btn btn-warning btn-outline-dark smallButton smallFont" data-bind="click: () => UndergroundTrading.tradeAmount = 1">Reset</button>
+
+                                    <input type="number" class="outline-dark form-control form-control-number" data-bind="textInput: UndergroundTrading.tradeAmount">
+
+                                    <!-- ko if: Settings.getSetting('shopButtons').observableValue() == 'original' -->
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.tradeAmount += 10">
+                                        +10
+                                    </button>
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.tradeAmount += 100">
+                                        +100
+                                    </button>
+                                    <!-- /ko -->
+                                    <!-- ko if: Settings.getSetting('shopButtons').observableValue() == 'multiplication' -->
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.tradeAmount *= 10">
+                                        &times;10
+                                    </button>
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.tradeAmount /= 10">
+                                        &div;10
+                                    </button>
+                                    <!-- /ko -->
+                                    <!-- ko if: Settings.getSetting('shopButtons').observableValue() == 'bigplus' -->
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.tradeAmount += 100">
+                                        +100
+                                    </button>
+                                    <button class="btn btn-secondary smallButton smallFont" type="button" onclick="UndergroundTrading.tradeAmount += 1000">
+                                        +1,000
+                                    </button>
+                                    <!-- /ko -->
+
+                                    <button class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                    <div class="dropdown-menu text-center p-0">
+                                        <p class="small py-2 m-0">Set Trade Amount</p>
+                                        <div class="dropdown-divider m-0"></div>
+                                        <!-- ko foreach: [10, 100, 1000] -->
+                                        <button class="dropdown-item small py-1" type="button" data-bind="
+                                            text: `${$data.toLocaleString('en-US')}`,
+                                            click: () => { UndergroundTrading.tradeAmount = $data }
+                                        "></button>
+                                        <!-- /ko -->
+                                        <div class="dropdown-divider m-0"></div>
+                                        <!-- ko foreach: [0.1, 0.25, 0.5, 0.75, 1] -->
+                                        <button class="dropdown-item small py-1" type="button" data-bind="
+                                            text: `${$data.toLocaleString('en-US', { style: 'percent' })}`,
+                                            click: () => { UndergroundTrading.tradeFromAmount = player.itemList[UndergroundTrading.selectedTradeFromItem.itemName]() * $data }
+                                        "></button>
+                                        <!-- /ko -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-3">
+                                <button class="btn btn-block btn-primary" data-bind="
+                                    enable: UndergroundTrading.canTrade,
+                                    click: () => UndergroundTrading.trade()
+                                ">Trade</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
