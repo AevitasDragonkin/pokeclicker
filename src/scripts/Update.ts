@@ -2841,6 +2841,14 @@ class Update implements Saveable {
                 }
             });
         },
+
+        '0.10.24': ({ playerData, saveData, settingsData }) => {
+            // Give the player a spirit bottle if they're past step 6 in the Clash of Ages questline
+            const clashOfAges = saveData.quests.questLines.find(ql => ql.name === 'Clash of Ages');
+            if (clashOfAges && clashOfAges.state === 2 || clashOfAges.quest > 7) {
+                playerData._itemList.Prison_bottle = (playerData._itemList.Prison_bottle || 0) + 1;
+            }
+        },
     };
 
     constructor() {

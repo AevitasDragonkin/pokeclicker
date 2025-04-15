@@ -6349,7 +6349,7 @@ const Baraz4 = new NPC('Baraz', [
     'Aha! There it is!',
     '<i>Baraz grabs the Prison Bottle, and an eerie glow surrounds him. A massive Pokémon picks him up and flies away into a nearby hoop.</i>',
 ], {
-    image: 'assets/images/items/quest/Prison_Bottle.png',
+    image: 'assets/images/items/evolution/Prison_Bottle.png',
     requirement: new MultiRequirement([new QuestLineStepCompletedRequirement('Clash of Ages', 6), new QuestLineStepCompletedRequirement('Clash of Ages', 8, GameConstants.AchievementOption.less)]),
 });
 

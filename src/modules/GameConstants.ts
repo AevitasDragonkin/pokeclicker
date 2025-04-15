@@ -1059,6 +1059,7 @@ export enum StoneType {
     'Whipped_dream',
     'Key_stone',
     'Ice_stone',
+    'Prison_bottle',
     'Solar_light',
     'Lunar_light',
     'Pure_light',
