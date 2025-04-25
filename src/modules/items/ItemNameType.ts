@@ -160,7 +160,6 @@ export type ItemNameType
     | 'Push_Forretress_Magikarp_Jump'
     | 'Push_Golem_Magikarp_Jump'
     | 'Push_Steelix_Magikarp_Jump'
-    | 'Prison_Bottle'
     | 'Great_Twisted_Spoon'
     | 'Island_Challenge_Amulet'
     | 'Fighting_Memory_Silvally'
