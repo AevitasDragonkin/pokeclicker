@@ -3202,6 +3202,24 @@ TemporaryBattleList['Hoopa 6'] = new TemporaryBattle(
         },
     }
 );
+TemporaryBattleList['Hoopa (Unbound)'] = new TemporaryBattle(
+    'Hoopa (Unbound)',
+    [new GymPokemon('Hoopa (Unbound)', 670461168, 80)],
+    '<i>The Unbound Hoopa is sucked into the Prison Bottle, and you gain control of it.</i>',
+    [new QuestLineCompletedRequirement('Clash of Ages'), new ItemOwnedRequirement('Prison_bottle')],
+    [new NullRequirement],
+    {
+        displayName: 'Unbound Hoopa',
+        imageName: '../pokemon/720.01',
+        hideTrainer: true,
+        returnTown: 'Kiloude City',
+        // visibleRequirement: new QuestLineCompletedRequirement('Clash of Ages'),
+        rewardFunction: () => {
+            BagHandler.gainItem({type: ItemType.item, id: 'Hoopa (Unbound)'}, 1);
+            player.loseItem('Prison_bottle', 1);
+        },
+    }
+);
 TemporaryBattleList['Calem 2'] = new TemporaryBattle(
     'Calem 2',
     [

@@ -341,6 +341,7 @@ ItemList.Beige_shard = new TreasureItem('Beige_shard', UndergroundItemValueType.
 ItemList.Slate_shard = new TreasureItem('Slate_shard', UndergroundItemValueType.Shard, 'Slate Shard');
 // Other
 ItemList.Palaeontologist_token = new TreasureItem('Palaeontologist_token', UndergroundItemValueType.Special, 'Palaeontologist Token');
+ItemList.Prison_bottle = new TreasureItem('Prison_bottle', UndergroundItemValueType.Special, 'Prison Bottle');
 
 
 // Pokemon shop items
@@ -391,6 +392,7 @@ ItemList['Furfrou (Star)']    = new PokemonItem('Furfrou (Star)', 10000);
 ItemList['Furfrou (La Reine)']    = new PokemonItem('Furfrou (La Reine)');
 ItemList['Furfrou (Heart)']    = new PokemonItem('Furfrou (Heart)', 15000, Currency.contestToken);
 ItemList['Probably Not Pikachu']   = new PokemonItem('Inkay (Pikachu)', 100000000, Currency.dungeonToken, false, 'Probably Not Pikachu');
+ItemList['Hoopa (Unbound)'] = new PokemonItem('Hoopa (Unbound)');
 // Alola
 ItemList['Type: Null']           = new PokemonItem('Type: Null', 114000);
 ItemList.Poipole              = new PokemonItem('Poipole', 90000);

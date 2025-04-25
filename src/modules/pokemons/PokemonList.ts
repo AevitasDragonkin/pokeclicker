@@ -22038,7 +22038,6 @@ export const pokemonList = createPokemonArray(
         'levelType': LevelType.slow,
         'exp': 270,
         'catchRate': 3,
-        'evolutions': [StoneEvolution('Hoopa', 'Hoopa (Unbound)', StoneType.Prison_bottle)],
         'base': {
             'hitpoints': 80,
             'attack': 110,

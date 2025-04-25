@@ -106,7 +106,6 @@ ItemList.Sachet            = new EvolutionStone(GameConstants.StoneType.Sachet, 
 ItemList.Whipped_dream     = new EvolutionStone(GameConstants.StoneType.Whipped_dream, 2500, undefined , 'Whipped Dream');
 ItemList.Key_stone         = new EvolutionStone(GameConstants.StoneType.Key_stone, 250, GameConstants.Currency.battlePoint, 'Key Stone', GameConstants.Region.kalos, {multiplier: 1.1, multiplierDecrease: false});
 ItemList.Ice_stone         = new EvolutionStone(GameConstants.StoneType.Ice_stone, 2500, undefined , 'Ice Stone');
-ItemList.Prison_bottle     = new EvolutionStone(GameConstants.StoneType.Prison_bottle, 0, undefined, 'Prison Bottle');
 ItemList.Solar_light       = new EvolutionStone(GameConstants.StoneType.Solar_light, 2500, undefined, 'Solar Light');
 ItemList.Lunar_light       = new EvolutionStone(GameConstants.StoneType.Lunar_light, 2500, undefined, 'Lunar Light');
 ItemList.Pure_light        = new EvolutionStone(GameConstants.StoneType.Pure_light, 2500, undefined, 'Pure Light');
