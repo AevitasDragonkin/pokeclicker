@@ -454,4 +454,6 @@ Object.assign(<any>window, {
     DamageCalculator,
     GameLoadState,
     BattleTree,
+    BattleTreeController,
+    BattleTreeRunState,
 });
