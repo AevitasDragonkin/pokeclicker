@@ -218,6 +218,7 @@ import ChristmasPresent from './items/ChristmasPresent';
 import DamageCalculator from './types/DamageCalculator';
 import GameLoadState from './utilities/GameLoadState';
 import GenericDeal, { DealCostOrProfitType } from './deal/GenericDeal';
+import { BattleTree } from './battleTree/BattleTree';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -450,4 +451,5 @@ Object.assign(<any>window, {
     ChristmasPresent,
     DamageCalculator,
     GameLoadState,
+    BattleTree,
 });

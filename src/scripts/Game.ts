@@ -47,6 +47,7 @@ class Game implements TmpGameType {
     public weatherApp: WeatherApp;
     public zMoves: ZMoves;
     public pokemonContest: PokemonContest;
+    public battleTree: BattleTree;
 
     constructor() {
         // Needs to be loaded first so save data can be updated (specifically "player" data)
@@ -87,6 +88,7 @@ class Game implements TmpGameType {
         this.weatherApp = new WeatherApp();
         this.zMoves = new ZMoves();
         this.pokemonContest = new PokemonContest();
+        this.battleTree = new BattleTree();
 
         this._gameState = ko.observable(GameConstants.GameState.loading);
     }
@@ -125,6 +127,7 @@ class Game implements TmpGameType {
         this.farming.initialize();
         this.specialEvents.initialize();
         this.pokeballFilters.initialize();
+        this.battleTree.initialize();
         this.load();
 
         // Unlock achievements that have already been completed, avoids renotifying
@@ -539,6 +542,11 @@ class Game implements TmpGameType {
         this.zMoves.counter += GameConstants.TICK_TIME;
         if (this.zMoves.counter >= GameConstants.ZMOVE_TICK) {
             this.zMoves.tick();
+        }
+
+        // Battle Tree
+        if (this.battleTree.canAccess()) {
+            this.battleTree.update(GameConstants.TICK_TIME / GameConstants.SECOND);
         }
 
         // Game timers
