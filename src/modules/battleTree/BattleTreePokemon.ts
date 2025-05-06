@@ -14,6 +14,14 @@ export class BattleTreePokemon {
         this._level = properties.level;
     }
 
+    get name(): PokemonNameType {
+        return this._name;
+    }
+
+    get level(): number {
+        return this._level;
+    }
+
     toJSON(): Record<string, any> {
         return {
             name: this._name,
