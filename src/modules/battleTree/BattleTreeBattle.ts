@@ -16,6 +16,9 @@ export class BattleTreeBattle {
 
     public update(delta: number): void {
         // TODO : BT : Implement the battle game loop
+
+        this.pokemonA.update(delta);
+        this.pokemonB.update(delta);
     }
 
     get pokemonA(): BattleTreePokemon {
