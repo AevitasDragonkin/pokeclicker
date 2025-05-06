@@ -1,5 +1,6 @@
 import { BattleTreePokemon } from './BattleTreePokemon';
 import { BattleTreeRand } from './BattleTreeRand';
+import { PokemonNameType } from '../pokemons/PokemonNameType';
 
 export class BattleTreeController {
     public static getRandomTeamForStage(seed: number, stage: number, amount: number): BattleTreePokemon[] {
@@ -20,5 +21,10 @@ export class BattleTreeController {
     public static calculatePokemonLevelForStage(stage: number): number {
         // TODO : BT : Calculate proper level for provided stage
         return stage;
+    }
+
+    public static calculatePokemonLevelForPlayer(pokemon: PokemonNameType): number {
+        // TODO : BT : Calculate proper level for the player's pokemon
+        return 100;
     }
 }

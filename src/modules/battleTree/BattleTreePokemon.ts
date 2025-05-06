@@ -24,6 +24,10 @@ export class BattleTreePokemon {
         this._attackCounter += delta;
     }
 
+    public resetAttackCounter(): void {
+        this._attackCounter = 0;
+    }
+
     get name(): PokemonNameType {
         return this._name;
     }
