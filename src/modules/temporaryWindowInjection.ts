@@ -219,6 +219,8 @@ import DamageCalculator from './types/DamageCalculator';
 import GameLoadState from './utilities/GameLoadState';
 import GenericDeal, { DealCostOrProfitType } from './deal/GenericDeal';
 import { BattleTree } from './battleTree/BattleTree';
+import { BattleTreeController } from './battleTree/BattleTreeController';
+import { BattleTreeRunState } from './battleTree/BattleTreeRun';
 
 Object.assign(<any>window, {
     SaveSelector,
