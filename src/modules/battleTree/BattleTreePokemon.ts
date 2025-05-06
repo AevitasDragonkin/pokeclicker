@@ -17,6 +17,7 @@ export class BattleTreePokemon {
         this._name = properties.name;
         this._level = properties.level;
 
+        this._hitPoints(this.maxHitPoints);
         this._attackCounter = 0;
     }
 

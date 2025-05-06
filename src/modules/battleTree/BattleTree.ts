@@ -36,6 +36,10 @@ export class BattleTree implements Feature {
         this._currentRun(new BattleTreeRun());
     }
 
+    public abortRun(): void {
+        this._currentRun(null);
+    }
+
     get currentRun(): BattleTreeRun | null {
         return this._currentRun();
     }

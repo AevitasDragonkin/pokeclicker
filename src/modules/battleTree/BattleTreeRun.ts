@@ -105,6 +105,14 @@ export class BattleTreeRun {
         return this._state();
     }
 
+    get teamA(): BattleTreePokemon[] {
+        return this._teamA();
+    }
+
+    get teamB(): BattleTreePokemon[] {
+        return this._teamB();
+    }
+
     get selectedPokemon(): PokemonNameType | null {
         return this._selectedPokemon();
     }
@@ -118,6 +126,10 @@ export class BattleTreeRun {
 
         // Create a new battle with the selected pokemon and the first enemy in team B
         this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.hitPoints > 0).name);
+    }
+
+    get battle(): BattleTreeBattle {
+        return this._battle();
     }
 
     toJSON(): Record<string, any> {

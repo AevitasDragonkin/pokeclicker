@@ -5,7 +5,37 @@
     </div>
 
     <div class="card-body">
-        <a class="btn btn-block btn-danger text-light" onclick="App.game.battleTree.leave()">Leave</a>
+
+        <!-- ko if: App.game.battleTree.currentRun === null -->
+        <button class="btn btn-block btn-success text-light" data-bind="
+            click: () => App.game.battleTree.createNewBattleTreeRun()
+        ">
+            Enter
+        </button>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.TEAM_SELECTION -->
+        <button class="btn btn-block btn-success text-light" data-bind="
+            click: () => App.game.battleTree.currentRun.startRun(),
+            enable: App.game.battleTree.currentRun.teamA.length > 0
+        ">
+            Start
+        </button>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun -->
+        <button class="btn btn-block btn-danger text-light" data-bind="
+            click: () => App.game.battleTree.abortRun()
+        ">
+            Abort
+        </button>
+        <!-- /ko -->
+
+        <button class="btn btn-block btn-danger text-light" data-bind="
+            click: () => App.game.battleTree.leave()
+        ">
+            Leave
+        </button>
     </div>
 </div>
 <!-- /ko -->
