@@ -1,4 +1,5 @@
-import { Feature } from '../DataStore/common/Feature';
+import {Feature} from '../DataStore/common/Feature';
+import {GameState} from '../GameConstants';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -14,6 +15,14 @@ export class BattleTree implements Feature {
     }
 
     update(delta: number): void {
+    }
+
+    public enter(): void {
+        App.game.gameState = GameState.battleTree;
+    }
+
+    public leave(): void {
+        App.game.gameState = GameState.town;
     }
 
     toJSON(): Record<string, any> {

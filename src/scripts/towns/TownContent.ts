@@ -86,6 +86,20 @@ class BattleFrontierTownContent extends TownContent {
     }
 }
 
+class BattleTreeTownContent extends TownContent {
+    public cssClass() {
+        return 'btn btn-primary';
+    }
+
+    public onclick(): void {
+        App.game.battleTree.enter();
+    }
+
+    public text() {
+        return 'Enter Battle Tree';
+    }
+}
+
 class NextRegionTownContent extends TownContent {
     public cssClass() {
         return 'btn btn-warning';

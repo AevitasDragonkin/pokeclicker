@@ -7953,7 +7953,7 @@ TownList['A Tree Maybe'] = new Town(
     'A Tree Maybe',
     GameConstants.Region.alola,
     GameConstants.AlolaSubRegions.PoniIsland,
-    [ATreeMaybeShop, TemporaryBattleList['Ryuki Dragon Memory']],
+    [ATreeMaybeShop, new BattleTreeTownContent(), TemporaryBattleList['Ryuki Dragon Memory']],
     {
         requirements: [new RouteKillRequirement(10, GameConstants.Region.alola, 30)],
         npcs: [BattleTreeRed, BattleTreeBlue, RyukiSilvally],

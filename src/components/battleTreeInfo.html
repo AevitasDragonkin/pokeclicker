@@ -1,0 +1,11 @@
+<!-- ko if: App.game.gameState === GameConstants.GameState.battleTree -->
+<div id="battleTreeInformation" class="card sortable-disabled border-secondary mb-3 battle-frontier no-select">
+    <div class="card-header p-0">
+        <span>Battle Tree</span>
+    </div>
+
+    <div class="card-body">
+        <a class="btn btn-block btn-danger text-light" onclick="App.game.battleTree.leave()">Leave</a>
+    </div>
+</div>
+<!-- /ko -->
