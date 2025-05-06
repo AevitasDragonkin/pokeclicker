@@ -9,6 +9,10 @@ export class BattleTreeRun {
         this._stage = ko.observable(1);
     }
 
+    public update(delta: number): void {
+        // TODO : BT : Update the run game loop
+    }
+
     toJSON(): Record<string, any> {
         return {
             seed: this._seed(),
