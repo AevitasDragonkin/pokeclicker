@@ -58,6 +58,8 @@ export class BattleTreeRun {
                 } else if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A) {
                     // TODO : BT : Give stage reward
                     this._state(BattleTreeRunState.REWARD);
+
+                    this.nextStage();
                 } else {
                     // TODO : BT : Give final reward
                     this._state(BattleTreeRunState.FINISHED);

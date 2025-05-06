@@ -22,10 +22,15 @@ export class BattleTreeBattle {
     }
 
     public update(delta: number): void {
-        // TODO : BT : Implement the battle game loop
+        if (this._pokemonA.hitPoints <= 0 || this.pokemonB.hitPoints <= 0) {
+            return;
+        }
 
         this.pokemonA.update(delta);
         this.pokemonB.update(delta);
+
+        if (this.pokemonA.canAttack) this.pokemonA.attackTarget(this.pokemonB);
+        if (this.pokemonB.canAttack) this.pokemonB.attackTarget(this.pokemonA);
     }
 
     get pokemonA(): BattleTreePokemon {

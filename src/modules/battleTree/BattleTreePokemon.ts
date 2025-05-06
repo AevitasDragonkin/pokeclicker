@@ -1,10 +1,15 @@
 import { PokemonNameType } from '../pokemons/PokemonNameType';
-import { Observable } from 'knockout';
+import { Observable, PureComputed } from 'knockout';
+import { pokemonMap } from '../pokemons/PokemonList';
+import TypeHelper from '../types/TypeHelper';
 
 type BattleTreePokemonProperties = {
     name: PokemonNameType;
     level: number;
 };
+
+const hitPointFormula = (base: number, iv: number, ev: number, level: number) => Math.floor(0.01 * (2 * base + iv + Math.floor(0.25 * ev)) * level) + level + 10;
+const statPointFormula = (base: number, iv: number, ev: number, level: number, nature: number) => (Math.floor(0.01 * (2 * base + iv + Math.floor(0.25 * ev)) * level) + 5) * nature;
 
 export class BattleTreePokemon {
     private readonly _name: PokemonNameType;
@@ -12,6 +17,12 @@ export class BattleTreePokemon {
 
     private _hitPoints: Observable<number> = ko.observable(0).extend({ numeric: 0 });
     private _attackCounter: number;
+
+    private _attack: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.attack, 1, 1, this._level, 1));
+    private _defense: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.defense, 1, 1, this._level, 1));
+    private _maxHitPoints: PureComputed<number> = ko.pureComputed(() => hitPointFormula(pokemonMap[this._name].base.hitpoints, 1, 1, this._level));
+    private _attackSpeed: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.attack, 1, 1, this._level, 1));
+    private _attacksPerSecond: PureComputed<number> = ko.pureComputed(() => 1.5 * Math.pow((this._attackSpeed() - 1) / 254, 2) + 0.5);
 
     constructor(properties: BattleTreePokemonProperties) {
         this._name = properties.name;
@@ -23,6 +34,24 @@ export class BattleTreePokemon {
 
     public update(delta: number): void {
         this._attackCounter += delta;
+    }
+
+    public attackTarget(target: BattleTreePokemon): void {
+        while (this.canAttack) {
+            const power: number = 40;
+            const type1Eff: number = TypeHelper.typeMatrix[pokemonMap[this.name].type[0]][pokemonMap[target.name].type[0]];
+            const type2Eff: number = TypeHelper.typeMatrix[pokemonMap[this.name].type[0]][pokemonMap[target.name].type[1] ?? pokemonMap[target.name].type[0]];
+
+            const damage = Math.floor(((2 * this.level / 5 + 2) * power * this.attack / target.defense / 50 + 2) * type1Eff * type2Eff);
+
+            target.takeDamage(damage);
+
+            this._attackCounter -= 1 / this.attacksPerSecond;
+        }
+    }
+
+    public takeDamage(damage: number): void {
+        this._hitPoints(Math.max(this._hitPoints() - damage, 0));
     }
 
     public resetAttackCounter(): void {
@@ -42,8 +71,27 @@ export class BattleTreePokemon {
     }
 
     get maxHitPoints(): number {
-        // TODO : BT : Implement calculating max hitpoints
-        return 5000;
+        return this._maxHitPoints();
+    }
+
+    get attack(): number {
+        return this._attack();
+    }
+
+    get defense(): number {
+        return this._defense();
+    }
+
+    get attackSpeed(): number {
+        return this._attackSpeed();
+    }
+
+    get attacksPerSecond(): number {
+        return this._attacksPerSecond();
+    }
+
+    get canAttack(): boolean {
+        return this._attackCounter >= 1 / this.attacksPerSecond;
     }
 
     toJSON(): Record<string, any> {

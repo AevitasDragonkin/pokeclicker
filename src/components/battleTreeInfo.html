@@ -5,6 +5,72 @@
     </div>
 
     <div class="card-body">
+        <!-- Team Management -->
+        <div class="d-flex flex-wrap justify-content-center" data-bind="if: App.game.battleTree.currentRun">
+            <!-- Your Team -->
+            <div class="card flex-grow-1">
+                <div class="card-header">Your Team</div>
+                <div class="card-body">
+                    <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                    <div class="d-flex clickable" data-bind="
+                        css: { 'bg-info': $data.name === App.game.battleTree.currentRun.selectedPokemon },
+                        click: () => App.game.battleTree.currentRun.selectedPokemon = $data.name
+                    ">
+                        <div>
+                            <img width="56" height="56" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                            <div>Level <knockout data-bind="text: $data.level"></knockout></div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
+                            <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                    style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                                ">
+                                    <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <!-- Opponent -->
+            <div class="card flex-grow-1">
+                <div class="card-header">Opponent</div>
+                <div class="card-body">
+                    <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
+                    <div class="d-flex">
+                        <div>
+                            <img width="56" height="56" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                            <div>Level <knockout data-bind="text: $data.level"></knockout></div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
+                            <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                    style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                                ">
+                                    <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
+        <div>
+            <div>Ending stage: <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout></div>
+        </div>
+        <!-- /ko -->
+
 
         <!-- ko if: App.game.battleTree.currentRun === null -->
         <button class="btn btn-block btn-success text-light" data-bind="
