@@ -116,7 +116,7 @@ export class BattleTreeRun {
 
     public fillPlayerATeamRandomly(): void {
         this._teamA.removeAll();
-        Rand.shuffleArray(this.longListSelection()).slice(0, 3).forEach(name => {
+        Rand.shuffleArray(this.longListSelection().filter(name => App.game.party.alreadyCaughtPokemonByName(name))).slice(0, 3).forEach(name => {
             this.addPokemonToPlayerATeam(name);
         });
     }
