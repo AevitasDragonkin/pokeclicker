@@ -8,6 +8,11 @@ export class BattleTreeController {
     public static availablePokemonNames: PureComputed<PokemonListData[]> = ko.pureComputed(() => pokemonMap.filter(p => PokemonLocations.isObtainable(p.name)));
     public static uniqueIDs: PureComputed<number[]> = ko.pureComputed(() => [...new Set(BattleTreeController.availablePokemonNames().map(p => Math.floor(p.id)))]);
 
+    public static calculateSeed(): number {
+        const now = new Date();
+        return Number((now.getFullYear() - 1900) * now.getDate() + 1000 * now.getMonth() + 100000 * now.getDate());
+    }
+
     public static getRandomTeamForStage(seed: number, stage: number, amount: number): BattleTreePokemon[] {
         BattleTreeRand.seed(seed + stage);
 
@@ -31,5 +36,10 @@ export class BattleTreeController {
     public static calculatePokemonLevelForPlayer(pokemon: PokemonNameType): number {
         // TODO : BT : Calculate proper level for the player's pokemon
         return 100;
+    }
+
+    public static calculateLongListSelectionSize(): number {
+        // TODO : BT : Calculate proper size for the player's selection
+        return 20;
     }
 }

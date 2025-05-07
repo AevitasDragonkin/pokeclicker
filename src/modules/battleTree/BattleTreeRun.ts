@@ -27,11 +27,12 @@ export class BattleTreeRun {
 
     private _selectedPokemon: Observable<PokemonNameType | null>;
 
-    public longListSelection: PureComputed<PokemonNameType[]> = ko.pureComputed(() => BattleTreeController.getLongListTeamSelection(this._seed(), 100));
+    public longListSelection: PureComputed<PokemonNameType[]> = ko.pureComputed(() => {
+        return BattleTreeController.getLongListTeamSelection(this._seed(), BattleTreeController.calculateLongListSelectionSize());
+    });
 
     constructor() {
-        const now = new Date();
-        this._seed = ko.observable(Number((now.getFullYear() - 1900) * now.getDate() + 1000 * now.getMonth() + 100000 * now.getDate()));
+        this._seed = ko.observable(BattleTreeController.calculateSeed());
         this._stage = ko.observable(0);
         this._state = ko.observable(BattleTreeRunState.TEAM_SELECTION);
 
