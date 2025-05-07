@@ -26,14 +26,31 @@
                             <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                    css: {
+                                        'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
+                                        'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
+                                        'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                                    },
                                     style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
                                 ">
+                                    <!-- ko if: $data.hitPoints > 0 -->
                                     <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                    <!-- /ko -->
+                                    <!-- ko ifnot: $data.hitPoints > 0 -->
+                                    <span class="font-italic">Fainted</span>
+                                    <!-- /ko -->
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- /ko -->
+
+                    <button class="btn btn-secondary" data-bind="
+                        click: () => App.game.battleTree.currentRun.fillPlayerATeamRandomly(),
+                        enable: App.game.battleTree.currentRun.state === BattleTreeRunState.TEAM_SELECTION
+                    ">
+                        Random fill
+                    </button>
                 </div>
             </div>
 
@@ -53,9 +70,19 @@
                             <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                    css: {
+                                        'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
+                                        'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
+                                        'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                                    },
                                     style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
                                 ">
+                                    <!-- ko if: $data.hitPoints > 0 -->
                                     <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                    <!-- /ko -->
+                                    <!-- ko ifnot: $data.hitPoints > 0 -->
+                                    <span class="font-italic">Fainted</span>
+                                    <!-- /ko -->
                                 </div>
                             </div>
                         </div>

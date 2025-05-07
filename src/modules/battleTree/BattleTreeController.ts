@@ -1,21 +1,15 @@
 import { BattleTreePokemon } from './BattleTreePokemon';
 import { BattleTreeRand } from './BattleTreeRand';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
+import { pokemonMap } from '../pokemons/PokemonList';
 
 export class BattleTreeController {
     public static getRandomTeamForStage(seed: number, stage: number, amount: number): BattleTreePokemon[] {
-        // TODO : BT : Return actual randomized list from all pokemon
-        const list: BattleTreePokemon[] = [
-            new BattleTreePokemon({ name: 'Bulbasaur', level: this.calculatePokemonLevelForStage(stage) }),
-            new BattleTreePokemon({ name: 'Squirtle', level: this.calculatePokemonLevelForStage(stage) }),
-            new BattleTreePokemon({ name: 'Charmander', level: this.calculatePokemonLevelForStage(stage) }),
-            new BattleTreePokemon({ name: 'Mew', level: this.calculatePokemonLevelForStage(stage) }),
-            new BattleTreePokemon({ name: 'Mewtwo', level: this.calculatePokemonLevelForStage(stage) }),
-            new BattleTreePokemon({ name: 'Rhydon', level: this.calculatePokemonLevelForStage(stage) }),
-        ];
-
         BattleTreeRand.seed(seed + stage);
-        return BattleTreeRand.shuffleArray(list).slice(0, amount);
+        return BattleTreeRand
+            .shuffleArray(pokemonMap.filter(p => p.nativeRegion >= 0 && p.nativeRegion <= player.highestRegion()).map(p => p.name))
+            .slice(0, amount)
+            .map(name => new BattleTreePokemon({ name, level: this.calculatePokemonLevelForStage(stage) }));
     }
 
     public static calculatePokemonLevelForStage(stage: number): number {

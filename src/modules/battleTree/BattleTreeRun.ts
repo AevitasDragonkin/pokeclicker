@@ -3,6 +3,7 @@ import { BattleTreeBattle, BattleTreeBattleWinner } from './BattleTreeBattle';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { BattleTreePokemon } from './BattleTreePokemon';
 import { BattleTreeController } from './BattleTreeController';
+import Rand from '../utilities/Rand';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -90,6 +91,13 @@ export class BattleTreeRun {
 
         this._teamB(BattleTreeController.getRandomTeamForStage(this._seed(), this._stage(), 3));
         this.createBattle(this._selectedPokemon(), this._teamB()[0].name);
+    }
+
+    public fillPlayerATeamRandomly(): void {
+        this._teamA.removeAll();
+        Rand.shuffleArray(App.game.party.caughtPokemon.map(p => p.name)).slice(0, 3 - this._teamA().length).forEach(p => {
+            this.addPokemonToPlayerATeam(p);
+        });
     }
 
     public addPokemonToPlayerATeam(pokemon: PokemonNameType): void {
