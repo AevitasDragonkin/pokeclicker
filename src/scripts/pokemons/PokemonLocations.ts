@@ -781,6 +781,10 @@ class PokemonLocations {
         return encounterTypes;
     }
 
+    public static isObtainable = (pokemonName: PokemonNameType): boolean => {
+        return Object.keys(PokemonLocations.getPokemonLocations(pokemonName)).length > 0;
+    }
+
     public static isObtainableAndNotEvable = (pokemonName: PokemonNameType) => {
         const locations = PokemonLocations.getPokemonLocations(pokemonName);
         const isEvable = locations[PokemonLocationType.Dungeon] ||

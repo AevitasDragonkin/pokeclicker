@@ -272,6 +272,7 @@ export type TmpAchievementHandlerType = {
 
 export type TmpPokemonLocationsType = {
     getPokemonPrevolution: (pokemonName: PokemonNameType, maxRegion?: GameConstants.Region) => EvoData[];
+    isObtainable: (pokemonName: PokemonNameType) => boolean;
 };
 
 export type TmpPokemonFactoryType = {

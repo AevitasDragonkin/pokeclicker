@@ -38,7 +38,7 @@
         </div>
 
         <!-- Team Management -->
-        <div class="d-flex flex-wrap justify-content-center" data-bind="if: App.game.battleTree.currentRun?.state !== BattleTreeRunState.TEAM_SELECTION">
+        <div class="d-flex flex-wrap justify-content-center" data-bind="if: App.game.battleTree.currentRun && App.game.battleTree.currentRun.state !== BattleTreeRunState.TEAM_SELECTION">
             <!-- Your Team -->
             <div class="card flex-grow-1">
                 <div class="card-header">Your Team</div>
