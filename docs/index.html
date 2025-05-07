@@ -2473,8 +2473,13 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 <!-- /ko -->
             </div>
 
-            <div data-bind="with: App.game.battleTree.currentRun?.battle.pokemonA">
-                <img src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+            <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonA">
+                <img src="" alt="" data-bind="
+                    attr: {
+                        id: `animate-damage-${$data.uuid}`,
+                        src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
+                    }
+                ">
                 <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
                 <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
@@ -2495,8 +2500,13 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 </div>
             </div>
 
-            <div data-bind="with: App.game.battleTree.currentRun?.battle.pokemonB">
-                <img src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+            <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonB">
+                <img src="" alt="" data-bind="
+                    attr: {
+                        id: `animate-damage-${$data.uuid}`,
+                        src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
+                    }
+                ">
                 <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
                 <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
@@ -2938,6 +2948,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                             <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
                             <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
                             <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div>APS: <knockout data-bind="text: $data.attacksPerSecond.toFixed(2)"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                     css: {
@@ -2975,6 +2986,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                             <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
                             <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
                             <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div>APS: <knockout data-bind="text: $data.attacksPerSecond.toFixed(2)"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                     css: {
