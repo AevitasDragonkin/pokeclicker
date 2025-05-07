@@ -3,6 +3,7 @@ import { Observable, PureComputed } from 'knockout';
 import { pokemonMap } from '../pokemons/PokemonList';
 import TypeHelper from '../types/TypeHelper';
 import PokemonType from '../enums/PokemonType';
+import Rand from '../utilities/Rand';
 
 type BattleTreePokemonProperties = {
     name: PokemonNameType;
@@ -12,7 +13,34 @@ type BattleTreePokemonProperties = {
 const hitPointFormula = (base: number, iv: number, ev: number, level: number) => Math.floor(0.01 * (2 * base + iv + Math.floor(0.25 * ev)) * level) + level + 10;
 const statPointFormula = (base: number, iv: number, ev: number, level: number, nature: number) => (Math.floor(0.01 * (2 * base + iv + Math.floor(0.25 * ev)) * level) + 5) * nature;
 
+const animateDamage = (uuid: string, damage: number) => {
+    const target = $(`#animate-damage-${uuid}`);
+
+    if (!target.length || !target.is(':visible')) {
+        return;
+    }
+
+    const left = (target.position().left + Rand.float(target.width() - 25)).toFixed(2);
+    const top = target.position().top;
+    const animatedElement = document.createElement('p');
+    animatedElement.className = 'animated-damage';
+    animatedElement.style.cssText = `top: ${top}px; left: ${left}px; font-size: 1rem;`;
+    animatedElement.innerText = damage.toLocaleString('en-US');
+
+    const animationDirection = { top: top - 100 };
+    const animationTime = 1500;
+
+    $(animatedElement).prependTo(target.parent()).animate({
+        ...animationDirection,
+        opacity: 0,
+    }, animationTime, 'linear',
+    () => {
+        $(animatedElement).remove();
+    });
+};
+
 export class BattleTreePokemon {
+    public readonly uuid: string;
     private readonly _name: PokemonNameType;
     private readonly _level: number;
 
@@ -26,8 +54,10 @@ export class BattleTreePokemon {
     private _attacksPerSecond: PureComputed<number> = ko.pureComputed(() => 1.5 * Math.pow((this._attackSpeed() - 1) / 254, 2) + 0.5);
 
     constructor(properties: BattleTreePokemonProperties) {
+        this.uuid = crypto.randomUUID();
         this._name = properties.name;
         this._level = properties.level;
+
 
         this._hitPoints(this.maxHitPoints);
         this._attackCounter = 0;
@@ -66,6 +96,7 @@ export class BattleTreePokemon {
 
     public takeDamage(damage: number): void {
         this._hitPoints(Math.max(this._hitPoints() - damage, 0));
+        animateDamage(this.uuid, damage);
     }
 
     public resetAttackCounter(): void {

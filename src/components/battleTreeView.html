@@ -22,8 +22,13 @@
                 <!-- /ko -->
             </div>
 
-            <div data-bind="with: App.game.battleTree.currentRun?.battle.pokemonA">
-                <img src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+            <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonA">
+                <img src="" alt="" data-bind="
+                    attr: {
+                        id: `animate-damage-${$data.uuid}`,
+                        src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
+                    }
+                ">
                 <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
                 <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
@@ -44,8 +49,13 @@
                 </div>
             </div>
 
-            <div data-bind="with: App.game.battleTree.currentRun?.battle.pokemonB">
-                <img src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+            <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonB">
+                <img src="" alt="" data-bind="
+                    attr: {
+                        id: `animate-damage-${$data.uuid}`,
+                        src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
+                    }
+                ">
                 <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
                 <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
