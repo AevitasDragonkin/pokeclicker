@@ -92,6 +92,24 @@
         <!-- /ko -->
 
         <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.MODIFIER -->
+        <div class="flex-grow-1">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cumque distinctio doloremque eum ipsam, magnam maxime molestias necessitatibus nulla odit praesentium quibusdam, repellendus sit. A in incidunt nemo quas quo suscipit totam vitae. Aut corporis iusto magnam neque officia pariatur, repudiandae soluta sunt. Consequatur eius in nesciunt quidem rem tempora!</p>
+            <p>Space to select a modifier</p>
+            <button class="btn btn-primary" data-bind="click: () => App.game.battleTree.currentRun.nextStage()">Continue</button>
+            <div>
+                <!-- ko let: { autoSelectRandomModifier: Settings.getSetting('autoSelectRandomModifier') } -->
+                <label for="auto-select-random-modifier" data-bind="text: autoSelectRandomModifier.displayName"></label>
+                <label class="form-check-label toggler-wrapper style-1 float-right">
+                    <input class="form-check-input" type="checkbox" id="auto-select-random-modifier"
+                           data-bind="checked: autoSelectRandomModifier.observableValue">
+                    <div class="toggler-slider">
+                        <div class="toggler-knob"></div>
+                    </div>
+                </label>
+                <!-- /ko -->
+            </div>
+
+        </div>
         <!-- /ko -->
 
         <!-- ko if: App.game.battleTree.currentRun -->

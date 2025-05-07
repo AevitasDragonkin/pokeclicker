@@ -197,6 +197,7 @@ Settings.add(new Setting<string>('saveReminder', 'Save reminder interval (in gam
 Settings.add(new BooleanSetting('disableBlinking', 'Disable blinking animation after completing a Region', false));
 Settings.add(new BooleanSetting('disableAutoSave', 'Disable Auto Save', false, undefined, false));
 Settings.add(new Setting<number>('breedingQueueSizeSetting', 'Breeding Queue Size', [], -1, undefined, false));
+Settings.add(new BooleanSetting('autoSelectRandomModifier', 'Auto select random modifier', false));
 
 // Sound settings
 Object.values(NotificationConstants.NotificationSound).forEach((soundGroup) => {

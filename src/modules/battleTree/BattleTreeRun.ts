@@ -4,6 +4,7 @@ import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { BattleTreePokemon } from './BattleTreePokemon';
 import { BattleTreeController } from './BattleTreeController';
 import Rand from '../utilities/Rand';
+import Settings from '../settings';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -71,7 +72,16 @@ export class BattleTreeRun {
                     // TODO : BT : Give stage reward
                     this._state(BattleTreeRunState.REWARD);
 
-                    this.nextStage();
+                    if (this._stage() % 5 === 0 ) {
+                        if (Settings.getSetting('autoSelectRandomModifier').observableValue()) {
+                            // TODO : BT : Select a random modifier
+                            this.nextStage();
+                        } else {
+                            this._state(BattleTreeRunState.MODIFIER);
+                        }
+                    } else {
+                        this.nextStage();
+                    }
                 } else {
                     // TODO : BT : Give final reward
                     this._state(BattleTreeRunState.FINISHED);
