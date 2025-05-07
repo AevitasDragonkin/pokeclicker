@@ -45,12 +45,12 @@
                 <div class="card-header">Your Team</div>
                 <div class="card-body">
                     <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
-                    <div class="d-flex clickable" data-bind="
-                        css: { 'bg-info': $data.name === App.game.battleTree.currentRun.selectedPokemon },
-                        click: () => App.game.battleTree.currentRun.selectedPokemon = $data.name
-                    ">
+                    <div class="d-flex">
                         <div>
-                            <img width="56" height="56" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                            <img width="56" height="56" src="" alt="" data-bind="
+                                css: { 'battle-tree-pokemon-fainted': $data.hitPoints === 0 },
+                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                            ">
                             <div>Level <knockout data-bind="text: $data.level"></knockout></div>
                         </div>
                         <div class="flex-grow-1">
@@ -138,11 +138,11 @@
                 <tbody>
                 <tr>
                     <td class="text-left">Runtime</td>
-                    <td class="text-left tight"><code data-bind="text: GameConstants.formatSecondsToTime(App.game.battleTree.currentRun.runTime)"></code></td>
+                    <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.runTime)"></code></td>
                 </tr>
                 <tr>
                     <td class="text-left">Combat time</td>
-                    <td class="text-left tight"><code data-bind="text: GameConstants.formatSecondsToTime(App.game.battleTree.currentRun.combatTime)"></code></td>
+                    <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code></td>
                 </tr>
                 </tbody>
             </table>

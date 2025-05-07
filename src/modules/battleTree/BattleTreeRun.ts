@@ -156,6 +156,10 @@ export class BattleTreeRun {
     }
 
     set selectedPokemon(pokemon: PokemonNameType) {
+        if (this._selectedPokemon() === pokemon) {
+            return;
+        }
+
         this._selectedPokemon(pokemon);
 
         if (this.state === BattleTreeRunState.BATTLE) {
