@@ -9,6 +9,7 @@ export enum BattleTreeRunState {
     TEAM_SELECTION,
     BATTLE,
     REWARD,
+    MODIFIER,
     FINISHED,
 }
 

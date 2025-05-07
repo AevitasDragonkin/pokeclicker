@@ -3,8 +3,8 @@
 
         <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0;">Battle</h2>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 1rem; padding: 1rem; flex: 1;">
-            <!-- ko if: App.game.battleTree.currentRun?.battle -->
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.BATTLE && App.game.battleTree.currentRun?.battle -->
+        <div class="flex-grow-1" style="display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 1rem; padding: 1rem;">
             <div data-bind="with: App.game.battleTree.currentRun?.battle.pokemonA">
                 <img src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
                 <div class="progress">
@@ -46,8 +46,28 @@
                     </div>
                 </div>
             </div>
-            <!-- /ko -->
         </div>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
+        <div class="flex-grow-1">
+            <div>Stage: <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout></div>
+
+            <div>Team</div>
+            <div class="d-flex justify-content-center mb-2" style="gap: 1rem;">
+                <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                <div class="card" style="width: 75px; height: 75px;">
+                    <div class="card-body p-0 d-flex justify-content-center align-items-center">
+                        <img class="w-100 h-100" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.MODIFIER -->
+        <!-- /ko -->
 
         <!-- ko if: App.game.battleTree.currentRun -->
         <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0; font-size: 1rem;">
