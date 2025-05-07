@@ -1,4 +1,4 @@
-import { Observable, ObservableArray } from 'knockout';
+import { Observable, ObservableArray, PureComputed } from 'knockout';
 import { BattleTreeBattle, BattleTreeBattleWinner } from './BattleTreeBattle';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { BattleTreePokemon } from './BattleTreePokemon';
@@ -24,8 +24,11 @@ export class BattleTreeRun {
 
     private _selectedPokemon: Observable<PokemonNameType | null>;
 
+    public longListSelection: PureComputed<PokemonNameType[]> = ko.pureComputed(() => BattleTreeController.getLongListTeamSelection(this._seed(), 100));
+
     constructor() {
-        this._seed = ko.observable(0); // TODO : BT : Seed correctly
+        const now = new Date();
+        this._seed = ko.observable(Number((now.getFullYear() - 1900) * now.getDate() + 1000 * now.getMonth() + 100000 * now.getDate()));
         this._stage = ko.observable(0);
         this._state = ko.observable(BattleTreeRunState.TEAM_SELECTION);
 
@@ -80,7 +83,7 @@ export class BattleTreeRun {
     }
 
     public startRun(): void {
-        if (!this._selectedPokemon()) {
+        if (this._teamA().findIndex(p => p.name === this._selectedPokemon()) < 0) {
             this._selectedPokemon(this._teamA()[0].name);
         }
         this.nextStage();
@@ -95,8 +98,8 @@ export class BattleTreeRun {
 
     public fillPlayerATeamRandomly(): void {
         this._teamA.removeAll();
-        Rand.shuffleArray(App.game.party.caughtPokemon.map(p => p.name)).slice(0, 3 - this._teamA().length).forEach(p => {
-            this.addPokemonToPlayerATeam(p);
+        Rand.shuffleArray(this.longListSelection()).slice(0, 3).forEach(name => {
+            this.addPokemonToPlayerATeam(name);
         });
     }
 
@@ -105,6 +108,14 @@ export class BattleTreeRun {
         if (this._teamA().findIndex(p => p.name === pokemon) >= 0) return;
 
         this._teamA.push(new BattleTreePokemon({ name: pokemon, level: BattleTreeController.calculatePokemonLevelForPlayer(pokemon) }));
+    }
+
+    public removePokemonFromPlayerATeam(pokemon: PokemonNameType): void {
+        this._teamA.remove(this._teamA().find(p => p.name === pokemon));
+    }
+
+    get seed(): number {
+        return this._seed();
     }
 
     get stage(): number {
@@ -130,12 +141,14 @@ export class BattleTreeRun {
     set selectedPokemon(pokemon: PokemonNameType) {
         this._selectedPokemon(pokemon);
 
-        // Reset all attack counter when a player switches his pokemon
-        // Team B will not reset its attack counter
-        this._teamA().forEach(p => p.resetAttackCounter());
+        if (this.state === BattleTreeRunState.BATTLE) {
+            // Reset all attack counter when a player switches his pokemon
+            // Team B will not reset its attack counter
+            this._teamA().forEach(p => p.resetAttackCounter());
 
-        // Create a new battle with the selected pokemon and the first enemy in team B
-        this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.hitPoints > 0).name);
+            // Create a new battle with the selected pokemon and the first enemy in team B
+            this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.hitPoints > 0).name);
+        }
     }
 
     get battle(): BattleTreeBattle {

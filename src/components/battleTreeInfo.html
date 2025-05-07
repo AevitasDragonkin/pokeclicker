@@ -5,8 +5,40 @@
     </div>
 
     <div class="card-body">
+        <!-- Team Selection -->
+        <div data-bind="if: App.game.battleTree.currentRun?.state === BattleTreeRunState.TEAM_SELECTION">
+
+            <div class="d-flex justify-content-center mb-2" style="gap: 1rem;">
+                <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                <div class="card clickable" style="width: 75px; height: 75px;" data-bind="click: () => App.game.battleTree.currentRun.removePokemonFromPlayerATeam($data.name)">
+                    <div class="card-body p-0 d-flex justify-content-center align-items-center">
+                        <img class="w-100 h-100" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko foreach: new Array(3 - App.game.battleTree.currentRun.teamA.length).fill(0) -->
+                <div class="card" style="width: 75px; height: 75px;">
+                    <a class="card-body p-0 d-flex justify-content-center align-items-center" href="#battleTreeTeamSelectionModal" data-toggle="modal">
+                        <code>Empty</code>
+                    </a>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="d-flex justify-content-center" style="gap: 1rem;">
+                <button class="btn btn-secondary" data-bind="
+                    click: () => App.game.battleTree.currentRun.fillPlayerATeamRandomly(),
+                    enable: App.game.battleTree.currentRun.state === BattleTreeRunState.TEAM_SELECTION
+                ">
+                    Randomize
+                </button>
+            </div>
+
+        </div>
+
         <!-- Team Management -->
-        <div class="d-flex flex-wrap justify-content-center" data-bind="if: App.game.battleTree.currentRun">
+        <div class="d-flex flex-wrap justify-content-center" data-bind="if: App.game.battleTree.currentRun?.state !== BattleTreeRunState.TEAM_SELECTION">
             <!-- Your Team -->
             <div class="card flex-grow-1">
                 <div class="card-header">Your Team</div>
@@ -44,13 +76,6 @@
                         </div>
                     </div>
                     <!-- /ko -->
-
-                    <button class="btn btn-secondary" data-bind="
-                        click: () => App.game.battleTree.currentRun.fillPlayerATeamRandomly(),
-                        enable: App.game.battleTree.currentRun.state === BattleTreeRunState.TEAM_SELECTION
-                    ">
-                        Random fill
-                    </button>
                 </div>
             </div>
 
@@ -132,3 +157,53 @@
     </div>
 </div>
 <!-- /ko -->
+
+<div id="battleTreeTeamSelectionModal" aria-labelledby="battleTreeTeamSelectionModal" class="modal fade no-select" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header align-items-center">Select</div>
+
+            <div class="modal-body">
+                <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem;">
+                    <!-- ko foreach: App.game.battleTree.currentRun?.longListSelection().sort((a, b) => pokemonMap[a].id - pokemonMap[b].id).sort((a, b) => (+App.game.party.alreadyCaughtPokemonByName(b)) - (+App.game.party.alreadyCaughtPokemonByName(a))) ?? [] -->
+                    <!-- ko with: pokemonMap[$data] -->
+                    <a class="position-relative border" data-bind="
+                        enable: true,
+                        css: { 'border-info': App.game.battleTree.currentRun?.teamA.map(p => p.name).includes($data.name) },
+                        click: () => {
+                            if (!App.game.party.alreadyCaughtPokemonByName($data.name)) {
+                                return;
+                            }
+                            if (App.game.battleTree.currentRun?.teamA.map(p => p.name).includes($data.name)) {
+                                App.game.battleTree.currentRun?.removePokemonFromPlayerATeam($data.name)
+                            } else {
+                                App.game.battleTree.currentRun?.addPokemonToPlayerATeam($data.name)
+                            }
+                        }
+                    ">
+                        <div class="p-2">
+                            <div data-bind="style: { background: PokedexHelper.getBackgroundColors($data.name) }">
+                                <img width="96" height="96" style="object-fit: contain;" src="" alt="" data-bind="
+                                    css: {
+                                        'pokemon-not-seen': !PokedexHelper.pokemonSeen($data.id)(),
+                                        'pokemon-seen-but-not-caught': !App.game.party.alreadyCaughtPokemonByName($data.name) && PokedexHelper.pokemonSeen($data.id)()
+                                    },
+                                    attr: {
+                                        src: PokemonHelper.getImage($data.id)
+                                    }
+                                ">
+                            </div>
+                        </div>
+                        <span class="position-absolute px-1 text-truncate" style="color: #f5f5f5; background-color: rgba(0, 0, 0, .5); left: 0; right: 0; bottom: 0;" data-bind="text: PokemonHelper.displayName($data.name)"></span>
+                    </a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

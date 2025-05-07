@@ -12,6 +12,13 @@ export class BattleTreeController {
             .map(name => new BattleTreePokemon({ name, level: this.calculatePokemonLevelForStage(stage) }));
     }
 
+    public static getLongListTeamSelection(seed: number, amount: number): PokemonNameType[] {
+        BattleTreeRand.seed(seed);
+        return BattleTreeRand
+            .shuffleArray(pokemonMap.filter(p => p.nativeRegion >= 0 && p.nativeRegion <= player.highestRegion()).map(p => p.name))
+            .slice(0, amount);
+    }
+
     public static calculatePokemonLevelForStage(stage: number): number {
         // TODO : BT : Calculate proper level for provided stage
         return stage;
