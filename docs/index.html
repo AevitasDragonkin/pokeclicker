@@ -1033,12 +1033,20 @@
             </div>
             <div class="modal-body pt-0" style="background-color: inherit;">
                 <!-- ko foreach: { data: Object.entries(RouteInfo.pokemonList()), as: 'pokemons' } -->
-                <div class="bg-primary text-left rounded px-3 py-2 mb-1 d-flex align-items-center" data-toggle="collapse" data-bind="attr: { 'data-target': `#route-${pokemons[0]}` }">
+                <div class="bg-primary text-left rounded px-3 py-2 mt-1 d-flex align-items-center" data-toggle="collapse" data-bind="attr: { 'data-target': `#route-${pokemons[0]}` }">
                     <h5 class="my-0 mx-1 text-light d-inline-block" data-bind="text: (pokemons[0] == 'roamers' ? 'Roamers' : 'Encounters')">Roamer Status</h5>
                 </div>
                 <div class="collapse show" data-bind="attr: { 'id': `route-${pokemons[0]}` }">
                     <ul class="row justify-content-center w-100 p-0 m-0" data-bind="foreach: pokemons[1]">
-                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-bind="style:{background: PokedexHelper.getBackgroundColors($data.name)}">
+                        <li class="col-sm-4 col-md-3 col-lg-2 pokedexEntry" data-toggle="modal" href="#pokemonStatisticsModal" data-bind="style:{background: PokedexHelper.getBackgroundColors($data.name)},
+                            click: () => {
+                                if (PokedexHelper.pokemonSeen($data.id)()) {
+                                    App.game.statistics.selectedPokemonID($data.id);
+                                } else {
+                                    event.stopPropagation();
+                                }
+                            },
+                            css: { 'clickable': PokedexHelper.pokemonSeen($data.id)() }">
                             <span class="id pokedex-top-text" data-bind="text: ($data.id > 0 ? Math.floor($data.id) + '' : '???').padStart(3, 0)">number</span>
                             <div data-bind="visible: App.game.party.alreadyCaughtPokemonByName(name)" style="position: absolute;right: 2px;top: -15px;">
                                 <img width="18px" src="" data-bind="attr: { src: `assets/images/pokeball/Pokeball${App.game.party.alreadyCaughtPokemon($data.id, true) ? '-shiny' : ''}.svg`}"/>
@@ -1065,11 +1073,11 @@
                             <!-- /ko -->
                             <img src="" class="pokedex-pokemon-sprite" data-bind="css: { 'pokemon-not-seen': !PokedexHelper.pokemonSeen($data.id)(), 'pokemon-seen-but-not-caught': !App.game.party.alreadyCaughtPokemonByName(name) && PokedexHelper.pokemonSeen($data.id)() }, attr:{ src: PokemonHelper.getImage($data.id, undefined, undefined, GameConstants.ShadowStatus.None)}">
                             <span class="pokedex-bottom-text text-truncate px-1" data-bind="text: PokedexHelper.pokemonSeen($data.id)() ? PokemonHelper.displayName($data.name) : '???',
-                            tooltip: {
+                            tooltip: PokedexHelper.pokemonSeen($data.id)() ? {
                                 title: PokemonHelper.displayName($data.name),
                                 trigger: 'hover',
                                 placement: 'bottom'
-                            }">name</span>
+                            } : null">name</span>
                         </li>
                     </ul>
                 </div>
@@ -1088,7 +1096,7 @@
             </div>
             <div class="modal-body pt-0" style="background-color: inherit;">
                 <!-- ko foreach: { data: Object.entries(DungeonInfo.getLootList()), as: 'lootEntries' } -->
-                <div class="bg-primary text-left rounded px-3 py-2 mb-1 d-flex align-items-center" data-toggle="collapse" data-bind="attr: { 'data-target': `#tier-${lootEntries[0]}` }">
+                <div class="bg-primary text-left rounded px-3 py-2 mt-1 d-flex align-items-center" data-toggle="collapse" data-bind="attr: { 'data-target': `#tier-${lootEntries[0]}` }">
                     <img width="42px" data-bind="attr: { src: `assets/images/dungeons/chest-${lootEntries[0]}.png` }" />
                     <h5 class="my-0 mx-1 text-light d-inline-block" data-bind="text: GameConstants.camelCaseToString(lootEntries[0])">Tier name</h5>
                 </div>
@@ -1097,23 +1105,25 @@
                         <div class="row justify-content-center">
                             <!-- ko foreach: { data: lootEntries[1], as: 'item' } -->
                             <div class="col-6 col-lg-4 mb-2">
-                                <!-- ko using: PokemonHelper.getPokemonByName(item.loot).name != 'MissingNo.' && !App.game.party.getPokemonByName(item.loot), as: 'isPokemonAndNotCaught' -->
-                                    <!-- ko using: isPokemonAndNotCaught ? '???' : DungeonInfo.getLootName(item.loot), as: 'lootName' -->
-                                        <div class="btn btn-secondary px-1 py-0 d-flex align-items-center text-left" style="cursor: default;">
-                                            <img width="42px" data-bind="attr: { src: DungeonInfo.getLootImage(item.loot) },
-                                                style: { 'filter': isPokemonAndNotCaught ? 'brightness(0)' : '' }">
-                                            <div class="flex-grow-1 small ml-2" style="min-width: 0;">
-                                                <div class="text-truncate" data-bind="text: lootName"></div>
-                                            </div>
-                                            <img width="24px" class="lock" src="assets/images/breeding/lock.svg" data-bind="
-                                            tooltip: {
-                                                title: item.requirement?.hint() || '',
-                                                placement: 'bottom',
-                                                trigger: 'hover'
-                                            }, visible: item.requirement && !item.requirement.isCompleted()" />
-                                        </div>
-                                    <!-- /ko -->
-                                <!-- /ko -->
+                                <div class="btn btn-secondary px-1 py-0 d-flex align-items-center text-left" style="cursor: default;">
+                                    <img width="42px" data-bind="attr: { src: DungeonInfo.getLootImage(item.loot) }">
+                                    <div class="flex-grow-1 small ml-2" style="min-width: 0;">
+                                        <div class="text-truncate" data-bind="text: DungeonInfo.getLootName(item.loot)"></div>
+                                    </div>
+                                    <img width="24px" class="lock" src="assets/images/breeding/lock.svg" data-bind="
+                                    tooltip: {
+                                        title: item.requirement?.hint() || '',
+                                        placement: 'bottom',
+                                        trigger: 'hover'
+                                    }, visible: item.requirement && !item.requirement.isCompleted()" />
+                                    <knockout class="h4 text-success no-emoji-font mr-2 mb-0 align-self-center" data-bind="
+                                        visible: DungeonRunner.isDungeonDebuffed(player.town.dungeon) && item.ignoreDebuff && (item.requirement?.isCompleted() ?? true),
+                                        tooltip: {
+                                            title: 'The odds for this item are preserved despite the dungeon being debuffed.',
+                                            trigger: 'hover',
+                                        }">⚠
+                                    </knockout>
+                                </div>
                             </div>
                             <!-- /ko -->
                         </div>
@@ -1957,7 +1967,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 <!--Use the base battle layout for fighting, dungeons and battle frontier.-->
 
                 <div class="battle-view card-body p-0 justify-content-center no-gutters no-select"
-                    data-bind="if: (App.game.gameState === GameConstants.GameState.fighting || App.game.gameState === GameConstants.GameState.dungeon || App.game.gameState === GameConstants.GameState.paused || App.game.gameState === GameConstants.GameState.town || App.game.gameState === GameConstants.GameState.gym || App.game.gameState == GameConstants.GameState.battleFrontier || App.game.gameState == GameConstants.GameState.temporaryBattle),
+                    data-bind="if: (App.game.gameState === GameConstants.GameState.fighting || App.game.gameState === GameConstants.GameState.dungeon || App.game.gameState === GameConstants.GameState.paused || App.game.gameState === GameConstants.GameState.town || App.game.gameState === GameConstants.GameState.gym || App.game.gameState == GameConstants.GameState.battleFrontier || App.game.gameState == GameConstants.GameState.temporaryBattle || App.game.gameState == GameConstants.GameState.battleTree),
                         class: MapHelper.calculateBattleCssClass()">
 
                     <!-- Route Battles -->
@@ -2438,6 +2448,104 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 </div>
 
 
+                    <!-- Battle Tree Battles -->
+                    <div class="" data-bind="if: App.game.gameState == GameConstants.GameState.battleTree">
+    <div class="d-flex flex-column" style="height: 280px; display: block;">
+
+        <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0;">Battle</h2>
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.BATTLE && App.game.battleTree.currentRun?.battle -->
+        <div class="flex-grow-1" style="display: grid; grid-template-columns: auto 1fr 1fr auto; align-items: center; gap: 1rem; padding: 1rem;">
+            <div class="d-flex flex-column justify-content-center" style="padding: 0.25rem; gap: 0.25rem; background-color: rgba(0,0,0,50%);">
+                <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
+                        click: () => {
+                            if ($data.hitPoints > 0) {
+                                App.game.battleTree.currentRun.selectedPokemon = $data.name
+                            }
+                        },
+                        css: {
+                            'clickable': $data.hitPoints > 0,
+                            'battle-tree-pokemon-fainted': $data.hitPoints === 0,
+                        },
+                        attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                    ">
+                <!-- /ko -->
+            </div>
+
+            <div data-bind="with: App.game.battleTree.currentRun?.battle.pokemonA">
+                <img src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
+                <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                        css: {
+                            'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
+                            'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
+                            'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                        },
+                        style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                    ">
+                        <!-- ko if: $data.hitPoints > 0 -->
+                        <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                        <!-- /ko -->
+                        <!-- ko ifnot: $data.hitPoints > 0 -->
+                        <span class="font-italic">Fainted</span>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+
+            <div data-bind="with: App.game.battleTree.currentRun?.battle.pokemonB">
+                <img src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
+                <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                        css: {
+                            'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
+                            'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
+                            'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                        },
+                        style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                    ">
+                        <!-- ko if: $data.hitPoints > 0 -->
+                        <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                        <!-- /ko -->
+                        <!-- ko ifnot: $data.hitPoints > 0 -->
+                        <span class="font-italic">Fainted</span>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column justify-content-center" style="padding: 0.25rem; gap: 0.25rem; background-color: rgba(0,0,0,50%);">
+                <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
+                <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
+                        css: { 'battle-tree-pokemon-fainted': $data.hitPoints === 0 },
+                        attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                    ">
+                <!-- /ko -->
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
+        <div class="flex-grow-1"></div>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.MODIFIER -->
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun -->
+        <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0; font-size: 1rem;">
+            <knockout>
+                Stage <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout> - <code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code>
+            </knockout>
+        </h2>
+        <!-- /ko -->
+    </div>
+</div>
+
+
                     <!--TownView-->
                     <knockout data-bind="if: App.game.gameState === GameConstants.GameState.town">
 <div id="townView" data-bind="style: { backgroundImage: `url('assets/images/towns/${player.town.name.replace(/'/, `\\'`)}.png')` }"
@@ -2487,8 +2595,9 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
                 <div class="title-right" data-bind="if: isDungeon && QuestLineHelper.isQuestLineCompleted('Tutorial Quests')">
                     <div class="d-flex ml-auto">
-                        <knockout class="h4 text-danger no-emoji-font mr-2 mb-0 align-self-center" data-bind="
+                        <knockout class="h4 no-emoji-font mr-2 mb-0 align-self-center" data-bind="
                             visible: DungeonRunner.isDungeonDebuffed(player.town.dungeon),
+                            class: Object.values(player.town.dungeon.lootTable).flat().find(l => l.ignoreDebuff && (l.requirement?.isCompleted() ?? true)) ? 'text-warning' : 'text-danger',
                             tooltip: {
                                 title: 'This dungeon is debuffed and will be significantly less likely to drop Epic, Legendary, and Mythic loot.',
                                 trigger: 'hover',
@@ -2767,6 +2876,274 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
     <!-- /ko -->
 </div>
 <!-- /ko -->
+
+
+            <!-- Battle Tree Information Container  -->
+            <!-- ko if: App.game.gameState === GameConstants.GameState.battleTree -->
+<div id="battleTreeInformation" class="card sortable-disabled border-secondary mb-3 battle-frontier no-select">
+    <div class="card-header p-0">
+        <span>Battle Tree</span>
+    </div>
+
+    <div class="card-body">
+        <!-- Team Selection -->
+        <div data-bind="if: App.game.battleTree.currentRun?.state === BattleTreeRunState.TEAM_SELECTION">
+
+            <div class="d-flex justify-content-center mb-2" style="gap: 1rem;">
+                <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                <div class="card clickable" style="width: 75px; height: 75px;" data-bind="click: () => App.game.battleTree.currentRun.removePokemonFromPlayerATeam($data.name)">
+                    <div class="card-body p-0 d-flex justify-content-center align-items-center">
+                        <img class="w-100 h-100" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko foreach: new Array(3 - App.game.battleTree.currentRun.teamA.length).fill(0) -->
+                <div class="card" style="width: 75px; height: 75px;">
+                    <a class="card-body p-0 d-flex justify-content-center align-items-center" href="#battleTreeTeamSelectionModal" data-toggle="modal">
+                        <code>Empty</code>
+                    </a>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="d-flex justify-content-center" style="gap: 1rem;">
+                <button class="btn btn-secondary" data-bind="
+                    click: () => App.game.battleTree.currentRun.fillPlayerATeamRandomly(),
+                    enable: App.game.battleTree.currentRun.state === BattleTreeRunState.TEAM_SELECTION
+                ">
+                    Randomize
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Team Management -->
+        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.REWARD].includes(App.game.battleTree.currentRun.state) -->
+        <div class="d-flex flex-wrap justify-content-center">
+            <!-- Your Team -->
+            <div class="card flex-grow-1">
+                <div class="card-header">Your Team</div>
+                <div class="card-body">
+                    <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                    <div class="d-flex">
+                        <div>
+                            <img width="56" height="56" src="" alt="" data-bind="
+                                css: { 'battle-tree-pokemon-fainted': $data.hitPoints === 0 },
+                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                            ">
+                            <div>Level <knockout data-bind="text: $data.level"></knockout></div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
+                            <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                    css: {
+                                        'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
+                                        'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
+                                        'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                                    },
+                                    style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                                ">
+                                    <!-- ko if: $data.hitPoints > 0 -->
+                                    <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                    <!-- /ko -->
+                                    <!-- ko ifnot: $data.hitPoints > 0 -->
+                                    <span class="font-italic">Fainted</span>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <!-- Opponent -->
+            <div class="card flex-grow-1">
+                <div class="card-header">Opponent</div>
+                <div class="card-body">
+                    <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
+                    <div class="d-flex">
+                        <div>
+                            <img width="56" height="56" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                            <div>Level <knockout data-bind="text: $data.level"></knockout></div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
+                            <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div class="progress">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                    css: {
+                                        'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
+                                        'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
+                                        'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                                    },
+                                    style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                                ">
+                                    <!-- ko if: $data.hitPoints > 0 -->
+                                    <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                    <!-- /ko -->
+                                    <!-- ko ifnot: $data.hitPoints > 0 -->
+                                    <span class="font-italic">Fainted</span>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
+        <div>
+            <div>Stage: <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout></div>
+
+            <div>Team</div>
+            <div class="d-flex justify-content-center mb-2" style="gap: 1rem;">
+                <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                <div class="card" style="width: 75px; height: 75px;">
+                    <div class="card-body p-0 d-flex justify-content-center align-items-center">
+                        <img class="w-100 h-100" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <table class="table table-striped table-hover table-bordered table-sm m-0">
+                <tbody>
+                <tr>
+                    <td class="text-left">Runtime</td>
+                    <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.runTime)"></code></td>
+                </tr>
+                <tr>
+                    <td class="text-left">Combat time</td>
+                    <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- /ko -->
+
+
+        <!-- ko if: App.game.battleTree.currentRun === null -->
+        <button class="btn btn-block btn-success text-light" data-bind="
+            click: () => App.game.battleTree.createNewBattleTreeRun()
+        ">
+            Enter
+        </button>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.TEAM_SELECTION -->
+        <button class="btn btn-block btn-success text-light" data-bind="
+            click: () => App.game.battleTree.currentRun.startRun(),
+            enable: App.game.battleTree.currentRun.teamA.length > 0
+        ">
+            Start
+        </button>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun && App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
+        <button class="btn btn-block btn-success text-light" data-bind="
+            click: () => App.game.battleTree.createNewBattleTreeRun()
+        ">
+            New run
+        </button>
+        <!-- /ko -->
+
+        <!-- ko if: App.game.battleTree.currentRun && App.game.battleTree.currentRun?.state !== BattleTreeRunState.FINISHED -->
+        <button class="btn btn-block btn-danger text-light" data-bind="
+            click: () => App.game.battleTree.abortRun()
+        ">
+            Abort
+        </button>
+        <!-- /ko -->
+
+        <button class="btn btn-block btn-danger text-light" data-bind="
+            click: () => App.game.battleTree.leave()
+        ">
+            Leave
+        </button>
+    </div>
+</div>
+<!-- /ko -->
+
+<div id="battleTreeTeamSelectionModal" aria-labelledby="battleTreeTeamSelectionModal" class="modal fade no-select" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header align-items-center">Select</div>
+
+            <div class="modal-body">
+                <p>Every day, a new selection of pokemon will be available for you to create your team from.</p>
+                <h3>Available pokemon</h3>
+                <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem;">
+                    <!-- ko foreach: App.game.battleTree.currentRun?.longListSelection().filter(name => App.game.party.alreadyCaughtPokemonByName(name)).sort((a, b) => pokemonMap[a].id - pokemonMap[b].id) ?? [] -->
+                    <!-- ko with: pokemonMap[$data] -->
+                    <a class="position-relative border" data-bind="
+                        enable: true,
+                        css: { 'border-info': App.game.battleTree.currentRun?.teamA.map(p => p.name).includes($data.name) },
+                        click: () => {
+                            if (!App.game.party.alreadyCaughtPokemonByName($data.name)) {
+                                return;
+                            }
+                            if (App.game.battleTree.currentRun?.teamA.map(p => p.name).includes($data.name)) {
+                                App.game.battleTree.currentRun?.removePokemonFromPlayerATeam($data.name)
+                            } else {
+                                App.game.battleTree.currentRun?.addPokemonToPlayerATeam($data.name)
+                            }
+                        }
+                    ">
+                        <div class="p-2">
+                            <div data-bind="style: { background: PokedexHelper.getBackgroundColors($data.name) }">
+                                <img width="96" height="96" style="object-fit: contain;" src="" alt="" data-bind="
+                                    attr: {
+                                        src: PokemonHelper.getImage($data.id)
+                                    }
+                                ">
+                            </div>
+                        </div>
+                        <span class="position-absolute px-1 text-truncate" style="color: #f5f5f5; background-color: rgba(0, 0, 0, .5); left: 0; right: 0; bottom: 0;" data-bind="text: PokemonHelper.displayName($data.name)"></span>
+                    </a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                </div>
+
+                <h3>Not available pokemon</h3>
+                <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem;">
+                    <!-- ko foreach: App.game.battleTree.currentRun?.longListSelection().filter(name => !App.game.party.alreadyCaughtPokemonByName(name)).sort((a, b) => pokemonMap[a].id - pokemonMap[b].id) ?? [] -->
+                    <!-- ko with: pokemonMap[$data] -->
+                    <a class="position-relative border">
+                        <div class="p-2">
+                            <div>
+                                <img width="96" height="96" style="object-fit: contain;" src="" alt="" data-bind="
+                                    css: {
+                                        'pokemon-not-seen': !PokedexHelper.pokemonSeen($data.id)(),
+                                        'pokemon-seen-but-not-caught': !App.game.party.alreadyCaughtPokemonByName($data.name) && PokedexHelper.pokemonSeen($data.id)()
+                                    },
+                                    attr: {
+                                        src: PokemonHelper.getImage($data.id)
+                                    }
+                                ">
+                            </div>
+                        </div>
+                        <span class="position-absolute px-1 text-truncate" style="color: #f5f5f5; background-color: rgba(0, 0, 0, .5); left: 0; right: 0; bottom: 0;" data-bind="text: !PokedexHelper.pokemonSeen($data.id)() ? '???' : PokemonHelper.displayName($data.name)"></span>
+                    </a>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
             <div id="middle-bottom-sort-column">
@@ -58952,7 +59329,7 @@ aria-labelledby="AchievementsModalLabel" aria-hidden="true">
                 <span class="text-muted">Help make Pokeclicker even better! Contribute to the project by sharing your ideas on our Github: <a href="https://github.com/pokeclicker/pokeclicker" target="_blank">https://github.com/pokeclicker/pokeclicker</a></span>
 
                 <p><h5 class="text-primary"><strong>Subreddit:</strong></h5></p>
-                <span class="text-muted">Check out some of the trending posts from the PokéClicker community: <a href="https://pokeclicker.reddit.com" target="_blank">https://pokeclicker.reddit.com</a></span>
+                <span class="text-muted">Check out some of the trending posts from the PokéClicker community: <a href="https://www.reddit.com/r/PokeClicker/" target="_blank">https://www.reddit.com/r/PokeClicker/</a></span>
 
                 <p><h5 class="text-primary"><strong>Wiki:</strong></h5></p>
                 <span class="text-muted">Check out the community wiki to learn more information about PokéClicker: <a href="https://wiki.pokeclicker.com/" target="_blank">https://wiki.pokeclicker.com/</a></span>
@@ -63848,7 +64225,7 @@ aria-labelledby="badgeCaseModalLabel">
                                     attr: { disabled: player.region == GameConstants.Region[$data] }'>
                                     <img style="position:absolute; left: 10px;" data-bind="visible: player.region == GameConstants.Region[$data], attr: { src: `assets/images/profile/trainer-${App.game.profile.trainer() || 0}.png` }"/> <knockout data-bind="text: GameConstants.camelCaseToString($data)">Region</knockout>
                                 </button>
-                                <!-- ko using: Weather.getRegionalWeather(GameConstants.Region[$data]), as: 'weatherType' -->
+                                <!-- ko using: Weather.regionalWeather[GameConstants.Region[$data]], as: 'weatherType' -->
                                 <button class="btn btn-weather-dock" style="right: 0px; top: 0px; width: auto; padding: 0 4px;"
                                     data-bind='style: { background: Weather.weatherConditions[weatherType].color },
                                         tooltip: {
@@ -65158,170 +65535,59 @@ aria-labelledby="purifyChamberModalLabel">
 <div class="modal fade" id="weatherAppModal" tabindex="-1" role="dialog" aria-labelledby="weatherAppModal">
     <div class="modal-dialog modal-dialog-scrollable modal-lg h-100" role="document">
         <div class="modal-content">
-            <div class="modal-header p-0">
-                <ul class="nav nav-tabs nav-fill w-100">
-                    <li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#castform-app">Castform App</a></li>
-                    <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#weather-override">Weather Override</a></li>
-                    <li class="d-block"><button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 18px; font-weight: 700;">×</button></li>
-                </ul>
+            <div class="modal-header">
+                <h4 class="modal-title">Castform App</h4>
+                <div style="width: 100px;">
+                    <!-- ko using: GameHelper.enumNumbers(GameConstants.Region).filter((r) => r >= 0 && r <= player.highestRegion()), as: 'regions' -->
+                    <select class="custom-select" onchange="WeatherApp.selectedRegion(+this.value);">
+                        <!-- ko foreach: regions -->
+                        <option data-bind="attr: { value: $data, selected: WeatherApp.selectedRegion() === $data }, text: GameConstants.camelCaseToString(GameConstants.Region[$data])"></option>
+                        <!-- /ko -->
+                    </select>
+                    <!-- /ko -->
+                </div>
             </div>
-
-            <div class="modal-body tab-content">
-                <div id="castform-app" class="tab-pane fade in active show">
-                    <div class="container">
-                        <div class="row mb-2">
-                            <!-- ko using: GameHelper.enumNumbers(GameConstants.Region).filter((r) => r >= 0 && r <= player.highestRegion()), as: 'regions' -->
-                            <select class="custom-select" onchange="WeatherApp.selectedRegion(+this.value);">
-                                <!-- ko foreach: regions -->
-                                <option data-bind="attr: { value: $data, selected: WeatherApp.selectedRegion() === $data }, text: GameConstants.camelCaseToString(GameConstants.Region[$data])"></option>
-                                <!-- /ko -->
-                            </select>
-                            <!-- /ko -->
-                        </div>
-                        <div class="row m-0 w-100 h-100">
-                            <div class="col-2 w-100 px-0" id="timeTable">
-                                <table class="w-100 h-100" border="1">
-                                    <thead>
-                                    <tr>
-                                        <th style="height: 26px;">Time</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody data-bind="foreach: WeatherApp.generateHourList()">
-                                    <tr>
-                                        <td style="height: 60px;" data-bind="text: `${GameHelper.twoDigitNumber(+$data)}:00 - ${GameHelper.twoDigitNumber(+$data + (Weather.period - 1))}:59`"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-10 w-100 px-0 overflow-auto" id="forecastTable">
-                                <table class="w-100 h-100" border="1">
-                                    <thead>
-                                    <tr>
-                                        <!-- ko foreach: WeatherApp.dateList() -->
-                                        <th style="height: 26px;" data-bind="text: GameConstants.DayOfWeek[$data.getDay()].slice(0, 3),
+            <div class="modal-body">
+                <div class="row m-0 w-100 h-100">
+                    <div class="col-2 w-100 px-0" id="timeTable">
+                        <table class="w-100 h-100" border="1">
+                            <thead>
+                                <tr>
+                                    <th style="height: 26px;">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: WeatherApp.generateHourList()">
+                                <tr>
+                                    <td style="height: 60px;" data-bind="text: `${GameHelper.twoDigitNumber(+$data)}:00 - ${GameHelper.twoDigitNumber(+$data + (Weather.period - 1))}:59`"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-10 w-100 px-0 overflow-auto" id="forecastTable">
+                        <table class="w-100 h-100" border="1">
+                            <thead>
+                                <tr>
+                                    <!-- ko foreach: WeatherApp.dateList() -->
+                                    <th style="height: 26px;" data-bind="text: GameConstants.DayOfWeek[$data.getDay()].slice(0, 3),
                                         tooltip: {
                                             title: $data.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
                                             placement: 'bottom',
                                             trigger: 'hover',
                                             boundary: 'window',
                                         }">
-                                        </th>
-                                        <!-- /ko -->
-                                    </tr>
-                                    </thead>
-                                    <tbody data-bind="foreach: { data: WeatherApp.fullForecast().find((rf) => rf.region == WeatherApp.selectedRegion()).weatherForecastList(), as: 'hourForecast' }">
-                                    <tr class="py-2" data-bind="template: { name: 'weatherAppTemplate', data: {'hourForecast': hourForecast, 'region': WeatherApp.selectedRegion()} }"></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                    </th>
+                                    <!-- /ko -->
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: { data: WeatherApp.fullForecast().find((rf) => rf.region == WeatherApp.selectedRegion()).weatherForecastList(), as: 'hourForecast' }">
+                                <tr class="py-2" data-bind="template: { name: 'weatherAppTemplate', data: {'hourForecast': hourForecast, 'region': WeatherApp.selectedRegion()} }"></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-                <div id="weather-override" class="tab-pane fade">
-                    <div class="d-flex flex-wrap justify-content-center" style="gap: 1rem;">
-                        <!-- ko foreach: [...new Set(Object.values(WeatherOverride.weatherCost).flatMap(value => value).map(value => value.item.name))] -->
-                        <div class="d-flex flex-column align-items-center">
-                            <img class="pixelated" src="" alt="" style="height: 26px;" data-bind="attr: { src: ItemList[$data].image }">
-                            <div class="small" data-bind="text: `${ItemList[$data].displayName}`"></div>
-                            <div class="small" data-bind="text: `[${player.itemList[$data]().toLocaleString('en-US')}]`"></div>
-                        </div>
-                        <!-- /ko -->
-                    </div>
-
-                    <hr>
-
-                    <div class="mb-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.25rem;">
-                        <!-- ko foreach: GameHelper.enumNumbers(GameConstants.Region).filter(r => r >= 0 && r <= GameConstants.MAX_AVAILABLE_REGION) -->
-                        <button class="btn btn-secondary position-relative" data-bind="
-                            css: { 'btn-info': $data === WeatherOverride.selectedRegion },
-                            click: () => { WeatherOverride.selectedRegion = $data }
-                        ">
-                            <knockout data-bind="text: GameConstants.camelCaseToString(GameConstants.Region[$data])"></knockout>
-                        </button>
-                        <!-- /ko -->
-                    </div>
-
-                    <h4>Cycles</h4>
-
-                    <div class="row align-items-center">
-                        <div class="col-12 col-md-9">
-                            <div class="input-group">
-                                <button class="btn btn-warning btn-outline-dark smallButton smallFont" data-bind="click: () => WeatherOverride.selectedCycles = 1">Reset</button>
-                                <input type="number" min="1" class="outline-dark form-control form-control-number" oninput="this.value = Math.max(this.value, 1)" data-bind="textInput: WeatherOverride.selectedCycles">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-3">Time: <code data-bind="text: GameConstants.formatTime(WeatherOverride.CYCLE_TIME * WeatherOverride.selectedCycles)"></code></div>
-                    </div>
-
-                    <div class="small">1 cycle equals <code data-bind="text: GameConstants.formatTime(WeatherOverride.CYCLE_TIME)"></code></div>
-
-                    <!-- ko if: (App.game.weatherOverride.getTimeForRegion(WeatherOverride.selectedRegion) ?? 0) > 0 -->
-                    <div class="m-2">
-                        Current weather override active for <code data-bind="text: GameConstants.formatTime(App.game.weatherOverride.getTimeForRegion(WeatherOverride.selectedRegion) ?? 0)"></code>
-                    </div>
-                    <!-- /ko -->
-
-                    <table class="table table-striped table-hover table-bordered table-sm table-responsive m-0 mb-2">
-                        <tbody>
-                        <!-- ko foreach: { data: App.game.weatherOverride.getAllowedWeather(WeatherOverride.selectedRegion), as: 'weatherType' } -->
-                        <tr data-bind="
-                            css: {
-                                'override-weather-highlight': weatherType === App.game.weatherOverride.getWeatherForRegion(WeatherOverride.selectedRegion),
-                                'original-weather-highlight': weatherType === Weather._regionalWeather[WeatherOverride.selectedRegion]()
-                            }
-                        ">
-                            <td class="vertical-middle" data-bind="style: { background: Weather.weatherConditions[weatherType].color }">
-                                <img width=30px src="" data-bind="attr: { src: `assets/images/weather/${WeatherType[weatherType]}.png` }"/>
-                            </td>
-                            <td class="vertical-middle text-left" data-bind="text: GameConstants.humanifyString(WeatherType[weatherType])"></td>
-                            <td class="vertical-middle text-left" data-bind="html: Weather.weatherConditions[weatherType].tooltip"></td>
-                            <td class="vertical-middle">
-                                <!-- ko foreach: WeatherOverride.weatherCost[weatherType] -->
-                                <div class="d-flex" style="gap: 1rem;">
-                                    <div><img data-bind="attr: { src: $data.item.image }" height="24px"></div>
-                                    <div class="text-left" data-bind="
-                                        text: `${App.game.weatherOverride.calculatePrice(WeatherOverride.selectedRegion, $data.amount, WeatherOverride.selectedCycles).toLocaleString('en-US')} × ${$data.item.displayName}`,
-                                        css: { 'text-danger': App.game.weatherOverride.calculatePrice(WeatherOverride.selectedRegion, $data.amount, WeatherOverride.selectedCycles) > player.itemList[$data.item.name]() }
-                                    "></div>
-                                </div>
-                                <!-- /ko -->
-                            </td>
-                            <td class="vertical-middle">
-                                <!-- ko if: weatherType === Weather.getRegionalWeather(WeatherOverride.selectedRegion) -->
-                                    <!-- ko if: weatherType === App.game.weatherOverride.getWeatherForRegion(WeatherOverride.selectedRegion) -->
-                                    <button class="btn btn-secondary" data-bind="
-                                        click: () => { App.game.weatherOverride.purchaseWeatherOverride(WeatherOverride.selectedRegion, weatherType, WeatherOverride.selectedCycles) },
-                                        enable: App.game.weatherOverride.canAffordWeather(WeatherOverride.selectedRegion, weatherType, WeatherOverride.selectedCycles)
-                                    ">
-                                        Extend
-                                    </button>
-                                    <!-- /ko -->
-
-                                    <!-- ko ifnot: weatherType === App.game.weatherOverride.getWeatherForRegion(WeatherOverride.selectedRegion) -->
-                                    <code>Active weather</code>
-                                    <!-- /ko -->
-                                <!-- /ko -->
-
-                                <!-- ko ifnot: weatherType === Weather.getRegionalWeather(WeatherOverride.selectedRegion) -->
-                                <button class="btn btn-secondary" data-bind="
-                                    click: () => { App.game.weatherOverride.purchaseWeatherOverride(WeatherOverride.selectedRegion, weatherType, WeatherOverride.selectedCycles) },
-                                    enable: App.game.weatherOverride.canAffordWeather(WeatherOverride.selectedRegion, weatherType, WeatherOverride.selectedCycles)
-                                ">
-                                    Activate
-                                </button>
-                                <!-- /ko -->
-                            </td>
-                        </tr>
-                        <!-- /ko -->
-                        </tbody>
-                    </table>
-
-                    <div class="row">
-                        <div class="col-12 col-md-6 p-2 original-weather-highlight">Regional weather</div>
-                        <div class="col-12 col-md-6 p-2 override-weather-highlight">Override weather</div>
-                    </div>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
