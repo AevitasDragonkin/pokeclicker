@@ -2,6 +2,7 @@ import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { Observable, PureComputed } from 'knockout';
 import { pokemonMap } from '../pokemons/PokemonList';
 import TypeHelper from '../types/TypeHelper';
+import PokemonType from '../enums/PokemonType';
 
 type BattleTreePokemonProperties = {
     name: PokemonNameType;
@@ -39,15 +40,30 @@ export class BattleTreePokemon {
     public attackTarget(target: BattleTreePokemon): void {
         while (this.canAttack) {
             const power: number = 40;
-            const type1Eff: number = TypeHelper.typeMatrix[pokemonMap[this.name].type[0]][pokemonMap[target.name].type[0]];
-            const type2Eff: number = TypeHelper.typeMatrix[pokemonMap[this.name].type[0]][pokemonMap[target.name].type[1] ?? pokemonMap[target.name].type[0]];
 
-            const damage = Math.floor(((2 * this.level / 5 + 2) * power * this.attack / target.defense / 50 + 2) * type1Eff * type2Eff);
+            const typeEfficiency = this.getBestTypeEfficiency(
+                pokemonMap[this.name].type[0],
+                pokemonMap[this.name].type[1],
+                pokemonMap[target.name].type[0],
+                pokemonMap[target.name].type[1],
+            );
+
+            const damage = Math.floor(((2 * this.level / 5 + 2) * power * this.attack / target.defense / 50 + 2) * typeEfficiency);
 
             target.takeDamage(damage);
 
             this._attackCounter -= 1 / this.attacksPerSecond;
         }
+    }
+
+    private getBestTypeEfficiency(attackerTypeA: PokemonType, attackerTypeB: PokemonType, defenderTypeA: PokemonType, defenderTypeB: PokemonType): number {
+        attackerTypeB = attackerTypeB ?? attackerTypeA;
+        defenderTypeB = defenderTypeB ?? defenderTypeA;
+
+        return Math.max(
+            TypeHelper.typeMatrix[attackerTypeA][defenderTypeA] * TypeHelper.typeMatrix[attackerTypeA][defenderTypeB],
+            TypeHelper.typeMatrix[attackerTypeB][defenderTypeA] * TypeHelper.typeMatrix[attackerTypeB][defenderTypeB],
+        );
     }
 
     public takeDamage(damage: number): void {
