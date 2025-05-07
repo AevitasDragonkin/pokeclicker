@@ -33,6 +33,7 @@ export class BattleTreeController {
         return stage;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static calculatePokemonLevelForPlayer(pokemon: PokemonNameType): number {
         // TODO : BT : Calculate proper level for the player's pokemon
         return 100;
