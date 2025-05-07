@@ -18,6 +18,8 @@ export class BattleTreeRun {
     private _state: Observable<BattleTreeRunState>;
 
     private _battle: Observable<BattleTreeBattle | null>;
+    private _runTimer: Observable<number>;
+    private _combatTimer: Observable<number>;
 
     private _teamA: ObservableArray<BattleTreePokemon>;
     private _teamB: ObservableArray<BattleTreePokemon>;
@@ -33,6 +35,8 @@ export class BattleTreeRun {
         this._state = ko.observable(BattleTreeRunState.TEAM_SELECTION);
 
         this._battle = ko.observable(null);
+        this._runTimer = ko.observable(0);
+        this._combatTimer = ko.observable(0);
 
         this._teamA = ko.observableArray();
         this._teamB = ko.observableArray();
@@ -41,6 +45,8 @@ export class BattleTreeRun {
     }
 
     public update(delta: number): void {
+        this.updateTimers(delta);
+
         if (this.state === BattleTreeRunState.BATTLE) {
             this._battle()?.update(delta);
 
@@ -69,6 +75,16 @@ export class BattleTreeRun {
                     this._state(BattleTreeRunState.FINISHED);
                 }
             }
+        }
+    }
+
+    private updateTimers(delta: number): void {
+        if (this.state === BattleTreeRunState.BATTLE) {
+            this._combatTimer(this._combatTimer() + delta);
+        }
+
+        if (this.state !== BattleTreeRunState.FINISHED) {
+            this._runTimer(this._runTimer() + delta);
         }
     }
 
@@ -155,6 +171,14 @@ export class BattleTreeRun {
         return this._battle();
     }
 
+    get runTime(): number {
+        return this._runTimer();
+    }
+
+    get combatTime(): number {
+        return this._combatTimer();
+    }
+
     toJSON(): Record<string, any> {
         return {
             seed: this._seed(),
@@ -164,6 +188,8 @@ export class BattleTreeRun {
                 pokemonA: this._battle().pokemonA.name,
                 pokemonB: this._battle().pokemonB.name,
             } : undefined,
+            runTime: this._runTimer(),
+            combatTime: this._combatTimer(),
             teamA: this._teamA().map((p: BattleTreePokemon) => p.toJSON()),
             teamB: this._teamB().map((p: BattleTreePokemon) => p.toJSON()),
             selectedPokemon: this._selectedPokemon(),
@@ -179,6 +205,9 @@ export class BattleTreeRun {
 
         run._teamA(json.teamA?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);
         run._teamB(json.teamB?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);
+
+        run._runTimer(json.runTime ?? 0);
+        run._combatTimer(json.combatTime ?? 0);
 
         run._selectedPokemon(json.selectedPokemon ?? null);
 

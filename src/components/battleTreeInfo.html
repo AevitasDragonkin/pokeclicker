@@ -120,6 +120,8 @@
         <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
         <div>
             <div>Ending stage: <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout></div>
+            <div>Runtime: <code data-bind="text: GameConstants.formatSecondsToTime(App.game.battleTree.currentRun.runTime)"></code></div>
+            <div>Combat time: <code data-bind="text: GameConstants.formatSecondsToTime(App.game.battleTree.currentRun.combatTime)"></code></div>
         </div>
         <!-- /ko -->
 

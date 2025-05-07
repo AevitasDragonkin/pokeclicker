@@ -52,7 +52,7 @@
         <!-- ko if: App.game.battleTree.currentRun -->
         <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0; font-size: 1rem;">
             <knockout>
-                Stage <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout>
+                Stage <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout> - <code data-bind="text: GameConstants.formatSecondsToTime(App.game.battleTree.currentRun.combatTime)"></code>
             </knockout>
         </h2>
         <!-- /ko -->
