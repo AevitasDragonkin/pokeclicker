@@ -60,10 +60,8 @@ export class BattleTreePokemon {
         attackerTypeB = attackerTypeB ?? attackerTypeA;
         defenderTypeB = defenderTypeB ?? defenderTypeA;
 
-        return Math.max(
-            TypeHelper.typeMatrix[attackerTypeA][defenderTypeA] * TypeHelper.typeMatrix[attackerTypeA][defenderTypeB],
-            TypeHelper.typeMatrix[attackerTypeB][defenderTypeA] * TypeHelper.typeMatrix[attackerTypeB][defenderTypeB],
-        );
+        return (TypeHelper.typeMatrix[attackerTypeA][defenderTypeA] * TypeHelper.typeMatrix[attackerTypeA][defenderTypeB] +
+            TypeHelper.typeMatrix[attackerTypeB][defenderTypeA] * TypeHelper.typeMatrix[attackerTypeB][defenderTypeB]) / 2;
     }
 
     public takeDamage(damage: number): void {
