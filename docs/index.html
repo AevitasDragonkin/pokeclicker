@@ -2450,7 +2450,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
                     <!-- Battle Tree Battles -->
                     <div class="" data-bind="if: App.game.gameState == GameConstants.GameState.battleTree">
-    <div class="d-flex flex-column" style="height: 280px; display: block;">
+    <div class="d-flex flex-column" style="min-height: 280px; display: block;">
 
         <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0;">Battle</h2>
 
@@ -2543,6 +2543,33 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         <!-- /ko -->
 
         <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.MODIFIER -->
+        <div class="flex-grow-1">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cumque distinctio doloremque eum ipsam, magnam maxime molestias necessitatibus nulla odit praesentium quibusdam, repellendus sit. A in incidunt nemo quas quo suscipit totam vitae. Aut corporis iusto magnam neque officia pariatur, repudiandae soluta sunt. Consequatur eius in nesciunt quidem rem tempora!</p>
+            <p>Space to select a modifier</p>
+            <div class="d-flex">
+                <!-- ko foreach: BattleTreeController.getModifierOptionsForStage(App.game.battleTree.currentRun.seed, App.game.battleTree.currentRun.stage, 3) -->
+                <div class="border clickable" data-bind="click: () => App.game.battleTree.currentRun.addModifier($data.id)">
+                    <div data-bind="text: $data.id"></div>
+                    <div data-bind="text: $data.name"></div>
+                    <div data-bind="text: $data.description"></div>
+                </div>
+                <!-- /ko -->
+            </div>
+            <button class="btn btn-primary" data-bind="click: () => App.game.battleTree.currentRun.nextStage()">Continue</button>
+            <div>
+                <!-- ko let: { autoSelectRandomModifier: Settings.getSetting('autoSelectRandomModifier') } -->
+                <label for="auto-select-random-modifier" data-bind="text: autoSelectRandomModifier.displayName"></label>
+                <label class="form-check-label toggler-wrapper style-1 float-right">
+                    <input class="form-check-input" type="checkbox" id="auto-select-random-modifier"
+                           data-bind="checked: autoSelectRandomModifier.observableValue">
+                    <div class="toggler-slider">
+                        <div class="toggler-knob"></div>
+                    </div>
+                </label>
+                <!-- /ko -->
+            </div>
+
+        </div>
         <!-- /ko -->
 
         <!-- ko if: App.game.battleTree.currentRun -->
@@ -2929,7 +2956,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         </div>
 
         <!-- Team Management -->
-        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.REWARD].includes(App.game.battleTree.currentRun.state) -->
+        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD].includes(App.game.battleTree.currentRun.state) -->
         <div class="d-flex flex-wrap justify-content-center">
             <!-- Your Team -->
             <div class="card flex-grow-1">
@@ -2947,7 +2974,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                         <div class="flex-grow-1">
                             <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
                             <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
-                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.speed"></knockout></div>
                             <div>APS: <knockout data-bind="text: $data.attacksPerSecond.toFixed(2)"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
@@ -2985,7 +3012,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                         <div class="flex-grow-1">
                             <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
                             <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
-                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.speed"></knockout></div>
                             <div>APS: <knockout data-bind="text: $data.attacksPerSecond.toFixed(2)"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
@@ -3009,6 +3036,17 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                     <!-- /ko -->
                 </div>
             </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- Modifiers -->
+        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD].includes(App.game.battleTree.currentRun.state) -->
+        <div class="d-flex flex-column justify-content-center">
+            <!-- ko foreach: App.game.battleTree.currentRun.modifiers -->
+            <div>
+                <knockout data-bind="text: $data.id"></knockout> • <knockout data-bind="text: $data.name"></knockout>
+            </div>
+            <!-- /ko -->
         </div>
         <!-- /ko -->
 
@@ -3042,6 +3080,18 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         </div>
         <!-- /ko -->
 
+        <div>
+            <!-- ko let: { autoSelectRandomModifier: Settings.getSetting('autoSelectRandomModifier') } -->
+            <label for="auto-select-random-modifier" data-bind="text: autoSelectRandomModifier.displayName"></label>
+            <label class="form-check-label toggler-wrapper style-1 float-right">
+                <input class="form-check-input" type="checkbox" id="auto-select-random-modifier"
+                       data-bind="checked: autoSelectRandomModifier.observableValue">
+                <div class="toggler-slider">
+                    <div class="toggler-knob"></div>
+                </div>
+            </label>
+            <!-- /ko -->
+        </div>
 
         <!-- ko if: App.game.battleTree.currentRun === null -->
         <button class="btn btn-block btn-success text-light" data-bind="
@@ -58314,6 +58364,7 @@ aria-labelledby="AchievementsModalLabel" aria-hidden="true">
                                         ">
                                     </td>
                                 </tr>
+                                <tr data-bind="template: { name: 'BooleanSettingTemplate', data: Settings.getSetting('autoSelectRandomModifier')}"></tr>
                             </tbody>
                         </table>
                     </div>
