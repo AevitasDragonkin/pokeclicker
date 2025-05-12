@@ -101,9 +101,6 @@
                         'border-success': $data.impact === BattleTreeModifierImpact.Positive,
                         'border-warning': $data.impact === BattleTreeModifierImpact.Neutral,
                         'border-danger': $data.impact === BattleTreeModifierImpact.Negative,
-                    },
-                    event: {
-                        mouseover: () => BattleTree.hoverModifier($data),
                     }
                 ">
                     <div style="font-size: 0.6rem; line-height: 1em;" data-bind="text: $data.id"></div>
