@@ -1,5 +1,5 @@
 <div class="" data-bind="if: App.game.gameState == GameConstants.GameState.battleTree">
-    <div class="d-flex flex-column" style="height: 280px; display: block;">
+    <div class="d-flex flex-column" style="min-height: 280px; display: block;">
 
         <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0;">Battle</h2>
 
@@ -9,13 +9,13 @@
                 <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
                 <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
                         click: () => {
-                            if ($data.hitPoints > 0) {
+                            if ($data.HP > 0) {
                                 App.game.battleTree.currentRun.selectedPokemon = $data.name
                             }
                         },
                         css: {
-                            'clickable': $data.hitPoints > 0,
-                            'battle-tree-pokemon-fainted': $data.hitPoints === 0,
+                            'clickable': $data.HP > 0,
+                            'battle-tree-pokemon-fainted': $data.HP === 0,
                         },
                         attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
                     ">
@@ -33,16 +33,16 @@
                 <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                         css: {
-                            'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
-                            'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
-                            'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                            'bg-success': $data.HP / $data.maxHP >= 0.5,
+                            'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
+                            'bg-danger': $data.HP / $data.maxHP < 0.2
                         },
-                        style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                        style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
                     ">
-                        <!-- ko if: $data.hitPoints > 0 -->
-                        <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                        <!-- ko if: $data.HP > 0 -->
+                        <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
                         <!-- /ko -->
-                        <!-- ko ifnot: $data.hitPoints > 0 -->
+                        <!-- ko ifnot: $data.HP > 0 -->
                         <span class="font-italic">Fainted</span>
                         <!-- /ko -->
                     </div>
@@ -60,16 +60,16 @@
                 <div class="progress">
                     <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                         css: {
-                            'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
-                            'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
-                            'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                            'bg-success': $data.HP / $data.maxHP >= 0.5,
+                            'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
+                            'bg-danger': $data.HP / $data.maxHP < 0.2
                         },
-                        style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                        style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
                     ">
-                        <!-- ko if: $data.hitPoints > 0 -->
-                        <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                        <!-- ko if: $data.HP > 0 -->
+                        <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
                         <!-- /ko -->
-                        <!-- ko ifnot: $data.hitPoints > 0 -->
+                        <!-- ko ifnot: $data.HP > 0 -->
                         <span class="font-italic">Fainted</span>
                         <!-- /ko -->
                     </div>
@@ -79,7 +79,7 @@
             <div class="d-flex flex-column justify-content-center" style="padding: 0.25rem; gap: 0.25rem; background-color: rgba(0,0,0,50%);">
                 <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
                 <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
-                        css: { 'battle-tree-pokemon-fainted': $data.hitPoints === 0 },
+                        css: { 'battle-tree-pokemon-fainted': $data.HP === 0 },
                         attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
                     ">
                 <!-- /ko -->
@@ -95,6 +95,22 @@
         <div class="flex-grow-1">
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cumque distinctio doloremque eum ipsam, magnam maxime molestias necessitatibus nulla odit praesentium quibusdam, repellendus sit. A in incidunt nemo quas quo suscipit totam vitae. Aut corporis iusto magnam neque officia pariatur, repudiandae soluta sunt. Consequatur eius in nesciunt quidem rem tempora!</p>
             <p>Space to select a modifier</p>
+            <div class="d-flex">
+                <!-- ko foreach: BattleTreeController.getModifierOptionsForStage(App.game.battleTree.currentRun.seed, App.game.battleTree.currentRun.uuid, App.game.battleTree.currentRun.stage, 3) -->
+                <div class="border clickable" data-bind="
+                    click: () => App.game.battleTree.currentRun.addModifier($data.id),
+                    css: {
+                        'border-success': $data.impact === BattleTreeModifierImpact.Positive,
+                        'border-warning': $data.impact === BattleTreeModifierImpact.Neutral,
+                        'border-danger': $data.impact === BattleTreeModifierImpact.Negative,
+                    }
+                ">
+                    <div data-bind="text: $data.id"></div>
+                    <div data-bind="text: $data.name"></div>
+                    <div data-bind="text: $data.description"></div>
+                </div>
+                <!-- /ko -->
+            </div>
             <button class="btn btn-primary" data-bind="click: () => App.game.battleTree.currentRun.nextStage()">Continue</button>
             <div>
                 <!-- ko let: { autoSelectRandomModifier: Settings.getSetting('autoSelectRandomModifier') } -->

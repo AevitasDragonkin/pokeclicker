@@ -8,21 +8,24 @@ export enum BattleTreeBattleWinner {
 }
 
 type BattleTreeBattleProperties = {
+    runID: string;
     pokemonA: BattleTreePokemon;
     pokemonB: BattleTreePokemon;
 };
 
 export class BattleTreeBattle {
+    public readonly runID: string;
     private readonly _pokemonA: BattleTreePokemon;
     private readonly _pokemonB: BattleTreePokemon;
 
     constructor(properties: BattleTreeBattleProperties) {
+        this.runID = properties.runID;
         this._pokemonA = properties.pokemonA;
         this._pokemonB = properties.pokemonB;
     }
 
     public update(delta: number): void {
-        if (this._pokemonA.hitPoints <= 0 || this.pokemonB.hitPoints <= 0) {
+        if (this._pokemonA.HP <= 0 || this.pokemonB.HP <= 0) {
             return;
         }
 
@@ -42,14 +45,14 @@ export class BattleTreeBattle {
     }
 
     get isFinished(): boolean {
-        return this.pokemonA.hitPoints === 0 || this.pokemonB.hitPoints === 0;
+        return this.pokemonA.HP === 0 || this.pokemonB.HP === 0;
     }
 
     get winner(): BattleTreeBattleWinner {
         switch (true) {
-            case this.pokemonA.hitPoints === 0 && this.pokemonB.hitPoints === 0: return BattleTreeBattleWinner.DRAW;
-            case this.pokemonA.hitPoints === 0: return BattleTreeBattleWinner.PLAYER_B;
-            case this.pokemonB.hitPoints === 0: return BattleTreeBattleWinner.PLAYER_A;
+            case this.pokemonA.HP === 0 && this.pokemonB.HP === 0: return BattleTreeBattleWinner.DRAW;
+            case this.pokemonA.HP === 0: return BattleTreeBattleWinner.PLAYER_B;
+            case this.pokemonB.HP === 0: return BattleTreeBattleWinner.PLAYER_A;
             default: return BattleTreeBattleWinner.UNDEFINED;
         }
     }

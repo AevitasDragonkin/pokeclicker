@@ -38,7 +38,7 @@
         </div>
 
         <!-- Team Management -->
-        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.REWARD].includes(App.game.battleTree.currentRun.state) -->
+        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD].includes(App.game.battleTree.currentRun.state) -->
         <div class="d-flex flex-wrap justify-content-center">
             <!-- Your Team -->
             <div class="card flex-grow-1">
@@ -48,7 +48,7 @@
                     <div class="d-flex">
                         <div>
                             <img width="56" height="56" src="" alt="" data-bind="
-                                css: { 'battle-tree-pokemon-fainted': $data.hitPoints === 0 },
+                                css: { 'battle-tree-pokemon-fainted': $data.HP === 0 },
                                 attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
                             ">
                             <div>Level <knockout data-bind="text: $data.level"></knockout></div>
@@ -56,21 +56,21 @@
                         <div class="flex-grow-1">
                             <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
                             <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
-                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.speed"></knockout></div>
                             <div>APS: <knockout data-bind="text: $data.attacksPerSecond.toFixed(2)"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                     css: {
-                                        'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
-                                        'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
-                                        'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                                        'bg-success': $data.HP / $data.maxHP >= 0.5,
+                                        'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
+                                        'bg-danger': $data.HP / $data.maxHP < 0.2
                                     },
-                                    style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                                    style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
                                 ">
-                                    <!-- ko if: $data.hitPoints > 0 -->
-                                    <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                    <!-- ko if: $data.HP > 0 -->
+                                    <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
                                     <!-- /ko -->
-                                    <!-- ko ifnot: $data.hitPoints > 0 -->
+                                    <!-- ko ifnot: $data.HP > 0 -->
                                     <span class="font-italic">Fainted</span>
                                     <!-- /ko -->
                                 </div>
@@ -94,21 +94,21 @@
                         <div class="flex-grow-1">
                             <div>A: <knockout data-bind="text: $data.attack"></knockout></div>
                             <div>D: <knockout data-bind="text: $data.defense"></knockout></div>
-                            <div>S: <knockout data-bind="text: $data.attackSpeed"></knockout></div>
+                            <div>S: <knockout data-bind="text: $data.speed"></knockout></div>
                             <div>APS: <knockout data-bind="text: $data.attacksPerSecond.toFixed(2)"></knockout></div>
                             <div class="progress">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                     css: {
-                                        'bg-success': $data.hitPoints / $data.maxHitPoints >= 0.5,
-                                        'bg-warning': $data.hitPoints / $data.maxHitPoints >= 0.2 && $data.hitPoints / $data.maxHitPoints < 0.5,
-                                        'bg-danger': $data.hitPoints / $data.maxHitPoints < 0.2
+                                        'bg-success': $data.HP / $data.maxHP >= 0.5,
+                                        'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
+                                        'bg-danger': $data.HP / $data.maxHP < 0.2
                                     },
-                                    style: { width: ($data.hitPoints / $data.maxHitPoints).toLocaleString('en-US', { style: 'percent' }) }
+                                    style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
                                 ">
-                                    <!-- ko if: $data.hitPoints > 0 -->
-                                    <span><knockout data-bind="text: $data.hitPoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitPoints.toLocaleString('en-US')"></knockout></span>
+                                    <!-- ko if: $data.HP > 0 -->
+                                    <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
                                     <!-- /ko -->
-                                    <!-- ko ifnot: $data.hitPoints > 0 -->
+                                    <!-- ko ifnot: $data.HP > 0 -->
                                     <span class="font-italic">Fainted</span>
                                     <!-- /ko -->
                                 </div>
@@ -135,20 +135,45 @@
                 </div>
                 <!-- /ko -->
             </div>
-
-            <table class="table table-striped table-hover table-bordered table-sm m-0">
-                <tbody>
-                <tr>
-                    <td class="text-left">Runtime</td>
-                    <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.runTime)"></code></td>
-                </tr>
-                <tr>
-                    <td class="text-left">Combat time</td>
-                    <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code></td>
-                </tr>
-                </tbody>
-            </table>
         </div>
+        <!-- /ko -->
+
+        <!-- Modifiers -->
+        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD, BattleTreeRunState.FINISHED].includes(App.game.battleTree.currentRun.state) -->
+        <div class="d-flex flex-wrap justify-content-center" style="gap: 0.25rem">
+            <!-- ko foreach: App.game.battleTree.currentRun.modifiers -->
+            <div class="p-2 border" data-bind="
+                css: {
+                    'border-success': $data.impact === BattleTreeModifierImpact.Positive,
+                    'border-warning': $data.impact === BattleTreeModifierImpact.Neutral,
+                    'border-danger': $data.impact === BattleTreeModifierImpact.Negative,
+                },
+                tooltip: {
+                    trigger: 'hover',
+                    title: $data.description,
+                    placement: 'bottom'
+                }
+            ">
+                <knockout data-bind="text: $data.id"></knockout>
+            </div>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- Modifiers -->
+        <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.FINISHED].includes(App.game.battleTree.currentRun.state) -->
+        <table class="table table-striped table-hover table-bordered table-sm m-0">
+            <tbody>
+            <tr>
+                <td class="text-left">Runtime</td>
+                <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.runTime)"></code></td>
+            </tr>
+            <tr>
+                <td class="text-left">Combat time</td>
+                <td class="text-left tight"><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code></td>
+            </tr>
+            </tbody>
+        </table>
         <!-- /ko -->
 
         <div>

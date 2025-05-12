@@ -5,6 +5,8 @@ import { BattleTreePokemon } from './BattleTreePokemon';
 import { BattleTreeController } from './BattleTreeController';
 import Rand from '../utilities/Rand';
 import Settings from '../settings';
+import { BattleTreeModifier, BattleTreeModifierEffectTarget } from './BattleTreeModifier';
+import { BattleTreeModifiers } from './BattleTreeModifiers';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -15,6 +17,7 @@ export enum BattleTreeRunState {
 }
 
 export class BattleTreeRun {
+    public readonly uuid: string;
     private _seed: Observable<number>;
     private _stage: Observable<number>;
     private _state: Observable<BattleTreeRunState>;
@@ -32,7 +35,8 @@ export class BattleTreeRun {
         return BattleTreeController.getLongListTeamSelection(this._seed(), BattleTreeController.calculateLongListSelectionSize());
     });
 
-    constructor() {
+    constructor(uuid?: string) {
+        this.uuid = uuid ?? crypto.randomUUID();
         this._seed = ko.observable(BattleTreeController.calculateSeed());
         this._stage = ko.observable(0);
         this._state = ko.observable(BattleTreeRunState.TEAM_SELECTION);
@@ -54,30 +58,31 @@ export class BattleTreeRun {
             this._battle()?.update(delta);
 
             if (this._battle()?.isFinished) {
-                const teamACanContinue: boolean = this._teamA().some(p => p.hitPoints > 0);
-                const teamBCanContinue: boolean = this._teamB().some(p => p.hitPoints > 0);
+                const teamACanContinue: boolean = this._teamA().some(p => p.HP > 0);
+                const teamBCanContinue: boolean = this._teamB().some(p => p.HP > 0);
 
                 if (teamACanContinue && teamBCanContinue) {
                     // Set the selected pokemon to the current one if it still has HP, otherwise switch it to the first one with HP
-                    this._selectedPokemon(this._teamA().find(p => p.name === this._selectedPokemon()).hitPoints > 0 ? this._selectedPokemon() : this._teamA().find(p => p.hitPoints > 0).name);
+                    this._selectedPokemon(this._teamA().find(p => p.name === this._selectedPokemon()).HP > 0 ? this._selectedPokemon() : this._teamA().find(p => p.HP > 0).name);
 
                     // Reset all attack counters
                     this._teamA().forEach(p => p.resetAttackCounter());
                     this._teamB().forEach(p => p.resetAttackCounter());
 
                     // Start a new battle
-                    this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.hitPoints > 0).name);
+                    this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.HP > 0).name);
 
                 } else if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A) {
                     // TODO : BT : Give stage reward
                     this._state(BattleTreeRunState.REWARD);
 
                     if (this._stage() % 5 === 0 ) {
+                        this._state(BattleTreeRunState.MODIFIER);
+
                         if (Settings.getSetting('autoSelectRandomModifier').observableValue()) {
                             // TODO : BT : Select a random modifier
-                            this.nextStage();
-                        } else {
-                            this._state(BattleTreeRunState.MODIFIER);
+                            const options = BattleTreeController.getModifierOptionsForStage(this.seed, this.uuid, this.stage, 3);
+                            this.addModifier(Rand.fromArray(options).id);
                         }
                     } else {
                         this.nextStage();
@@ -105,8 +110,18 @@ export class BattleTreeRun {
         const pokemonB: BattleTreePokemon = this._teamB().find((p: BattleTreePokemon) => p.name === pokemonBName);
 
         if (pokemonA && pokemonB) {
-            this._battle(new BattleTreeBattle({ pokemonA, pokemonB }));
+            this._battle(new BattleTreeBattle({ runID: this.uuid, pokemonA, pokemonB }));
             this._state(BattleTreeRunState.BATTLE);
+        }
+    }
+
+    public addModifier(modifierID: string) {
+        const modifier = BattleTreeModifiers.addModifier(this.uuid, modifierID);
+
+        modifier?.instantEffects.forEach(effect => effect(this));
+
+        if (this.state === BattleTreeRunState.MODIFIER) {
+            this.nextStage();
         }
     }
 
@@ -120,7 +135,14 @@ export class BattleTreeRun {
     public nextStage(): void {
         this._stage(this._stage() + 1);
 
-        this._teamB(BattleTreeController.getRandomTeamForStage(this._seed(), this._stage(), 3));
+        this._teamB(BattleTreeController
+            .getRandomTeamForStage(this._seed(), this._stage(), 3)
+            .map(pokemonName => new BattleTreePokemon({
+                runID: this.uuid,
+                name: pokemonName,
+                level: BattleTreeController.calculatePokemonLevelForStage(this.stage),
+                modifierTargetID: BattleTreeModifierEffectTarget.Enemy,
+            })));
         this.createBattle(this._selectedPokemon(), this._teamB()[0].name);
     }
 
@@ -135,7 +157,12 @@ export class BattleTreeRun {
         if (this._teamA().length >= 3) return;
         if (this._teamA().findIndex(p => p.name === pokemon) >= 0) return;
 
-        this._teamA.push(new BattleTreePokemon({ name: pokemon, level: BattleTreeController.calculatePokemonLevelForPlayer(pokemon) }));
+        this._teamA.push(new BattleTreePokemon({
+            runID: this.uuid,
+            name: pokemon,
+            level: BattleTreeController.calculatePokemonLevelForPlayer(pokemon),
+            modifierTargetID: BattleTreeModifierEffectTarget.Player,
+        }));
     }
 
     public removePokemonFromPlayerATeam(pokemon: PokemonNameType): void {
@@ -179,12 +206,16 @@ export class BattleTreeRun {
             this._teamA().forEach(p => p.resetAttackCounter());
 
             // Create a new battle with the selected pokemon and the first enemy in team B
-            this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.hitPoints > 0).name);
+            this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.HP > 0).name);
         }
     }
 
     get battle(): BattleTreeBattle {
         return this._battle();
+    }
+
+    get modifiers(): BattleTreeModifier[] {
+        return BattleTreeModifiers.getModifierList(this.uuid)();
     }
 
     get runTime(): number {
@@ -197,6 +228,7 @@ export class BattleTreeRun {
 
     toJSON(): Record<string, any> {
         return {
+            uuid: this.uuid,
             seed: this._seed(),
             stage: this._stage(),
             state: this._state(),
@@ -204,6 +236,7 @@ export class BattleTreeRun {
                 pokemonA: this._battle().pokemonA.name,
                 pokemonB: this._battle().pokemonB.name,
             } : undefined,
+            modifiers: BattleTreeModifiers.getModifierList(this.uuid)().map(modifier => modifier.id),
             runTime: this._runTimer(),
             combatTime: this._combatTimer(),
             teamA: this._teamA().map((p: BattleTreePokemon) => p.toJSON()),
@@ -213,11 +246,13 @@ export class BattleTreeRun {
     }
 
     static fromJSON(json: Record<string, any>): BattleTreeRun {
-        const run: BattleTreeRun = new BattleTreeRun();
+        const run: BattleTreeRun = new BattleTreeRun(json.uuid ?? undefined);
 
         run._stage(json.stage ?? 0);
         run._seed(json.seed ?? 0);
         run._state(json.state ?? BattleTreeRunState.TEAM_SELECTION);
+
+        json.modifiers?.forEach(id => BattleTreeModifiers.addModifier(json.uuid, id));
 
         run._teamA(json.teamA?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);
         run._teamB(json.teamB?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);

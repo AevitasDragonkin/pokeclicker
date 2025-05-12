@@ -221,6 +221,7 @@ import GenericDeal, { DealCostOrProfitType } from './deal/GenericDeal';
 import { BattleTree } from './battleTree/BattleTree';
 import { BattleTreeController } from './battleTree/BattleTreeController';
 import { BattleTreeRunState } from './battleTree/BattleTreeRun';
+import { BattleTreeModifierImpact } from './battleTree/BattleTreeModifier';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -456,4 +457,5 @@ Object.assign(<any>window, {
     BattleTree,
     BattleTreeController,
     BattleTreeRunState,
+    BattleTreeModifierImpact,
 });
