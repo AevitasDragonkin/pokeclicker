@@ -92,26 +92,26 @@
         <!-- /ko -->
 
         <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.MODIFIER -->
-        <div class="flex-grow-1">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab cumque distinctio doloremque eum ipsam, magnam maxime molestias necessitatibus nulla odit praesentium quibusdam, repellendus sit. A in incidunt nemo quas quo suscipit totam vitae. Aut corporis iusto magnam neque officia pariatur, repudiandae soluta sunt. Consequatur eius in nesciunt quidem rem tempora!</p>
-            <p>Space to select a modifier</p>
-            <div class="d-flex">
+        <div class="flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-center p-3" style="gap: 1rem;">
                 <!-- ko foreach: BattleTreeController.getModifierOptionsForStage(App.game.battleTree.currentRun.seed, App.game.battleTree.currentRun.uuid, App.game.battleTree.currentRun.stage, 3) -->
-                <div class="border clickable" data-bind="
+                <div class="border clickable p-2 text-light bg-dark" style="flex: 1 1 100%" data-bind="
                     click: () => App.game.battleTree.currentRun.addModifier($data.id),
                     css: {
                         'border-success': $data.impact === BattleTreeModifierImpact.Positive,
                         'border-warning': $data.impact === BattleTreeModifierImpact.Neutral,
                         'border-danger': $data.impact === BattleTreeModifierImpact.Negative,
+                    },
+                    event: {
+                        mouseover: () => BattleTree.hoverModifier($data),
                     }
                 ">
-                    <div data-bind="text: $data.id"></div>
-                    <div data-bind="text: $data.name"></div>
-                    <div data-bind="text: $data.description"></div>
+                    <div style="font-size: 0.6rem; line-height: 1em;" data-bind="text: $data.id"></div>
+                    <h4 data-bind="text: $data.name"></h4>
+                    <div class="small text-wrap" data-bind="text: $data.description"></div>
                 </div>
                 <!-- /ko -->
             </div>
-            <button class="btn btn-primary" data-bind="click: () => App.game.battleTree.currentRun.nextStage()">Continue</button>
             <div>
                 <!-- ko let: { autoSelectRandomModifier: Settings.getSetting('autoSelectRandomModifier') } -->
                 <label for="auto-select-random-modifier" data-bind="text: autoSelectRandomModifier.displayName"></label>
