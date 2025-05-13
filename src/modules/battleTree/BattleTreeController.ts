@@ -30,7 +30,7 @@ export class BattleTreeController {
 
     public static getModifierOptionsForStage(seed: number, runID: string, stage: number, amount: number): BattleTreeModifier[] {
         const activeModifiers = BattleTreeModifiers.getModifierList(runID)();
-        const lastModifierID: number = activeModifiers[activeModifiers.length - 1].id ?? 0;
+        const lastModifierID: number = activeModifiers[activeModifiers.length - 1]?.id ?? 0;
 
         BattleTreeRand.seed(seed + stage + (1000 * lastModifierID));
 
