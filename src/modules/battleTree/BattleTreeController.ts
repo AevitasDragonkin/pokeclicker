@@ -35,7 +35,7 @@ export class BattleTreeController {
         BattleTreeRand.seed(seed + stage + (1000 * lastModifierID));
 
         return BattleTreeRand
-            .shuffleWeightedArray(MODIFIER_LIST, MODIFIER_LIST.map(modifier => modifier.weight))
+            .shuffleWeightedArray([...MODIFIER_LIST], [...MODIFIER_LIST].map(modifier => modifier.weight))
             .filter(modifier => modifier.isUnlocked)
             .filter(modifier => modifier.limit > activeModifiers.filter(m => m.id === modifier.id).length)
             .slice(0, amount);
