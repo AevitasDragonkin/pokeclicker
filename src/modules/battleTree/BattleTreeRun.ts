@@ -1,12 +1,13 @@
-import { Observable, ObservableArray, PureComputed } from 'knockout';
-import { BattleTreeBattle, BattleTreeBattleWinner } from './BattleTreeBattle';
-import { PokemonNameType } from '../pokemons/PokemonNameType';
-import { BattleTreePokemon } from './BattleTreePokemon';
-import { BattleTreeController } from './BattleTreeController';
+import {Observable, ObservableArray, PureComputed} from 'knockout';
+import {BattleTreeBattle, BattleTreeBattleWinner} from './BattleTreeBattle';
+import {PokemonNameType} from '../pokemons/PokemonNameType';
+import {BattleTreePokemon} from './BattleTreePokemon';
+import {BattleTreeController} from './BattleTreeController';
 import Rand from '../utilities/Rand';
 import Settings from '../settings';
-import { BattleTreeModifier, BattleTreeModifierEffectTarget } from './BattleTreeModifier';
-import { BattleTreeModifiers } from './BattleTreeModifiers';
+import {BattleTreeModifier, BattleTreeModifierEffectTarget} from './BattleTreeModifier';
+import {BattleTreeModifiers} from './BattleTreeModifiers';
+import {pokemonMap} from '../pokemons/PokemonList';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -60,6 +61,10 @@ export class BattleTreeRun {
             if (this._battle()?.isFinished) {
                 const teamACanContinue: boolean = this._teamA().some(p => p.HP > 0);
                 const teamBCanContinue: boolean = this._teamB().some(p => p.HP > 0);
+
+                if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A || this._battle().winner === BattleTreeBattleWinner.DRAW) {
+                    BattleTreeController.addBattleTreeExp(this._battle().pokemonB.name, this._battle().pokemonB.level);
+                }
 
                 if (teamACanContinue && teamBCanContinue) {
                     // Set the selected pokemon to the current one if it still has HP, otherwise switch it to the first one with HP

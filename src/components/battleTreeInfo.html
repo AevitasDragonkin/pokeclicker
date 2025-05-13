@@ -5,6 +5,19 @@
     </div>
 
     <div class="card-body">
+        <div class="p-0" data-bind="tooltip: {
+                                    title: `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
+                                    trigger: 'hover'
+                                }">
+            <div>Lvl. <knockout data-bind="text: App.game.battleTree.battleTreeLevel"></knockout></div>
+            <div class="progress" style='height: 5px'>
+                <div class="progress-bar bg-info" role="progressbar"
+                     data-bind="attr:{ style: 'width:' + App.game.battleTree.progressToNextLevel.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }) }"
+                     aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+        </div>
+
         <!-- Team Selection -->
         <div data-bind="if: App.game.battleTree.currentRun?.state === BattleTreeRunState.TEAM_SELECTION">
 

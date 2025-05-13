@@ -1,12 +1,21 @@
 import { Feature } from '../DataStore/common/Feature';
 import { GameState } from '../GameConstants';
-import { Observable } from 'knockout';
+import {Observable, PureComputed} from 'knockout';
 import { BattleTreeRun } from './BattleTreeRun';
+import GameHelper from '../GameHelper';
+import Notifier from '../notifications/Notifier';
+import NotificationConstants from '../notifications/NotificationConstants';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
     saveKey: string = 'battleTree';
     defaults: Record<string, any> = { };
+
+    private _battleTreeExp: Observable<number> = ko.observable(0);
+    private _battleTreeLevel: PureComputed<number> = ko.pureComputed(() => BattleTree.convertExperienceToLevel(this._battleTreeExp()));
+    private _progressToNextLevel: PureComputed<number> = ko.pureComputed(() =>
+        (this._battleTreeExp() - BattleTree.convertLevelToExperience(this._battleTreeLevel())) /
+        (BattleTree.convertLevelToExperience(this._battleTreeLevel() + 1) - BattleTree.convertLevelToExperience(this._battleTreeLevel())));
 
     private _currentRun: Observable<BattleTreeRun | null> = ko.observable(null);
 
@@ -40,19 +49,58 @@ export class BattleTree implements Feature {
         this._currentRun(null);
     }
 
+    public addExp(amount: number): void {
+        const currentLevel = this._battleTreeLevel();
+        this._battleTreeExp(this._battleTreeExp() + amount);
+
+        if (this._battleTreeLevel() > currentLevel) {
+            Notifier.notify({
+                message: `Your Battle Tree level has increased to ${this._battleTreeLevel()}`,
+                type: NotificationConstants.NotificationOption.success,
+                timeout: 1e4,
+            });
+        }
+    }
+
+    get battleTreeExp(): number {
+        return this._battleTreeExp();
+    }
+
+    get battleTreeLevel(): number {
+        return this._battleTreeLevel();
+    }
+
+    get progressToNextLevel(): number {
+        return this._progressToNextLevel();
+    }
+
     get currentRun(): BattleTreeRun | null {
         return this._currentRun();
     }
 
     toJSON(): Record<string, any> {
         return {
+            battleTreeExp: this._battleTreeExp(),
             run: this.currentRun?.toJSON(),
         };
     }
 
     fromJSON(json: Record<string, any>): void {
         if (json.run) {
+            this._battleTreeExp(json.battleTreeExp ?? 0);
             this._currentRun(BattleTreeRun.fromJSON(json.run));
         }
+    }
+
+    public static convertLevelToExperience(level: number): number {
+        return level <= 1 ? 0 : Math.floor(5 * Math.pow(level, 3) / 4);
+    }
+
+    public static convertExperienceToLevel(experience: number): number {
+        let level = 1;
+        while (experience >= this.convertLevelToExperience(level + 1)) {
+            ++level;
+        }
+        return level;
     }
 }
