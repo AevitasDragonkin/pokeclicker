@@ -3,99 +3,95 @@
 
         <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0;">Battle</h2>
 
-        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.BATTLE && App.game.battleTree.currentRun?.battle -->
-        <div class="flex-grow-1" style="display: grid; grid-template-columns: auto 1fr 1fr auto; align-items: center; gap: 1rem; padding: 1rem;">
-            <div class="d-flex flex-column justify-content-center" style="padding: 0.25rem; gap: 0.25rem; background-color: rgba(0,0,0,50%);">
-                <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
-                <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
-                        click: () => {
-                            if ($data.HP > 0) {
-                                App.game.battleTree.currentRun.selectedPokemon = $data.name
-                            }
-                        },
-                        css: {
-                            'clickable': $data.HP > 0,
-                            'battle-tree-pokemon-fainted': $data.HP === 0,
-                        },
-                        attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
-                    ">
-                <!-- /ko -->
-            </div>
+        <div class="flex-grow-1 p-3">
+            <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.BATTLE && App.game.battleTree.currentRun?.battle -->
+            <div style="display: grid; grid-template-columns: auto 1fr 1fr auto; align-items: center; gap: 1rem;">
+                <div class="d-flex flex-column justify-content-center" style="padding: 0.25rem; gap: 0.25rem; background-color: rgba(0,0,0,50%);">
+                    <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
+                    <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
+                            click: () => {
+                                if ($data.HP > 0) {
+                                    App.game.battleTree.currentRun.selectedPokemon = $data.name
+                                }
+                            },
+                            css: {
+                                'clickable': $data.HP > 0,
+                                'battle-tree-pokemon-fainted': $data.HP === 0,
+                            },
+                            attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                        ">
+                    <!-- /ko -->
+                </div>
 
-            <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonA">
-                <img src="" alt="" data-bind="
-                    attr: {
-                        id: `animate-damage-${$data.uuid}`,
-                        src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
-                    }
-                ">
-                <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
-                <div class="progress">
-                    <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                        css: {
-                            'bg-success': $data.HP / $data.maxHP >= 0.5,
-                            'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
-                            'bg-danger': $data.HP / $data.maxHP < 0.2
-                        },
-                        style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
+                <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonA">
+                    <img src="" alt="" data-bind="
+                        attr: {
+                            id: `animate-damage-${$data.uuid}`,
+                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
+                        }
                     ">
-                        <!-- ko if: $data.HP > 0 -->
-                        <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
-                        <!-- /ko -->
-                        <!-- ko ifnot: $data.HP > 0 -->
-                        <span class="font-italic">Fainted</span>
-                        <!-- /ko -->
+                    <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                            css: {
+                                'bg-success': $data.HP / $data.maxHP >= 0.5,
+                                'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
+                                'bg-danger': $data.HP / $data.maxHP < 0.2
+                            },
+                            style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
+                        ">
+                            <!-- ko if: $data.HP > 0 -->
+                            <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
+                            <!-- /ko -->
+                            <!-- ko ifnot: $data.HP > 0 -->
+                            <span class="font-italic">Fainted</span>
+                            <!-- /ko -->
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonB">
-                <img src="" alt="" data-bind="
-                    attr: {
-                        id: `animate-damage-${$data.uuid}`,
-                        src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
-                    }
-                ">
-                <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
-                <div class="progress">
-                    <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                        css: {
-                            'bg-success': $data.HP / $data.maxHP >= 0.5,
-                            'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
-                            'bg-danger': $data.HP / $data.maxHP < 0.2
-                        },
-                        style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
+                <div data-bind="using: App.game.battleTree.currentRun?.battle.pokemonB">
+                    <img src="" alt="" data-bind="
+                        attr: {
+                            id: `animate-damage-${$data.uuid}`,
+                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
+                        }
                     ">
-                        <!-- ko if: $data.HP > 0 -->
-                        <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
-                        <!-- /ko -->
-                        <!-- ko ifnot: $data.HP > 0 -->
-                        <span class="font-italic">Fainted</span>
-                        <!-- /ko -->
+                    <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                            css: {
+                                'bg-success': $data.HP / $data.maxHP >= 0.5,
+                                'bg-warning': $data.HP / $data.maxHP >= 0.2 && $data.HP / $data.maxHP < 0.5,
+                                'bg-danger': $data.HP / $data.maxHP < 0.2
+                            },
+                            style: { width: ($data.HP / $data.maxHP).toLocaleString('en-US', { style: 'percent' }) }
+                        ">
+                            <!-- ko if: $data.HP > 0 -->
+                            <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
+                            <!-- /ko -->
+                            <!-- ko ifnot: $data.HP > 0 -->
+                            <span class="font-italic">Fainted</span>
+                            <!-- /ko -->
+                        </div>
                     </div>
                 </div>
+
+                <div class="d-flex flex-column justify-content-center" style="padding: 0.25rem; gap: 0.25rem; background-color: rgba(0,0,0,50%);">
+                    <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
+                    <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
+                            css: { 'battle-tree-pokemon-fainted': $data.HP === 0 },
+                            attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                        ">
+                    <!-- /ko -->
+                </div>
             </div>
+            <!-- /ko -->
 
-            <div class="d-flex flex-column justify-content-center" style="padding: 0.25rem; gap: 0.25rem; background-color: rgba(0,0,0,50%);">
-                <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
-                <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
-                        css: { 'battle-tree-pokemon-fainted': $data.HP === 0 },
-                        attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
-                    ">
-                <!-- /ko -->
-            </div>
-        </div>
-        <!-- /ko -->
-
-        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
-        <div class="flex-grow-1"></div>
-        <!-- /ko -->
-
-        <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.MODIFIER -->
-        <div class="flex flex-column flex-grow-1">
-            <div class="d-flex justify-content-center p-3" style="gap: 1rem;">
+            <!-- ko if: App.game.battleTree.currentRun?.state === BattleTreeRunState.MODIFIER -->
+            <div class="d-flex justify-content-center" style="gap: 1rem;">
                 <!-- ko foreach: BattleTreeController.getModifierOptionsForStage(App.game.battleTree.currentRun.seed, App.game.battleTree.currentRun.uuid, App.game.battleTree.currentRun.stage, 3) -->
-                <div class="border clickable p-2 text-light bg-dark" style="flex: 1 1 100%" data-bind="
+                <div class="d-flex flex-column border clickable p-2 text-light bg-dark" style="flex: 1 1 100%; border-width: 4px !important;" data-bind="
                     click: () => App.game.battleTree.currentRun.addModifier($data.id),
                     css: {
                         'border-success': $data.impact === BattleTreeModifierImpact.Positive,
@@ -105,33 +101,18 @@
                 ">
                     <div style="font-size: 0.6rem; line-height: 1em;" data-bind="text: $data.id"></div>
                     <h4 data-bind="text: $data.name"></h4>
-                    <div class="small text-wrap" data-bind="text: $data.description"></div>
+                    <div class="flex-grow-1 mb-2 small text-wrap" data-bind="text: $data.description"></div>
                     <div style="font-size: 0.6rem; line-height: 1em;">Limit: <knockout data-bind="text: $data.limit"></knockout></div>
                 </div>
                 <!-- /ko -->
             </div>
-            <div>
-                <!-- ko let: { autoSelectRandomModifier: Settings.getSetting('autoSelectRandomModifier') } -->
-                <label for="auto-select-random-modifier" data-bind="text: autoSelectRandomModifier.displayName"></label>
-                <label class="form-check-label toggler-wrapper style-1 float-right">
-                    <input class="form-check-input" type="checkbox" id="auto-select-random-modifier"
-                           data-bind="checked: autoSelectRandomModifier.observableValue">
-                    <div class="toggler-slider">
-                        <div class="toggler-knob"></div>
-                    </div>
-                </label>
-                <!-- /ko -->
-            </div>
-
+            <!-- /ko -->
         </div>
-        <!-- /ko -->
 
         <!-- ko if: App.game.battleTree.currentRun -->
-        <h2 class="" style="background-color: rgba(0,0,0,70%); margin: 0; font-size: 1rem;">
-            <knockout>
-                Stage <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout> - <code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code>
-            </knockout>
-        </h2>
+        <div class="small" style="background-color: rgba(0,0,0,70%); margin: 0;">
+            Stage <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout> - <code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code>
+        </div>
         <!-- /ko -->
     </div>
 </div>
