@@ -46,7 +46,6 @@ class Game implements TmpGameType {
     public purifyChamber: PurifyChamber;
     public weatherApp: WeatherApp;
     public zMoves: ZMoves;
-    public pokemonContest: PokemonContest;
     public battleTree: BattleTree;
 
     constructor() {
@@ -87,7 +86,6 @@ class Game implements TmpGameType {
         this.purifyChamber = new PurifyChamber();
         this.weatherApp = new WeatherApp();
         this.zMoves = new ZMoves();
-        this.pokemonContest = new PokemonContest();
         this.battleTree = new BattleTree();
 
         this._gameState = ko.observable(GameConstants.GameState.loading);
@@ -157,7 +155,6 @@ class Game implements TmpGameType {
         SafariPokemonList.generateSafariLists();
         RoamingPokemonList.generateIncreasedChanceRoutes(now);
         WeatherApp.initialize();
-        PokemonContestController.generateDailyContest(now);
         DamageCalculator.initialize();
 
         if (Settings.getSetting('disableOfflineProgress').value === false) {

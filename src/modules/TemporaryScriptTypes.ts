@@ -101,7 +101,6 @@ export type TmpDreamOrbControllerType = any;
 export type TmpPurifyChamberType = any;
 export type TmpWeatherAppType = any;
 export type TmpZMovesType = any;
-export type TmpPokemonContestType = any;
 export type TmpHeldItemType = any;
 
 export type TmpGameType = {
@@ -139,7 +138,6 @@ export type TmpGameType = {
     purifyChamber: TmpPurifyChamberType;
     weatherApp: TmpWeatherAppType;
     zMoves: TmpZMovesType;
-    pokemonContest: TmpPokemonContestType;
     battleTree: BattleTree;
 
     // functions
@@ -177,8 +175,6 @@ export type TmpSaveType = {
     initializeEffects: (saved?: Array<string>) => Record<string, KnockoutObservable<number>>;
     initializeEffectTimer: () => Record<string, KnockoutObservable<string>>;
     loadFromFile: (file) => void;
-    convert: () => void;
-    convertShinies: (list: Array<any>) => void;
 };
 
 export type TmpPlayerType = {
