@@ -97,10 +97,10 @@ export class BattleTree implements Feature {
     }
 
     public static convertExperienceToLevel(experience: number): number {
-        let level = 1;
+        let level = 0;
         while (experience >= this.convertLevelToExperience(level + 1)) {
             ++level;
         }
-        return level;
+        return Math.min(Math.max(level, 1), 100);
     }
 }

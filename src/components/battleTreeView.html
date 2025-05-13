@@ -54,7 +54,7 @@
                     <img src="" alt="" data-bind="
                         attr: {
                             id: `animate-damage-${$data.uuid}`,
-                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
+                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id, false, undefined, false)
                         }
                     ">
                     <div data-bind="text: PokemonHelper.displayName($data.name)"></div>
@@ -81,7 +81,7 @@
                     <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
                     <img width="60" height="60" style="object-fit: contain" src="" alt="" data-bind="
                             css: { 'battle-tree-pokemon-fainted': $data.HP === 0 },
-                            attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                            attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id, false, undefined, false) }
                         ">
                     <!-- /ko -->
                 </div>
