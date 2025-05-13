@@ -32,7 +32,7 @@ export class BattleTreeController {
         const activeModifiers = BattleTreeModifiers.getModifierList(runID)();
         const lastModifierID: number = activeModifiers[activeModifiers.length - 1]?.id ?? 0;
 
-        BattleTreeRand.seed(seed + stage + (1000 * lastModifierID));
+        BattleTreeRand.seed(seed + lastModifierID);
 
         return BattleTreeRand
             .shuffleWeightedArray([...MODIFIER_LIST], [...MODIFIER_LIST].map(modifier => modifier.weight))
