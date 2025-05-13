@@ -36,7 +36,7 @@ type BattleTreeModifierEffectProperties = {
 };
 
 type BattleTreeModifierProperties = {
-    id: string;
+    id: number;
     name: string;
     description: string;
     impact: BattleTreeModifierImpact;
@@ -87,7 +87,7 @@ export class BattleTreeModifier {
         this._effects = properties.effects?.map(effect => new BattleTreeModifierEffect(effect)) || [];
     }
 
-    get id(): string {
+    get id(): number {
         return this._properties.id;
     }
 

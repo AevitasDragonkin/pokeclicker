@@ -4,7 +4,6 @@ import { PokemonListData, pokemonMap } from '../pokemons/PokemonList';
 import { PureComputed } from 'knockout';
 import { BattleTreeModifier } from './BattleTreeModifier';
 import { BattleTreeModifiers, MODIFIER_LIST } from './BattleTreeModifiers';
-import {BattleTree} from './BattleTree';
 
 export class BattleTreeController {
     public static availablePokemonNames: PureComputed<PokemonListData[]> = ko.pureComputed(() => pokemonMap.filter(p => PokemonLocations.isObtainable(p.name)));
@@ -30,15 +29,15 @@ export class BattleTreeController {
     }
 
     public static getModifierOptionsForStage(seed: number, runID: string, stage: number, amount: number): BattleTreeModifier[] {
-        BattleTreeRand.seed(seed + stage);
-
         const activeModifiers = BattleTreeModifiers.getModifierList(runID)();
-        const possibleModifiers = MODIFIER_LIST
-            .filter(modifier => modifier.isUnlocked)
-            .filter(modifier => modifier.limit > activeModifiers.filter(m => m.id === modifier.id).length);
+        const lastModifierID: number = activeModifiers[activeModifiers.length - 1].id ?? 0;
+
+        BattleTreeRand.seed(seed + stage + (1000 * lastModifierID));
 
         return BattleTreeRand
-            .shuffleWeightedArray(possibleModifiers, possibleModifiers.map(modifier => modifier.weight))
+            .shuffleWeightedArray(MODIFIER_LIST, MODIFIER_LIST.map(modifier => modifier.weight))
+            .filter(modifier => modifier.isUnlocked)
+            .filter(modifier => modifier.limit > activeModifiers.filter(m => m.id === modifier.id).length)
             .slice(0, amount);
     }
 

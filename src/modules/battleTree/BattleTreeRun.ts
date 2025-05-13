@@ -1,13 +1,12 @@
-import {Observable, ObservableArray, PureComputed} from 'knockout';
-import {BattleTreeBattle, BattleTreeBattleWinner} from './BattleTreeBattle';
-import {PokemonNameType} from '../pokemons/PokemonNameType';
-import {BattleTreePokemon} from './BattleTreePokemon';
-import {BattleTreeController} from './BattleTreeController';
+import { Observable, ObservableArray, PureComputed } from 'knockout';
+import { BattleTreeBattle, BattleTreeBattleWinner } from './BattleTreeBattle';
+import { PokemonNameType } from '../pokemons/PokemonNameType';
+import { BattleTreePokemon } from './BattleTreePokemon';
+import { BattleTreeController } from './BattleTreeController';
 import Rand from '../utilities/Rand';
 import Settings from '../settings';
-import {BattleTreeModifier, BattleTreeModifierEffectTarget} from './BattleTreeModifier';
-import {BattleTreeModifiers} from './BattleTreeModifiers';
-import {pokemonMap} from '../pokemons/PokemonList';
+import { BattleTreeModifier, BattleTreeModifierEffectTarget } from './BattleTreeModifier';
+import { BattleTreeModifiers } from './BattleTreeModifiers';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -120,7 +119,7 @@ export class BattleTreeRun {
         }
     }
 
-    public addModifier(modifierID: string) {
+    public addModifier(modifierID: number) {
         const modifier = BattleTreeModifiers.addModifier(this.uuid, modifierID);
 
         modifier?.instantEffects.forEach(effect => effect(this));
@@ -151,8 +150,12 @@ export class BattleTreeRun {
         this.createBattle(this._selectedPokemon(), this._teamB()[0].name);
     }
 
-    public fillPlayerATeamRandomly(): void {
+    public emptyPlayerATeam(): void {
         this._teamA.removeAll();
+    }
+
+    public fillPlayerATeamRandomly(): void {
+        this.emptyPlayerATeam();
         Rand.shuffleArray(this.longListSelection().filter(name => App.game.party.alreadyCaughtPokemonByName(name))).slice(0, 3).forEach(name => {
             this.addPokemonToPlayerATeam(name);
         });

@@ -1,10 +1,10 @@
 import { Feature } from '../DataStore/common/Feature';
 import { GameState } from '../GameConstants';
-import {Observable, PureComputed} from 'knockout';
+import { Observable, ObservableArray, PureComputed } from 'knockout';
 import { BattleTreeRun } from './BattleTreeRun';
-import GameHelper from '../GameHelper';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
+import { PokemonNameType } from '../pokemons/PokemonNameType';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -18,6 +18,8 @@ export class BattleTree implements Feature {
         (BattleTree.convertLevelToExperience(this._battleTreeLevel() + 1) - BattleTree.convertLevelToExperience(this._battleTreeLevel())));
 
     private _currentRun: Observable<BattleTreeRun | null> = ko.observable(null);
+
+    private _previousTeam: ObservableArray<PokemonNameType> = ko.observableArray();
 
     canAccess(): boolean {
         return true;
@@ -42,11 +44,20 @@ export class BattleTree implements Feature {
     }
 
     public createNewBattleTreeRun(): void {
+        this._previousTeam(this.currentRun?.teamA.map(p => p.name) ?? []);
+
         this._currentRun(new BattleTreeRun());
     }
 
+    public loadPreviousTeam(): void {
+        this.currentRun.emptyPlayerATeam();
+        this._previousTeam()
+            .filter(p => this.currentRun.longListSelection().includes(p))
+            .forEach(p => this.currentRun.addPokemonToPlayerATeam(p));
+    }
+
     public abortRun(): void {
-        this._currentRun(null);
+        this.createNewBattleTreeRun();
     }
 
     public addExp(amount: number): void {
@@ -76,6 +87,10 @@ export class BattleTree implements Feature {
 
     get currentRun(): BattleTreeRun | null {
         return this._currentRun();
+    }
+
+    get previousTeam(): PokemonNameType[] {
+        return this._previousTeam();
     }
 
     toJSON(): Record<string, any> {

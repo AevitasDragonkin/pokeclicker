@@ -53,10 +53,17 @@
 
                     <button class="btn btn-info" data-bind="
                         click: () => App.game.battleTree.currentRun.fillPlayerATeamRandomly(),
-                        enable: App.game.battleTree.currentRun.state === BattleTreeRunState.TEAM_SELECTION
                     ">
                         Randomize
                     </button>
+
+                    <!-- ko if: App.game.battleTree.previousTeam.length > 0 -->
+                    <button class="btn btn-info" data-bind="
+                        click: () => App.game.battleTree.loadPreviousTeam(),
+                    ">
+                        Previous Team
+                    </button>
+                    <!-- /ko -->
                 </div>
             </div>
         </div>
@@ -71,7 +78,7 @@
                 <div class="card-body p-2">
                     <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
                     <div>
-                        <div class="d-flex mb-1">
+                        <div class="d-flex mb-1" style="gap: 0.5rem">
                             <div>
                                 <img width="40" height="40" src="" alt="" data-bind="
                                     css: { 'battle-tree-pokemon-fainted': $data.HP === 0 },
@@ -129,7 +136,7 @@
                 <div class="card-body p-2">
                     <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
                     <div>
-                        <div class="d-flex mb-1">
+                        <div class="d-flex mb-1" style="gap: 0.5rem">
                             <div>
                                 <img width="40" height="40" src="" alt="" data-bind="
                                     css: { 'battle-tree-pokemon-fainted': $data.HP === 0 },
@@ -215,7 +222,7 @@
                     placement: 'bottom'
                 }
             ">
-                <knockout data-bind="text: $data.id"></knockout>
+                <knockout data-bind="text: $data.id.toLocaleString('en-US', { useGrouping: false, minimumIntegerDigits: 3 })"></knockout>
             </div>
             <!-- /ko -->
         </div>
@@ -287,7 +294,7 @@
                     </button>
                     <!-- /ko -->
 
-                    <!-- ko if: App.game.battleTree.currentRun && App.game.battleTree.currentRun?.state !== BattleTreeRunState.FINISHED -->
+                    <!-- ko if: App.game.battleTree.currentRun && ![BattleTreeRunState.TEAM_SELECTION, BattleTreeRunState.FINISHED].includes(App.game.battleTree.currentRun.state) -->
                     <button class="btn btn-danger text-light" data-bind="
                         click: () => App.game.battleTree.abortRun()
                     ">

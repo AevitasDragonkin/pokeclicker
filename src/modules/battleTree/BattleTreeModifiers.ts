@@ -9,7 +9,7 @@ import {
 
 export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
-        id: '001',
+        id: 1,
         name: 'Attack',
         description: '+10 Attack',
         impact: BattleTreeModifierImpact.Positive,
@@ -19,7 +19,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '002',
+        id: 2,
         name: 'Defense',
         description: '+10 Defense',
         impact: BattleTreeModifierImpact.Positive,
@@ -29,7 +29,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '003',
+        id: 3,
         name: 'Hitpoints',
         description: '+10 Max Hitpoints',
         impact: BattleTreeModifierImpact.Positive,
@@ -39,7 +39,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '004',
+        id: 4,
         name: 'Super attack',
         description: 'Increase Attack by 10%',
         impact: BattleTreeModifierImpact.Positive,
@@ -49,7 +49,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '005',
+        id: 5,
         name: 'Super defense',
         description: 'Increase Defense by 10%',
         impact: BattleTreeModifierImpact.Positive,
@@ -59,7 +59,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '006',
+        id: 6,
         name: 'Super HP',
         description: 'Increase Max Hitpoints by 10%',
         impact: BattleTreeModifierImpact.Positive,
@@ -69,7 +69,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '007',
+        id: 7,
         name: 'Heal',
         description: 'Heal 10%',
         impact: BattleTreeModifierImpact.Positive,
@@ -79,7 +79,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '008',
+        id: 8,
         name: 'Super Heal',
         description: 'Heal 20%',
         impact: BattleTreeModifierImpact.Positive,
@@ -89,7 +89,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '009',
+        id: 9,
         name: 'Mega Heal',
         description: 'Heal 50%',
         impact: BattleTreeModifierImpact.Positive,
@@ -99,7 +99,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '010',
+        id: 10,
         name: 'Ultra Heal',
         description: 'Heal 100%',
         impact: BattleTreeModifierImpact.Positive,
@@ -109,7 +109,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '011',
+        id: 11,
         name: "Tactician's Insight",
         description: 'Double XP, No rewards',
         impact: BattleTreeModifierImpact.Neutral,
@@ -121,7 +121,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         limit: 1,
     }),
     new BattleTreeModifier({
-        id: '012',
+        id: 12,
         name: 'Trainer Discipline',
         description: 'Double rewards, No XP',
         impact: BattleTreeModifierImpact.Neutral,
@@ -133,7 +133,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         limit: 1,
     }),
     new BattleTreeModifier({
-        id: '013',
+        id: 13,
         name: 'Adrenaline Rush',
         description: 'All pokemon attack x1.5 faster',
         impact: BattleTreeModifierImpact.Positive,
@@ -144,7 +144,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         limit: 1,
     }),
     new BattleTreeModifier({
-        id: '014',
+        id: 14,
         name: 'Swift Command',
         description: 'All pokemon attack x2.5 faster',
         impact: BattleTreeModifierImpact.Positive,
@@ -155,7 +155,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         limit: 1,
     }),
     new BattleTreeModifier({
-        id: '015',
+        id: 15,
         name: 'Overdrive Engine',
         description: 'All pokemon attack x5 faster',
         impact: BattleTreeModifierImpact.Positive,
@@ -166,7 +166,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         limit: 1,
     }),
     new BattleTreeModifier({
-        id: '016',
+        id: 16,
         name: 'Time Distortion',
         description: 'All pokemon attack x10 faster',
         impact: BattleTreeModifierImpact.Positive,
@@ -177,7 +177,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         limit: 1,
     }),
     new BattleTreeModifier({
-        id: '017',
+        id: 17,
         name: 'Glass Cannon',
         description: 'Triple Attack, set Defense to 0',
         impact: BattleTreeModifierImpact.Neutral,
@@ -188,7 +188,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '018',
+        id: 18,
         name: 'Pressure Build',
         description: 'Enemies gain +5 Attack and +5 Defense for every stage',
         impact: BattleTreeModifierImpact.Negative,
@@ -200,7 +200,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         limit: 1,
     }),
     new BattleTreeModifier({
-        id: '019',
+        id: 19,
         name: 'Heavy Hand',
         description: 'Enemies deal +10 damage.',
         impact: BattleTreeModifierImpact.Negative,
@@ -210,7 +210,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '020',
+        id: 20,
         name: 'Fatigue',
         description: 'Reduce APS by 5% each stage',
         impact: BattleTreeModifierImpact.Negative,
@@ -220,7 +220,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '021',
+        id: 21,
         name: 'Enrage',
         description: 'Increase attack by party HP% lost',
         impact: BattleTreeModifierImpact.Neutral,
@@ -231,7 +231,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '022',
+        id: 22,
         name: 'Enemy growth',
         description: "Enemies gain +1 attack for each second you've spend in combat",
         impact: BattleTreeModifierImpact.Negative,
@@ -241,7 +241,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         ],
     }),
     new BattleTreeModifier({
-        id: '023',
+        id: 23,
         name: 'Toxic',
         description: 'Lose 1 Max Hitpoint for each 5 seconds of combat time',
         impact: BattleTreeModifierImpact.Negative,
@@ -259,7 +259,7 @@ export class BattleTreeModifiers {
         return this.modifiers.get(runID) ?? this.modifiers.set(runID, ko.observableArray()).get(runID);
     }
 
-    public static addModifier(runID: string, modifierID: string): BattleTreeModifier | undefined {
+    public static addModifier(runID: string, modifierID: number): BattleTreeModifier | undefined {
         const modifier = MODIFIER_LIST.find(mod => mod.id === modifierID);
         if (modifier) {
             this.getModifierList(runID).push(modifier);
