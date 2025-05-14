@@ -5,20 +5,6 @@
     </div>
 
     <div class="card-body d-flex flex-column p-2" style="gap: 0.5rem;">
-        <!-- Level -->
-        <div data-bind="tooltip: {
-            title: App.game.battleTree.battleTreeLevel >= BattleTree.MAX_LEVEL ? (App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US') : `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
-            trigger: 'hover'
-        }">
-            <div>Lvl. <knockout data-bind="text: App.game.battleTree.battleTreeLevel"></knockout></div>
-            <div class="progress" style='height: 5px'>
-                <div class="progress-bar bg-info" role="progressbar"
-                     data-bind="attr:{ style: 'width:' + App.game.battleTree.progressToNextLevel.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }) }"
-                     aria-valuemin="0" aria-valuemax="100">
-                </div>
-            </div>
-        </div>
-
         <!-- Team Selection -->
         <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.TEAM_SELECTION].includes(App.game.battleTree.currentRun.state) -->
         <div class="card">
@@ -44,26 +30,40 @@
                 <p class="text-center" style="font-size: 0.6rem; line-height: 1em;">Click on the Empty boxes to select a pokemon</p>
 
                 <div class="d-flex justify-content-center" style="gap: 1rem;">
-                    <button class="btn btn-success" data-bind="
+                    <button class="btn btn-info" data-bind="
+                        click: () => App.game.battleTree.currentRun.fillPlayerATeamRandomly(),,
+                        tooltip: {
+                            trigger: 'hover',
+                            title: 'Load random team',
+                            placement: 'bottom',
+                        }
+                    ">
+                        ↻
+                    </button>
+
+                    <button class="btn btn-success" style="width: 150px;" data-bind="
                         click: () => App.game.battleTree.currentRun.startRun(),
-                        enable: App.game.battleTree.currentRun.teamA.length > 0
+                        enable: App.game.battleTree.currentRun.teamA.length > 0,
+                        tooltip: {
+                            trigger: 'hover',
+                            title: App.game.battleTree.currentRun.teamA.length < 1 ? 'Select at least 1 pokemon for your team' : '',
+                            placement: 'bottom',
+                        }
                     ">
                         Start
                     </button>
 
                     <button class="btn btn-info" data-bind="
-                        click: () => App.game.battleTree.currentRun.fillPlayerATeamRandomly(),
-                    ">
-                        Randomize
-                    </button>
-
-                    <!-- ko if: App.game.battleTree.previousTeam.length > 0 -->
-                    <button class="btn btn-info" data-bind="
                         click: () => App.game.battleTree.loadPreviousTeam(),
+                        enable: App.game.battleTree.previousTeam.length > 0,
+                        tooltip: {
+                            trigger: 'hover',
+                            title: 'Load previous team',
+                            placement: 'bottom',
+                        }
                     ">
-                        Previous Team
+                        ⏎
                     </button>
-                    <!-- /ko -->
                 </div>
             </div>
         </div>
@@ -245,14 +245,6 @@
         </table>
         <!-- /ko -->
 
-        <!-- ko if: App.game.battleTree.currentRun && App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
-        <button class="btn btn-success text-light" data-bind="
-                        click: () => App.game.battleTree.createNewBattleTreeRun()
-                    ">
-            New run
-        </button>
-        <!-- /ko -->
-
         <!-- Settings -->
         <div class="card">
             <div class="card-body p-2">
@@ -295,11 +287,24 @@
                     </button>
                     <!-- /ko -->
 
+                    <!-- ko if: App.game.battleTree.currentRun && App.game.battleTree.currentRun?.state === BattleTreeRunState.FINISHED -->
+                    <button class="btn btn-success text-light" data-bind="
+                        click: () => App.game.battleTree.createNewBattleTreeRun()
+                    ">
+                        New run
+                    </button>
+                    <!-- /ko -->
+
                     <!-- ko if: App.game.battleTree.currentRun && ![BattleTreeRunState.TEAM_SELECTION, BattleTreeRunState.FINISHED].includes(App.game.battleTree.currentRun.state) -->
                     <button class="btn btn-danger text-light" data-bind="
-                        click: () => App.game.battleTree.abortRun()
+                        click: () => App.game.battleTree.abortRun(),
+                        tooltip: {
+                            trigger: 'hover',
+                            title: `Forfeiting will end the current run, and you will only receive ${BattleTree.FORFEIT_REWARD_MULTIPLIER.toLocaleString('en-US', { style: 'percent' })} of your rewards.`,
+                            placement: 'top'
+                        }
                     ">
-                        Abort run
+                        Forfeit
                     </button>
                     <!-- /ko -->
 

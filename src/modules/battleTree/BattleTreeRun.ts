@@ -284,6 +284,7 @@ export class BattleTreeRun {
     }
 
     public static handlePokemonDefeat(pokemon: BattleTreePokemon): void {
+        // TODO : BT : Handle statistics and defeat rewards (gems, egg steps, xp...)
         BattleTreeController.addBattleTreeExp(pokemon.name, pokemon.level);
     }
 }

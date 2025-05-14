@@ -27,13 +27,14 @@ export class BattleTree implements Feature {
     private _previousTeam: ObservableArray<PokemonNameType> = ko.observableArray();
 
     public static MAX_LEVEL: number = 100;
+    public static FORFEIT_REWARD_MULTIPLIER: number = 0.25;
 
     canAccess(): boolean {
         return true;
     }
 
     initialize(): void {
-
+        this._currentRun(new BattleTreeRun());
     }
 
     update(delta: number): void {
