@@ -13,13 +13,20 @@ export class BattleTree implements Feature {
 
     private _battleTreeExp: Observable<number> = ko.observable(0);
     private _battleTreeLevel: PureComputed<number> = ko.pureComputed(() => BattleTree.convertExperienceToLevel(this._battleTreeExp()));
-    private _progressToNextLevel: PureComputed<number> = ko.pureComputed(() =>
-        (this._battleTreeExp() - BattleTree.convertLevelToExperience(this._battleTreeLevel())) /
-        (BattleTree.convertLevelToExperience(this._battleTreeLevel() + 1) - BattleTree.convertLevelToExperience(this._battleTreeLevel())));
+    private _progressToNextLevel: PureComputed<number> = ko.pureComputed(() => {
+        if (this._battleTreeLevel() >= BattleTree.MAX_LEVEL) {
+            return 1;
+        }
+
+        return (this._battleTreeExp() - BattleTree.convertLevelToExperience(this._battleTreeLevel())) /
+            (BattleTree.convertLevelToExperience(this._battleTreeLevel() + 1) - BattleTree.convertLevelToExperience(this._battleTreeLevel()));
+    });
 
     private _currentRun: Observable<BattleTreeRun | null> = ko.observable(null);
 
     private _previousTeam: ObservableArray<PokemonNameType> = ko.observableArray();
+
+    public static MAX_LEVEL: number = 100;
 
     canAccess(): boolean {
         return true;
@@ -116,6 +123,6 @@ export class BattleTree implements Feature {
         while (experience >= this.convertLevelToExperience(level + 1)) {
             ++level;
         }
-        return Math.min(Math.max(level, 1), 100);
+        return Math.min(Math.max(level, 1), BattleTree.MAX_LEVEL);
     }
 }

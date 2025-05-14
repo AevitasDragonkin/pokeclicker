@@ -7,9 +7,9 @@
     <div class="card-body d-flex flex-column p-2" style="gap: 0.5rem;">
         <!-- Level -->
         <div data-bind="tooltip: {
-                                    title: `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
-                                    trigger: 'hover'
-                                }">
+            title: App.game.battleTree.battleTreeLevel >= BattleTree.MAX_LEVEL ? (App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US') : `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
+            trigger: 'hover'
+        }">
             <div>Lvl. <knockout data-bind="text: App.game.battleTree.battleTreeLevel"></knockout></div>
             <div class="progress" style='height: 5px'>
                 <div class="progress-bar bg-info" role="progressbar"
