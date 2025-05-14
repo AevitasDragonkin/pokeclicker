@@ -11,7 +11,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 1,
         name: 'Attack',
-        description: '+10 Attack',
+        description: '+10 Player Attack',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
@@ -21,7 +21,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 2,
         name: 'Defense',
-        description: '+10 Defense',
+        description: '+10 Player Defense',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
@@ -31,7 +31,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 3,
         name: 'Hitpoints',
-        description: '+10 Max Hitpoints',
+        description: '+10 Player Max Hitpoints',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
@@ -41,7 +41,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 4,
         name: 'Super attack',
-        description: 'Increase Attack by 10%',
+        description: 'Increase Player Attack by 10%',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
@@ -51,7 +51,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 5,
         name: 'Super defense',
-        description: 'Increase Defense by 10%',
+        description: 'Increase Player Defense by 10%',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
@@ -61,7 +61,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 6,
         name: 'Super HP',
-        description: 'Increase Max Hitpoints by 10%',
+        description: 'Increase Player Max Hitpoints by 10%',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
@@ -71,7 +71,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 7,
         name: 'Heal',
-        description: 'Heal 10%',
+        description: 'Instant Heal 10%',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Common,
         instantEffects: [
@@ -81,7 +81,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 8,
         name: 'Super Heal',
-        description: 'Heal 20%',
+        description: 'Instant Heal 20%',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Rare,
         instantEffects: [
@@ -91,7 +91,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 9,
         name: 'Mega Heal',
-        description: 'Heal 50%',
+        description: 'Instant Heal 50%',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Epic,
         instantEffects: [
@@ -101,7 +101,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 10,
         name: 'Ultra Heal',
-        description: 'Heal 100%',
+        description: 'Instant Heal 100%',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Epic,
         instantEffects: [
@@ -111,7 +111,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 11,
         name: "Tactician's Insight",
-        description: 'Double XP, No rewards',
+        description: 'Double XP<br/>Zero rewards',
         impact: BattleTreeModifierImpact.Neutral,
         rarity: BattleTreeModifierRarity.Epic,
         effects: [
@@ -123,7 +123,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 12,
         name: 'Trainer Discipline',
-        description: 'Double rewards, No XP',
+        description: 'Double rewards<br/>Zero XP',
         impact: BattleTreeModifierImpact.Neutral,
         rarity: BattleTreeModifierRarity.Epic,
         effects: [
@@ -179,7 +179,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 17,
         name: 'Glass Cannon',
-        description: 'Triple Attack, set Defense to 0',
+        description: 'Triple Player Attack<br/>Player Defense to 0',
         impact: BattleTreeModifierImpact.Neutral,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
@@ -190,7 +190,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 18,
         name: 'Pressure Build',
-        description: 'Enemies gain +5 Attack and +5 Defense for every stage',
+        description: '+5 Enemy Attack<br/>+5 Enemy Defense<br/>Every stage',
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
@@ -202,7 +202,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 19,
         name: 'Heavy Hand',
-        description: 'Enemies deal +10 damage.',
+        description: '+10 Enemy Damage',
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
@@ -212,11 +212,11 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 20,
         name: 'Fatigue',
-        description: 'Reduce APS by 5% each stage',
+        description: 'Reduce APS by 1%<br/>Every stage',
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
-            { source: 'attacks-per-second', type: BattleTreeModifierEffectType.Multiplicative, value: run => 0.95 ** run.stage, target: BattleTreeModifierEffectTarget.Player },
+            { source: 'attacks-per-second', type: BattleTreeModifierEffectType.Multiplicative, value: run => 0.99 ** run.stage, target: BattleTreeModifierEffectTarget.Player },
         ],
     }),
     new BattleTreeModifier({
@@ -233,7 +233,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 22,
         name: 'Enemy growth',
-        description: "Enemies gain +1 attack for each second you've spend in combat",
+        description: '+1 Enemy attack<br/>Every second of combat',
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
@@ -243,7 +243,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 23,
         name: 'Toxic',
-        description: 'Lose 1 Max Hitpoint for each 5 seconds of combat time',
+        description: '-1 Player Max Hitpoints<br/>Every 5 seconds of combat',
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [

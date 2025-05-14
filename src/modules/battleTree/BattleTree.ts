@@ -108,8 +108,9 @@ export class BattleTree implements Feature {
     }
 
     fromJSON(json: Record<string, any>): void {
+        this._battleTreeExp(json.battleTreeExp ?? 0);
+
         if (json.run) {
-            this._battleTreeExp(json.battleTreeExp ?? 0);
             this._currentRun(BattleTreeRun.fromJSON(json.run));
         }
     }

@@ -114,7 +114,7 @@
                 ">
                     <div style="font-size: 0.6rem; line-height: 1em;" data-bind="text: $data.id.toLocaleString('en-US', { useGrouping: false, minimumIntegerDigits: 3 })"></div>
                     <h4 data-bind="text: $data.name"></h4>
-                    <div class="flex-grow-1 mb-2 small text-wrap" data-bind="text: $data.description"></div>
+                    <div class="flex-grow-1 mb-2 small text-wrap" data-bind="html: $data.description"></div>
                     <div style="font-size: 0.6rem; line-height: 1em;">Limit: <knockout data-bind="text: $data.limit"></knockout></div>
                 </div>
                 <!-- /ko -->
