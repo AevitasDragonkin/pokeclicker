@@ -9,6 +9,7 @@ import { BattleTreeModifier, BattleTreeModifierEffectTarget } from './BattleTree
 import { BattleTreeModifiers } from './BattleTreeModifiers';
 import { SHINY_CHANCE_BATTLE } from '../GameConstants';
 import { pokemonMap } from '../pokemons/PokemonList';
+import GameHelper from '../GameHelper';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -79,7 +80,13 @@ export class BattleTreeRun {
                     this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.HP > 0).name);
 
                 } else if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A) {
-                    // TODO : BT : Give stage reward
+                    GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompleted, 1);
+                    App.game.statistics.battleTreeHighestStageCompleted(Math.max(this._stage(), App.game.statistics.battleTreeHighestStageCompleted()));
+                    if (this.seed === BattleTreeController.calculateSeed()) {
+                        App.game.statistics.battleTreeHighestDailyStageCompleted(Math.max(this._stage(), App.game.statistics.battleTreeHighestDailyStageCompleted()));
+                    }
+
+                    this.addStageReward();
                     this._state(BattleTreeRunState.REWARD);
 
                     if (this._stage() % 5 === 0 ) {
@@ -94,7 +101,9 @@ export class BattleTreeRun {
                         this.nextStage();
                     }
                 } else {
-                    // TODO : BT : Give final reward
+                    GameHelper.incrementObservable(App.game.statistics.battleTreeTotalRunsCompleted, 1);
+
+                    this.addRunReward();
                     this._state(BattleTreeRunState.FINISHED);
                 }
             }
@@ -181,6 +190,14 @@ export class BattleTreeRun {
 
     public removePokemonFromPlayerATeam(pokemon: PokemonNameType): void {
         this._teamA.remove(this._teamA().find(p => p.name === pokemon));
+    }
+
+    private addStageReward(): void {
+        // TODO : BT : Give stage reward
+    }
+
+    private addRunReward(): void {
+        // TODO : BT : Give final reward
     }
 
     get seed(): number {
