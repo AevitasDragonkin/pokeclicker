@@ -1,16 +1,16 @@
-import {Observable, ObservableArray, PureComputed} from 'knockout';
-import {BattleTreeBattle, BattleTreeBattleWinner} from './BattleTreeBattle';
-import {PokemonNameType} from '../pokemons/PokemonNameType';
-import {BattleTreePokemon} from './BattleTreePokemon';
-import {BattleTreeController} from './BattleTreeController';
+import { Observable, ObservableArray, PureComputed } from 'knockout';
+import { BattleTreeBattle, BattleTreeBattleWinner } from './BattleTreeBattle';
+import { PokemonNameType } from '../pokemons/PokemonNameType';
+import { BattleTreePokemon } from './BattleTreePokemon';
+import { BattleTreeController } from './BattleTreeController';
 import Rand from '../utilities/Rand';
 import Settings from '../settings';
-import {BattleTreeModifier, BattleTreeModifierEffectTarget} from './BattleTreeModifier';
-import {BattleTreeModifiers} from './BattleTreeModifiers';
-import {Currency, SHINY_CHANCE_BATTLE} from '../GameConstants';
-import {pokemonMap} from '../pokemons/PokemonList';
+import { BattleTreeModifier, BattleTreeModifierEffectTarget } from './BattleTreeModifier';
+import { BattleTreeModifiers } from './BattleTreeModifiers';
+import { Currency, SHINY_CHANCE_BATTLE } from '../GameConstants';
+import { pokemonMap } from '../pokemons/PokemonList';
 import GameHelper from '../GameHelper';
-import {BattleTreeRewards, BattleTreeRewardType} from './BattleTreeRewards';
+import { BattleTreeRewards, BattleTreeRewardType } from './BattleTreeRewards';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,

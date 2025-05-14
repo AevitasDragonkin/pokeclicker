@@ -1,7 +1,7 @@
 import PokemonType from '../enums/PokemonType';
-import {ObservableArray} from 'knockout';
-import {Currency} from '../GameConstants';
-import {ItemNameType} from '../items/ItemNameType';
+import { ObservableArray } from 'knockout';
+import { Currency } from '../GameConstants';
+import { ItemNameType } from '../items/ItemNameType';
 
 /* eslint-disable @typescript-eslint/no-shadow */
 export enum BattleTreeRewardType {
