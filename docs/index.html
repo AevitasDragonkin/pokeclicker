@@ -2613,7 +2613,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 ">
                     <div style="font-size: 0.6rem; line-height: 1em;" data-bind="text: $data.id.toLocaleString('en-US', { useGrouping: false, minimumIntegerDigits: 3 })"></div>
                     <h4 data-bind="text: $data.name"></h4>
-                    <div class="flex-grow-1 mb-2 small text-wrap" data-bind="text: $data.description"></div>
+                    <div class="flex-grow-1 mb-2 small text-wrap" data-bind="html: $data.description"></div>
                     <div style="font-size: 0.6rem; line-height: 1em;">Limit: <knockout data-bind="text: $data.limit"></knockout></div>
                 </div>
                 <!-- /ko -->
@@ -2972,9 +2972,9 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
     <div class="card-body d-flex flex-column p-2" style="gap: 0.5rem;">
         <!-- Level -->
         <div data-bind="tooltip: {
-                                    title: `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
-                                    trigger: 'hover'
-                                }">
+            title: App.game.battleTree.battleTreeLevel >= BattleTree.MAX_LEVEL ? (App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US') : `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
+            trigger: 'hover'
+        }">
             <div>Lvl. <knockout data-bind="text: App.game.battleTree.battleTreeLevel"></knockout></div>
             <div class="progress" style='height: 5px'>
                 <div class="progress-bar bg-info" role="progressbar"
@@ -3184,6 +3184,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 tooltip: {
                     trigger: 'hover',
                     title: $data.description,
+                    html: true,
                     placement: 'bottom'
                 }
             ">
