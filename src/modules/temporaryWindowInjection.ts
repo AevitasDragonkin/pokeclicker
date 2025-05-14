@@ -221,6 +221,7 @@ import { BattleTree } from './battleTree/BattleTree';
 import { BattleTreeController } from './battleTree/BattleTreeController';
 import { BattleTreeRunState } from './battleTree/BattleTreeRun';
 import { BattleTreeModifierImpact } from './battleTree/BattleTreeModifier';
+import { BattleTreeRewards } from './battleTree/BattleTreeRewards';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -456,4 +457,5 @@ Object.assign(<any>window, {
     BattleTreeController,
     BattleTreeRunState,
     BattleTreeModifierImpact,
+    BattleTreeRewards,
 });
