@@ -9,6 +9,7 @@ import {
     BattleTreeModifierEffectTarget,
     BattleTreeModifierEffectSource, BattleTreeModifierEffectType,
 } from './BattleTreeModifier';
+import { BattlePokemonGender } from '../GameConstants';
 
 type BattleTreePokemonProperties = {
     runID: string;
@@ -93,6 +94,9 @@ export class BattleTreePokemon {
     private _speed: PureComputed<number> = ko.pureComputed(() => Math.floor(this.processModifierEffects(statPointFormula(this._baseSpeed(), this.level), 'speed')));
 
     private _attacksPerSecond: PureComputed<number> = ko.pureComputed(() => 1.5 * Math.pow((this._speed() - 1) / 254, 2) + 0.5);
+
+    private _shiny: Observable<boolean | undefined> = ko.observable(undefined);
+    private _gender: Observable<BattlePokemonGender | undefined> = ko.observable(undefined);
 
     constructor(properties: BattleTreePokemonProperties) {
         this.uuid = crypto.randomUUID();
@@ -203,6 +207,22 @@ export class BattleTreePokemon {
         return this._attackCounter >= 1 / this.attacksPerSecond;
     }
 
+    get shiny(): boolean | undefined {
+        return this._shiny();
+    }
+
+    set shiny(value: boolean | undefined) {
+        this._shiny(value);
+    }
+
+    get gender(): BattlePokemonGender {
+        return this._gender();
+    }
+
+    set gender(value: BattlePokemonGender | undefined) {
+        this._gender(value);
+    }
+
     toJSON(): Record<string, any> {
         return {
             runID: this._properties.runID,
@@ -211,6 +231,8 @@ export class BattleTreePokemon {
             targetID: this._properties.modifierTargetID,
             hp: this._hp(),
             attackCounter: this._attackCounter,
+            shiny: this._shiny() || undefined,
+            gender: this._gender(),
         };
     }
 
@@ -224,6 +246,8 @@ export class BattleTreePokemon {
 
         pokemon._hp(json.hp ?? pokemon.maxHP);
         pokemon._attackCounter = json.attackCounter ?? 0;
+        pokemon._shiny(json.shiny);
+        pokemon._gender(json.gender);
 
         return pokemon;
     }

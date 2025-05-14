@@ -7,6 +7,8 @@ import Rand from '../utilities/Rand';
 import Settings from '../settings';
 import { BattleTreeModifier, BattleTreeModifierEffectTarget } from './BattleTreeModifier';
 import { BattleTreeModifiers } from './BattleTreeModifiers';
+import { SHINY_CHANCE_BATTLE } from '../GameConstants';
+import { pokemonMap } from '../pokemons/PokemonList';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -62,7 +64,7 @@ export class BattleTreeRun {
                 const teamBCanContinue: boolean = this._teamB().some(p => p.HP > 0);
 
                 if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A || this._battle().winner === BattleTreeBattleWinner.DRAW) {
-                    BattleTreeController.addBattleTreeExp(this._battle().pokemonB.name, this._battle().pokemonB.level);
+                    BattleTreeRun.handlePokemonDefeat(this._battle().pokemonB);
                 }
 
                 if (teamACanContinue && teamBCanContinue) {
@@ -147,6 +149,10 @@ export class BattleTreeRun {
                 level: BattleTreeController.calculatePokemonLevelForStage(this.stage),
                 modifierTargetID: BattleTreeModifierEffectTarget.Enemy,
             })));
+        this._teamB().forEach(p => {
+            p.shiny = PokemonFactory.generateShiny(SHINY_CHANCE_BATTLE);
+            p.gender = PokemonFactory.generateGenderById(pokemonMap[p.name].id);
+        });
         this.createBattle(this._selectedPokemon(), this._teamB()[0].name);
     }
 
@@ -275,5 +281,9 @@ export class BattleTreeRun {
         }
 
         return run;
+    }
+
+    public static handlePokemonDefeat(pokemon: BattleTreePokemon): void {
+        BattleTreeController.addBattleTreeExp(pokemon.name, pokemon.level);
     }
 }
