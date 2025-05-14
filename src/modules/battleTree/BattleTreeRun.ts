@@ -121,13 +121,16 @@ export class BattleTreeRun {
         }
     }
 
-    public createBattle(pokemonAName: PokemonNameType, pokemonBName: PokemonNameType) {
+    public createBattle(pokemonAName: PokemonNameType, pokemonBName: PokemonNameType, startBattleState: boolean = true) {
         const pokemonA: BattleTreePokemon = this._teamA().find((p: BattleTreePokemon) => p.name === pokemonAName);
         const pokemonB: BattleTreePokemon = this._teamB().find((p: BattleTreePokemon) => p.name === pokemonBName);
 
         if (pokemonA && pokemonB) {
             this._battle(new BattleTreeBattle({ runID: this.uuid, pokemonA, pokemonB }));
-            this._state(BattleTreeRunState.BATTLE);
+
+            if (startBattleState) {
+                this._state(BattleTreeRunState.BATTLE);
+            }
         }
     }
 
@@ -297,7 +300,7 @@ export class BattleTreeRun {
         run._selectedPokemon(json.selectedPokemon ?? null);
 
         if (json.battle?.pokemonA && json.battle?.pokemonB) {
-            run.createBattle(json.battle.pokemonA, json.battle.pokemonB);
+            run.createBattle(json.battle.pokemonA, json.battle.pokemonB, false);
         }
 
         return run;
