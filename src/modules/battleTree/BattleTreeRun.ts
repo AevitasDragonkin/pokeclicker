@@ -210,6 +210,7 @@ export class BattleTreeRun {
     private addRunReward(): void {
         // TODO : BT : Give final reward
         BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Currency, currency: Currency.battlePoint, amount: ko.observable(1000) });
+        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Item, item: 'xAttack', amount: ko.observable(1) });
     }
 
     get seed(): number {
