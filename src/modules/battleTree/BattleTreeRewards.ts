@@ -1,5 +1,5 @@
 import PokemonType from '../enums/PokemonType';
-import { ObservableArray } from 'knockout';
+import { Observable, ObservableArray } from 'knockout';
 import { Currency } from '../GameConstants';
 import { ItemNameType } from '../items/ItemNameType';
 
@@ -12,7 +12,7 @@ export enum BattleTreeRewardType {
 /* eslint-enable @typescript-eslint/no-shadow */
 
 type BattleTreeBaseReward = {
-    amount: number;
+    amount: Observable<number>;
 };
 
 type BattleTreeGemReward = {
@@ -51,9 +51,10 @@ export class BattleTreeRewards {
             });
 
         if (existingReward) {
-            existingReward.amount += reward.amount;
+            existingReward.amount(existingReward.amount() + reward.amount());
         } else {
             this.getRewardList(runID).push(reward);
         }
+        this.getRewardList(runID).sort((a, b) => a.type.localeCompare(b.type));
     }
 }

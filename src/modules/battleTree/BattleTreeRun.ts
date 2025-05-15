@@ -67,6 +67,12 @@ export class BattleTreeRun {
 
                 if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A || this._battle().winner === BattleTreeBattleWinner.DRAW) {
                     BattleTreeRun.handlePokemonDefeat(this._battle().pokemonB);
+
+                    const pokemonTypeA = pokemonMap[this._battle().pokemonB.name].type[0];
+                    const pokemonTypeB = pokemonMap[this._battle().pokemonB.name].type[1] ?? pokemonTypeA;
+
+                    BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Gem, gemType: pokemonTypeA, amount: ko.observable(5) });
+                    BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Gem, gemType: pokemonTypeB, amount: ko.observable(5) });
                 }
 
                 if (teamACanContinue && teamBCanContinue) {
@@ -198,12 +204,12 @@ export class BattleTreeRun {
 
     private addStageReward(): void {
         // TODO : BT : Give stage reward
-        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Currency, currency: Currency.money, amount: 1000 * this._stage() });
+        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Currency, currency: Currency.money, amount: ko.observable(1000 * this._stage()) });
     }
 
     private addRunReward(): void {
         // TODO : BT : Give final reward
-        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Currency, currency: Currency.battlePoint, amount: 1000 });
+        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Currency, currency: Currency.battlePoint, amount: ko.observable(1000) });
     }
 
     get seed(): number {
@@ -274,6 +280,7 @@ export class BattleTreeRun {
                 pokemonB: this._battle().pokemonB.name,
             } : undefined,
             modifiers: BattleTreeModifiers.getModifierList(this.uuid)().map(modifier => modifier.id),
+            rewards: ko.toJS(BattleTreeRewards.getRewardList(this.uuid)),
             runTime: this._runTimer(),
             combatTime: this._combatTimer(),
             teamA: this._teamA().map((p: BattleTreePokemon) => p.toJSON()),
@@ -289,7 +296,8 @@ export class BattleTreeRun {
         run._seed(json.seed ?? 0);
         run._state(json.state ?? BattleTreeRunState.TEAM_SELECTION);
 
-        json.modifiers?.forEach(id => BattleTreeModifiers.addModifier(json.uuid, id));
+        json.modifiers?.forEach(id => BattleTreeModifiers.addModifier(run.uuid, id));
+        json.rewards?.forEach(reward => BattleTreeRewards.addReward(run.uuid, { ...reward, amount: ko.observable(reward.amount) }));
 
         run._teamA(json.teamA?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);
         run._teamB(json.teamB?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);
