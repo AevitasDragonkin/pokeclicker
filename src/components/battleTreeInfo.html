@@ -311,13 +311,15 @@
 
             <div class="modal-body">
                 <p>Every day, a new selection of pokemon will be available for you to create your team from.</p>
-                <h3>Available pokemon</h3>
                 <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem;">
-                    <!-- ko foreach: App.game.battleTree.currentRun?.longListSelection().filter(name => App.game.party.alreadyCaughtPokemonByName(name)).sort((a, b) => pokemonMap[a].id - pokemonMap[b].id) ?? [] -->
+                    <!-- ko foreach: App.game.battleTree.currentRun?.longListSelection().sort((a, b) => pokemonMap[a].id - pokemonMap[b].id) ?? [] -->
                     <!-- ko with: pokemonMap[$data] -->
                     <a class="position-relative border" data-bind="
                         enable: true,
-                        css: { 'border-info': App.game.battleTree.currentRun?.teamA.map(p => p.name).includes($data.name) },
+                        css: {
+                            'clickable': App.game.party.alreadyCaughtPokemonByName($data.name),
+                            'border-info': App.game.battleTree.currentRun?.teamA.map(p => p.name).includes($data.name),
+                        },
                         click: () => {
                             if (!App.game.party.alreadyCaughtPokemonByName($data.name)) {
                                 return;
@@ -330,27 +332,7 @@
                         }
                     ">
                         <div class="p-2">
-                            <div data-bind="style: { background: PokedexHelper.getBackgroundColors($data.name) }">
-                                <img width="96" height="96" style="object-fit: contain;" src="" alt="" data-bind="
-                                    attr: {
-                                        src: PokemonHelper.getImage($data.id)
-                                    }
-                                ">
-                            </div>
-                        </div>
-                        <span class="position-absolute px-1 text-truncate" style="color: #f5f5f5; background-color: rgba(0, 0, 0, .5); left: 0; right: 0; bottom: 0;" data-bind="text: PokemonHelper.displayName($data.name)"></span>
-                    </a>
-                    <!-- /ko -->
-                    <!-- /ko -->
-                </div>
-
-                <h3>Not available pokemon</h3>
-                <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem;">
-                    <!-- ko foreach: App.game.battleTree.currentRun?.longListSelection().filter(name => !App.game.party.alreadyCaughtPokemonByName(name)).sort((a, b) => pokemonMap[a].id - pokemonMap[b].id) ?? [] -->
-                    <!-- ko with: pokemonMap[$data] -->
-                    <a class="position-relative border">
-                        <div class="p-2">
-                            <div>
+                            <div data-bind="style: { background: App.game.party.alreadyCaughtPokemonByName($data.name) ? PokedexHelper.getBackgroundColors($data.name) : 'transparent' }">
                                 <img width="96" height="96" style="object-fit: contain;" src="" alt="" data-bind="
                                     css: {
                                         'pokemon-not-seen': !PokedexHelper.pokemonSeen($data.id)(),
@@ -362,7 +344,7 @@
                                 ">
                             </div>
                         </div>
-                        <span class="position-absolute px-1 text-truncate" style="color: #f5f5f5; background-color: rgba(0, 0, 0, .5); left: 0; right: 0; bottom: 0;" data-bind="text: !PokedexHelper.pokemonSeen($data.id)() ? '???' : PokemonHelper.displayName($data.name)"></span>
+                        <span class="position-absolute px-1 text-truncate" style="color: #f5f5f5; background-color: rgba(0, 0, 0, .5); left: 0; right: 0; bottom: 0;" data-bind="text: PokemonHelper.displayName($data.name)"></span>
                     </a>
                     <!-- /ko -->
                     <!-- /ko -->

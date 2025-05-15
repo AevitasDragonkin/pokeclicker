@@ -4,28 +4,45 @@ import { PokemonListData, pokemonMap } from '../pokemons/PokemonList';
 import { PureComputed } from 'knockout';
 import { BattleTreeModifier } from './BattleTreeModifier';
 import { BattleTreeModifiers, MODIFIER_LIST } from './BattleTreeModifiers';
+import GameHelper from '../GameHelper';
+import { Region } from '../GameConstants';
 
 export class BattleTreeController {
     public static availablePokemonNames: PureComputed<PokemonListData[]> = ko.pureComputed(() => pokemonMap.filter(p => PokemonLocations.isObtainable(p.name)));
-    public static uniqueIDs: PureComputed<number[]> = ko.pureComputed(() => [...new Set(BattleTreeController.availablePokemonNames().map(p => Math.floor(p.id)))]);
 
     public static calculateSeed(): number {
         const now = new Date();
         return Number((now.getFullYear() - 1900) * now.getDate() + 1000 * now.getMonth() + 100000 * now.getDate());
     }
 
-    public static getRandomTeamForStage(seed: number, stage: number, amount: number): PokemonNameType[] {
-        BattleTreeRand.seed(seed + stage);
+    public static getRegion(seed: number): Region {
+        BattleTreeRand.seed(seed);
+        const shuffledRegions = BattleTreeRand.shuffleArray(GameHelper.enumNumbers(Region));
+        const allowedShuffledRegions = shuffledRegions.filter(value => value >= 0 && value <= player.highestRegion());
 
-        return BattleTreeRand.shuffleArray(this.uniqueIDs()).slice(0, amount)
-            .map(id => BattleTreeRand.fromArray(pokemonMap.filter(p => Math.floor(p.id) === id && p.nativeRegion <= player.highestRegion())).name);
+        return allowedShuffledRegions[0] ?? Region.alola;
+    }
+
+    public static getRandomTeamForStage(seed: number, stage: number, amount: number): PokemonNameType[] {
+        const regionPokemon = this.availablePokemonNames().filter(p => pokemonMap[p.name].nativeRegion <= player.highestRegion());
+        const regionPokemonUniqueIDs = [...new Set(regionPokemon.map(p => Math.floor(p.id)))];
+
+        BattleTreeRand.seed(seed + stage);
+        const shuffledUniqueIDs = BattleTreeRand.shuffleArray(regionPokemonUniqueIDs);
+
+        return shuffledUniqueIDs.slice(0, amount).map(id => BattleTreeRand.fromArray(pokemonMap.filter(p => Math.floor(p.id) === id && p.nativeRegion <= player.highestRegion())).name);
     }
 
     public static getLongListTeamSelection(seed: number, amount: number): PokemonNameType[] {
-        BattleTreeRand.seed(seed);
+        const selectedRegion = this.getRegion(seed);
 
-        return BattleTreeRand.shuffleArray(this.uniqueIDs()).slice(0, amount)
-            .map(id => BattleTreeRand.fromArray(pokemonMap.filter(p => Math.floor(p.id) === id && p.nativeRegion <= player.highestRegion())).name);
+        const regionPokemon = this.availablePokemonNames().filter(p => pokemonMap[p.name].nativeRegion === selectedRegion);
+        const regionPokemonUniqueIDs = [...new Set(regionPokemon.map(p => Math.floor(p.id)))];
+
+        BattleTreeRand.seed(seed);
+        const shuffledUniqueIDs = BattleTreeRand.shuffleArray(regionPokemonUniqueIDs);
+
+        return shuffledUniqueIDs.slice(0, amount).map(id => BattleTreeRand.fromArray(pokemonMap.filter(p => Math.floor(p.id) === id && p.nativeRegion === selectedRegion)).name);
     }
 
     public static getModifierOptionsForStage(seed: number, runID: string, stage: number, amount: number): BattleTreeModifier[] {
