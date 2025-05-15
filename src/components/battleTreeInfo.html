@@ -259,11 +259,11 @@
         <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD, BattleTreeRunState.FINISHED].includes(App.game.battleTree.currentRun.state) -->
         <table class="table table-striped table-hover table-bordered table-sm m-0">
             <thead>
-            <tr class="thead-dark">
+            <tr class="thead-dark clickable position-relative" href="#battle-tree-rewards-currencies" data-toggle="collapse">
                 <th colspan="2">Currencies</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="battle-tree-rewards-currencies" class="">
             <!-- ko foreach: BattleTreeRewards.getRewardList(App.game.battleTree.currentRun.uuid)().filter(r => r.type === 'Currency') -->
             <!-- ko template: { name: 'battleTreeRewardTemplate', data: { model: $data } } -->
             <!-- /ko -->
@@ -271,11 +271,11 @@
             </tbody>
 
             <thead>
-            <tr class="thead-dark">
+            <tr class="thead-dark clickable position-relative" href="#battle-tree-rewards-items" data-toggle="collapse">
                 <th colspan="2">Items</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="battle-tree-rewards-items" class="">
             <!-- ko foreach: BattleTreeRewards.getRewardList(App.game.battleTree.currentRun.uuid)().filter(r => r.type === 'Item') -->
             <!-- ko template: { name: 'battleTreeRewardTemplate', data: { model: $data } } -->
             <!-- /ko -->
@@ -283,11 +283,11 @@
             </tbody>
 
             <thead>
-            <tr class="thead-dark">
+            <tr class="thead-dark clickable collapsed position-relative" href="#battle-tree-rewards-gems" data-toggle="collapse">
                 <th colspan="2">Gems</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="battle-tree-rewards-gems" class="collapse">
             <!-- ko foreach: BattleTreeRewards.getRewardList(App.game.battleTree.currentRun.uuid)().filter(r => r.type === 'Gem') -->
             <!-- ko template: { name: 'battleTreeRewardTemplate', data: { model: $data } } -->
             <!-- /ko -->
