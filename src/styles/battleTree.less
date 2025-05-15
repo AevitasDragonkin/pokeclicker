@@ -9,7 +9,7 @@
     z-index: 50;
 }
 
-.thead-dark.clickable::after {
+[data-toggle="collapse"]::after {
     content: '❯';
     position: absolute;
     font-size: 10px;
@@ -19,6 +19,6 @@
     transform: rotate(90deg) translateY(-50%);
 }
 
-.thead-dark.clickable.collapsed::after {
+[data-toggle="collapse"].collapsed::after {
     transform: rotate(0deg) translateY(-50%);
 }
