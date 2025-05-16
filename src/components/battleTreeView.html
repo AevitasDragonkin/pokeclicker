@@ -106,7 +106,7 @@
                                     'clickable': $data.HP > 0,
                                     'battle-tree-pokemon-fainted': $data.HP === 0,
                                 },
-                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id, $data.shiny, $data.gender, false) }
                             ">
                         <div class="progress" style="min-height: 3px; height: 3px;">
                             <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
