@@ -2503,6 +2503,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
             <div>Stage <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout></div>
             <div><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code></div>
+            <div>Delay • <knockout data-bind="text: BattleTreeController.calculateAttackSpeed(App.game.battleTree.currentRun.uuid).toFixed(2)"></knockout></div>
         </div>
 
         <div class="p-3">
@@ -2512,13 +2513,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                     <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
                     <div>
                         <img width="56" height="56" style="object-fit: contain" src="" alt="" data-bind="
-                                click: () => {
-                                    if ($data.HP > 0) {
-                                        App.game.battleTree.currentRun.selectedPokemon = $data.name
-                                    }
-                                },
                                 css: {
-                                    'clickable': $data.HP > 0,
                                     'battle-tree-pokemon-fainted': $data.HP === 0,
                                 },
                                 attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
@@ -2596,16 +2591,10 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                     <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
                     <div>
                         <img width="56" height="56" style="object-fit: contain" src="" alt="" data-bind="
-                                click: () => {
-                                    if ($data.HP > 0) {
-                                        App.game.battleTree.currentRun.selectedPokemon = $data.name
-                                    }
-                                },
                                 css: {
-                                    'clickable': $data.HP > 0,
                                     'battle-tree-pokemon-fainted': $data.HP === 0,
                                 },
-                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id, $data.shiny, $data.gender, false) }
                             ">
                         <div class="progress" style="min-height: 3px; height: 3px;">
                             <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
@@ -3128,8 +3117,16 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                             <tr>
                                 <td class="p-0">Speed</td>
                                 <td class="p-0"><code data-bind="text: $data.speed"></code></td>
-                                <td class="p-0">APS</td>
-                                <td class="p-0"><code data-bind="text: $data.attacksPerSecond.toFixed(2)"></code></td>
+                                <td class="p-0 vertical-middle" colspan="2">
+                                    <div class="d-flex justify-content-center" style="gap: 0.25rem;">
+                                        <span class="badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="visible: pokemonMap[$data.name].type[0] >= 0, style: { 'background-color': GameConstants.TypeColor[pokemonMap[$data.name].type[0]] }">
+                                            <small><strong data-bind="text: PokemonType[pokemonMap[$data.name].type[0]]"></strong></small>
+                                        </span>
+                                        <span class="badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="visible: pokemonMap[$data.name].type[1] >= 0, style: { 'background-color': GameConstants.TypeColor[pokemonMap[$data.name].type[1]] }">
+                                            <small><strong data-bind="text: PokemonType[pokemonMap[$data.name].type[1]]"></strong></small>
+                                        </span>
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -3186,8 +3183,16 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                             <tr>
                                 <td class="p-0">Speed</td>
                                 <td class="p-0"><code data-bind="text: $data.speed"></code></td>
-                                <td class="p-0">APS</td>
-                                <td class="p-0"><code data-bind="text: $data.attacksPerSecond.toFixed(2)"></code></td>
+                                <td class="p-0 vertical-middle" colspan="2">
+                                    <div class="d-flex justify-content-center" style="gap: 0.25rem;">
+                                        <span class="badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="visible: pokemonMap[$data.name].type[0] >= 0, style: { 'background-color': GameConstants.TypeColor[pokemonMap[$data.name].type[0]] }">
+                                            <small><strong data-bind="text: PokemonType[pokemonMap[$data.name].type[0]]"></strong></small>
+                                        </span>
+                                        <span class="badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="visible: pokemonMap[$data.name].type[1] >= 0, style: { 'background-color': GameConstants.TypeColor[pokemonMap[$data.name].type[1]] }">
+                                            <small><strong data-bind="text: PokemonType[pokemonMap[$data.name].type[1]]"></strong></small>
+                                        </span>
+                                    </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -3255,7 +3260,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
         <!-- Rewards -->
         <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD, BattleTreeRunState.FINISHED].includes(App.game.battleTree.currentRun.state) -->
-        <table class="table table-striped table-hover table-bordered table-sm m-0">
+        <table class="table table-striped table-hover table-bordered table-sm m-0 table-battle-tree-rewards">
             <thead>
             <tr class="thead-dark clickable position-relative" href="#battle-tree-rewards-currencies" data-toggle="collapse">
                 <th colspan="2">Currencies</th>
@@ -3437,11 +3442,11 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                                 <td data-bind="text: App.game.statistics.battleTreeTotalRunsCompleted().toLocaleString('en-US')"></td>
                             </tr>
                             <tr>
-                                <td class="text-left vertical-middle">Highest stage reached</td>
+                                <td class="text-left vertical-middle">Highest stage completed</td>
                                 <td data-bind="text: App.game.statistics.battleTreeHighestStageCompleted().toLocaleString('en-US')"></td>
                             </tr>
                             <tr>
-                                <td class="text-left vertical-middle">Highest stage reach (today)</td>
+                                <td class="text-left vertical-middle">Highest stage completed (today)</td>
                                 <td data-bind="text: App.game.statistics.battleTreeHighestDailyStageCompleted().toLocaleString('en-US')"></td>
                             </tr>
                             </tbody>
