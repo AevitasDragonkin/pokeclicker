@@ -2,7 +2,7 @@ import { BattleTreeRand } from './BattleTreeRand';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { PokemonListData, pokemonMap } from '../pokemons/PokemonList';
 import { PureComputed } from 'knockout';
-import { BattleTreeModifier } from './BattleTreeModifier';
+import { BattleTreeModifier, BattleTreeModifierEffectType } from './BattleTreeModifier';
 import { BattleTreeModifiers, MODIFIER_LIST } from './BattleTreeModifiers';
 import GameHelper from '../GameHelper';
 import { Region } from '../GameConstants';
@@ -72,6 +72,22 @@ export class BattleTreeController {
     public static calculateLongListSelectionSize(): number {
         // TODO : BT : Calculate proper size for the player's selection
         return 20;
+    }
+
+    public static calculateAttackSpeed(runID: string) {
+        const initialAttackSpeed = 1;
+
+        return BattleTreeModifiers.getModifierList(runID)()
+            .flatMap(value => value.effects)
+            .filter(value => value.source === 'attack-delay')
+            .reduce((previousValue, currentValue) => {
+                switch (currentValue.type) {
+                    case BattleTreeModifierEffectType.Additive: return previousValue + currentValue.value;
+                    case BattleTreeModifierEffectType.Multiplicative: return previousValue * currentValue.value;
+                    case BattleTreeModifierEffectType.Reset: return initialAttackSpeed;
+                    case BattleTreeModifierEffectType.Set: return currentValue.value;
+                }
+            }, initialAttackSpeed);
     }
 
     public static addBattleTreeExp(name: PokemonNameType, level: number): void {

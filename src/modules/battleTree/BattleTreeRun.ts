@@ -33,8 +33,6 @@ export class BattleTreeRun {
     private _teamA: ObservableArray<BattleTreePokemon>;
     private _teamB: ObservableArray<BattleTreePokemon>;
 
-    private _selectedPokemon: Observable<PokemonNameType | null>;
-
     public longListSelection: PureComputed<PokemonNameType[]> = ko.pureComputed(() => {
         return BattleTreeController.getLongListTeamSelection(this._seed(), BattleTreeController.calculateLongListSelectionSize());
     });
@@ -51,8 +49,6 @@ export class BattleTreeRun {
 
         this._teamA = ko.observableArray();
         this._teamB = ko.observableArray();
-
-        this._selectedPokemon = ko.observable(null);
     }
 
     public update(delta: number): void {
@@ -76,16 +72,11 @@ export class BattleTreeRun {
                 }
 
                 if (teamACanContinue && teamBCanContinue) {
-                    // Set the selected pokemon to the current one if it still has HP, otherwise switch it to the first one with HP
-                    this._selectedPokemon(this._teamA().find(p => p.name === this._selectedPokemon()).HP > 0 ? this._selectedPokemon() : this._teamA().find(p => p.HP > 0).name);
-
-                    // Reset all attack counters
-                    this._teamA().forEach(p => p.resetAttackCounter());
-                    this._teamB().forEach(p => p.resetAttackCounter());
-
                     // Start a new battle
-                    this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.HP > 0).name);
-
+                    this.createBattle(
+                        this._battle()?.pokemonA.HP > 0 ? this._battle()?.pokemonA.name : this._teamA().find(p => p.HP > 0).name,
+                        this._teamB().find(p => p.HP > 0).name,
+                    );
                 } else if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A) {
                     GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompleted, 1);
                     App.game.statistics.battleTreeHighestStageCompleted(Math.max(this._stage(), App.game.statistics.battleTreeHighestStageCompleted()));
@@ -151,9 +142,6 @@ export class BattleTreeRun {
     }
 
     public startRun(): void {
-        if (this._teamA().findIndex(p => p.name === this._selectedPokemon()) < 0) {
-            this._selectedPokemon(this._teamA()[0].name);
-        }
         this.nextStage();
     }
 
@@ -172,7 +160,11 @@ export class BattleTreeRun {
             p.shiny = PokemonFactory.generateShiny(SHINY_CHANCE_BATTLE);
             p.gender = PokemonFactory.generateGenderById(pokemonMap[p.name].id);
         });
-        this.createBattle(this._selectedPokemon(), this._teamB()[0].name);
+
+        this.createBattle(
+            this._battle()?.pokemonA.HP > 0 ? this._battle()?.pokemonA.name : this._teamA().find(p => p.HP > 0).name,
+            this._teamB().find(p => p.HP > 0).name,
+        );
     }
 
     public emptyPlayerATeam(): void {
@@ -233,27 +225,6 @@ export class BattleTreeRun {
         return this._teamB();
     }
 
-    get selectedPokemon(): PokemonNameType | null {
-        return this._selectedPokemon();
-    }
-
-    set selectedPokemon(pokemon: PokemonNameType) {
-        if (this._selectedPokemon() === pokemon) {
-            return;
-        }
-
-        this._selectedPokemon(pokemon);
-
-        if (this.state === BattleTreeRunState.BATTLE) {
-            // Reset all attack counter when a player switches his pokemon
-            // Team B will not reset its attack counter
-            this._teamA().forEach(p => p.resetAttackCounter());
-
-            // Create a new battle with the selected pokemon and the first enemy in team B
-            this.createBattle(this._selectedPokemon(), this._teamB().find(p => p.HP > 0).name);
-        }
-    }
-
     get battle(): BattleTreeBattle {
         return this._battle();
     }
@@ -276,17 +247,13 @@ export class BattleTreeRun {
             seed: this._seed(),
             stage: this._stage(),
             state: this._state(),
-            battle: this._battle() ? {
-                pokemonA: this._battle().pokemonA.name,
-                pokemonB: this._battle().pokemonB.name,
-            } : undefined,
+            battle: this._battle()?.toJSON(),
             modifiers: BattleTreeModifiers.getModifierList(this.uuid)().map(modifier => modifier.id),
             rewards: ko.toJS(BattleTreeRewards.getRewardList(this.uuid)),
             runTime: this._runTimer(),
             combatTime: this._combatTimer(),
             teamA: this._teamA().map((p: BattleTreePokemon) => p.toJSON()),
             teamB: this._teamB().map((p: BattleTreePokemon) => p.toJSON()),
-            selectedPokemon: this._selectedPokemon(),
         };
     }
 
@@ -306,10 +273,14 @@ export class BattleTreeRun {
         run._runTimer(json.runTime ?? 0);
         run._combatTimer(json.combatTime ?? 0);
 
-        run._selectedPokemon(json.selectedPokemon ?? null);
-
         if (json.battle?.pokemonA && json.battle?.pokemonB) {
-            run.createBattle(json.battle.pokemonA, json.battle.pokemonB, false);
+            run._battle(new BattleTreeBattle({
+                runID: run.uuid,
+                pokemonA: run.teamA.find(value => value.name === json.battle.pokemonA),
+                pokemonB: run.teamB.find(value => value.name === json.battle.pokemonB),
+                attackCounter: json.battle.attackCounter,
+                attacker: json.battle.attacker,
+            }));
         }
 
         return run;

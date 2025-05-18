@@ -135,44 +135,44 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 13,
         name: 'Adrenaline Rush',
-        description: 'All pokemon attack x1.5 faster',
+        description: 'All pokemon attack x1.25 faster',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
-            { source: 'attacks-per-second', type: BattleTreeModifierEffectType.Multiplicative, value: 1.5 },
+            { source: 'attack-delay', type: BattleTreeModifierEffectType.Multiplicative, value: 1 / 1.25 },
         ],
         limit: 1,
     }),
     new BattleTreeModifier({
         id: 14,
         name: 'Swift Command',
-        description: 'All pokemon attack x2.5 faster',
+        description: 'All pokemon attack x1.5 faster',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
-            { source: 'attacks-per-second', type: BattleTreeModifierEffectType.Multiplicative, value: 2.5 },
+            { source: 'attack-delay', type: BattleTreeModifierEffectType.Multiplicative, value: 1 / 1.5 },
         ],
         limit: 1,
     }),
     new BattleTreeModifier({
         id: 15,
         name: 'Overdrive Engine',
-        description: 'All pokemon attack x5 faster',
+        description: 'All pokemon attack x1.75 faster',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Epic,
         effects: [
-            { source: 'attacks-per-second', type: BattleTreeModifierEffectType.Multiplicative, value: 5 },
+            { source: 'attack-delay', type: BattleTreeModifierEffectType.Multiplicative, value: 1 / 1.75 },
         ],
         limit: 1,
     }),
     new BattleTreeModifier({
         id: 16,
         name: 'Time Distortion',
-        description: 'All pokemon attack x10 faster',
+        description: 'All pokemon attack x2 faster',
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Legendary,
         effects: [
-            { source: 'attacks-per-second', type: BattleTreeModifierEffectType.Multiplicative, value: 10 },
+            { source: 'attack-delay', type: BattleTreeModifierEffectType.Multiplicative, value: 1 / 2 },
         ],
         limit: 1,
     }),
@@ -212,11 +212,11 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
         id: 20,
         name: 'Fatigue',
-        description: 'Reduce APS by 1%<br/>Every stage',
+        description: 'Increase delay between attacks by 1%<br/>Every stage',
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
-            { source: 'attacks-per-second', type: BattleTreeModifierEffectType.Multiplicative, value: run => 0.99 ** run.stage, target: BattleTreeModifierEffectTarget.Player },
+            { source: 'attack-delay', type: BattleTreeModifierEffectType.Multiplicative, value: run => 1.01 ** run.stage, target: BattleTreeModifierEffectTarget.Player },
         ],
     }),
     new BattleTreeModifier({

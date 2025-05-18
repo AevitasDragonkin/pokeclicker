@@ -1,7 +1,7 @@
 import Requirement from '../requirements/Requirement';
 import { BattleTreeRun } from './BattleTreeRun';
 
-export type BattleTreeModifierEffectSource = 'level' | 'base-attack' | 'base-defense' | 'base-max-hitpoints' | 'base-speed' | 'base-hitpoints' | 'attack' | 'defense' | 'max-hitpoints' | 'speed' | 'attacks-per-second' | 'damage' | 'reward-tokens' | 'experience';
+export type BattleTreeModifierEffectSource = 'level' | 'base-attack' | 'base-defense' | 'base-max-hitpoints' | 'base-speed' | 'base-hitpoints' | 'attack' | 'defense' | 'max-hitpoints' | 'speed' | 'attack-delay' | 'damage' | 'reward-tokens' | 'experience';
 export enum BattleTreeModifierEffectType {
     Additive,
     Multiplicative,

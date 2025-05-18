@@ -4,6 +4,7 @@
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
             <div>Stage <knockout data-bind="text: App.game.battleTree.currentRun.stage"></knockout></div>
             <div><code data-bind="text: GameConstants.formatTime(App.game.battleTree.currentRun.combatTime)"></code></div>
+            <div>Delay • <knockout data-bind="text: BattleTreeController.calculateAttackSpeed(App.game.battleTree.currentRun.uuid).toFixed(2)"></knockout></div>
         </div>
 
         <div class="p-3">
@@ -13,13 +14,7 @@
                     <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
                     <div>
                         <img width="56" height="56" style="object-fit: contain" src="" alt="" data-bind="
-                                click: () => {
-                                    if ($data.HP > 0) {
-                                        App.game.battleTree.currentRun.selectedPokemon = $data.name
-                                    }
-                                },
                                 css: {
-                                    'clickable': $data.HP > 0,
                                     'battle-tree-pokemon-fainted': $data.HP === 0,
                                 },
                                 attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
@@ -97,13 +92,7 @@
                     <!-- ko foreach: App.game.battleTree.currentRun.teamB -->
                     <div>
                         <img width="56" height="56" style="object-fit: contain" src="" alt="" data-bind="
-                                click: () => {
-                                    if ($data.HP > 0) {
-                                        App.game.battleTree.currentRun.selectedPokemon = $data.name
-                                    }
-                                },
                                 css: {
-                                    'clickable': $data.HP > 0,
                                     'battle-tree-pokemon-fainted': $data.HP === 0,
                                 },
                                 attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id, $data.shiny, $data.gender, false) }

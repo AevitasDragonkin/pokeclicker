@@ -1,4 +1,5 @@
 import { BattleTreePokemon } from './BattleTreePokemon';
+import { BattleTreeController } from './BattleTreeController';
 
 export enum BattleTreeBattleWinner {
     UNDEFINED,
@@ -11,6 +12,8 @@ type BattleTreeBattleProperties = {
     runID: string;
     pokemonA: BattleTreePokemon;
     pokemonB: BattleTreePokemon;
+    attackCounter?: number;
+    attacker?: number;
 };
 
 export class BattleTreeBattle {
@@ -18,10 +21,16 @@ export class BattleTreeBattle {
     private readonly _pokemonA: BattleTreePokemon;
     private readonly _pokemonB: BattleTreePokemon;
 
+    private _attackCounter: number = 0;
+    private _attacker: number = -1;
+
     constructor(properties: BattleTreeBattleProperties) {
         this.runID = properties.runID;
         this._pokemonA = properties.pokemonA;
         this._pokemonB = properties.pokemonB;
+
+        this._attacker = properties.attacker ?? this._pokemonA.speed >= this.pokemonB.speed ? 0 : 1;
+        this._attackCounter = properties.attackCounter ?? 0;
     }
 
     public update(delta: number): void {
@@ -29,11 +38,19 @@ export class BattleTreeBattle {
             return;
         }
 
-        this.pokemonA.update(delta);
-        this.pokemonB.update(delta);
+        this._attackCounter += delta;
 
-        if (this.pokemonA.canAttack) this.pokemonA.attackTarget(this.pokemonB);
-        if (this.pokemonB.canAttack) this.pokemonB.attackTarget(this.pokemonA);
+        const attackSpeed = BattleTreeController.calculateAttackSpeed(this.runID);
+        while (this._attackCounter >= attackSpeed) {
+            if (this._attacker % 2 === 0) {
+                this.pokemonA.attackTarget(this.pokemonB);
+            } else {
+                this.pokemonB.attackTarget(this.pokemonA);
+            }
+            ++this._attacker;
+
+            this._attackCounter -= attackSpeed;
+        }
     }
 
     get pokemonA(): BattleTreePokemon {
@@ -55,5 +72,14 @@ export class BattleTreeBattle {
             case this.pokemonB.HP === 0: return BattleTreeBattleWinner.PLAYER_A;
             default: return BattleTreeBattleWinner.UNDEFINED;
         }
+    }
+
+    toJSON(): Record<string, any> {
+        return {
+            pokemonA: this.pokemonA.name,
+            pokemonB: this.pokemonB.name,
+            attackCounter: this._attackCounter,
+            attacker: this._attacker,
+        };
     }
 }

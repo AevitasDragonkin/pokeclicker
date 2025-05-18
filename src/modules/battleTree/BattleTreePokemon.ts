@@ -79,7 +79,6 @@ export class BattleTreePokemon {
     private readonly _properties: BattleTreePokemonProperties;
 
     private _hp: Observable<number> = ko.observable(0).extend({ numeric: 0 });
-    private _attackCounter: number;
 
     // BASE VALUES
     private _baseAttack: PureComputed<number> = ko.pureComputed(() => Math.max(this.processModifierEffects(pokemonMap[this._properties.name].base.attack, 'base-attack'), 0));
@@ -93,8 +92,6 @@ export class BattleTreePokemon {
     private _maxHitPoints: PureComputed<number> = ko.pureComputed(() => Math.max(Math.floor(this.processModifierEffects(hitPointFormula(this._baseMaxHitPoints(), this.level), 'max-hitpoints')), 1));
     private _speed: PureComputed<number> = ko.pureComputed(() => Math.floor(this.processModifierEffects(statPointFormula(this._baseSpeed(), this.level), 'speed')));
 
-    private _attacksPerSecond: PureComputed<number> = ko.pureComputed(() => 1.5 * Math.pow((this._speed() - 1) / 254, 2) + 0.5);
-
     private _shiny: Observable<boolean | undefined> = ko.observable(undefined);
     private _gender: Observable<BattlePokemonGender | undefined> = ko.observable(undefined);
 
@@ -104,7 +101,6 @@ export class BattleTreePokemon {
         this._properties = properties;
 
         this._hp(this.maxHP);
-        this._attackCounter = 0;
 
         this._maxHitPoints.subscribe(function () {
             this._hp(Math.min(this.maxHP, this._hp()));
@@ -125,28 +121,20 @@ export class BattleTreePokemon {
             }, initialValue);
     }
 
-    public update(delta: number): void {
-        this._attackCounter += delta;
-    }
-
     public attackTarget(target: BattleTreePokemon): void {
-        while (this.canAttack) {
-            const power: number = 40;
+        const power: number = 40;
 
-            const typeEfficiency = this.getBestTypeEfficiency(
-                pokemonMap[this.name].type[0],
-                pokemonMap[this.name].type[1],
-                pokemonMap[target.name].type[0],
-                pokemonMap[target.name].type[1],
-            );
+        const typeEfficiency = this.getBestTypeEfficiency(
+            pokemonMap[this.name].type[0],
+            pokemonMap[this.name].type[1],
+            pokemonMap[target.name].type[0],
+            pokemonMap[target.name].type[1],
+        );
 
-            const baseDamage = ((2 * this.level / 5 + 2) * power * this.attack / target.defense / 50 + 2);
-            const damage = Math.floor(this.processModifierEffects(baseDamage, 'damage') * typeEfficiency);
+        const baseDamage = ((2 * this.level / 5 + 2) * power * this.attack / target.defense / 50 + 2);
+        const damage = Math.floor(this.processModifierEffects(baseDamage, 'damage') * typeEfficiency);
 
-            target.takeDamage(damage);
-
-            this._attackCounter -= 1 / this.attacksPerSecond;
-        }
+        target.takeDamage(damage);
     }
 
     private getBestTypeEfficiency(attackerTypeA: PokemonType, attackerTypeB: PokemonType, defenderTypeA: PokemonType, defenderTypeB: PokemonType): number {
@@ -165,10 +153,6 @@ export class BattleTreePokemon {
     public heal(health: number): void {
         this._hp(Math.min(Math.max(this._hp() + health, 0), this.maxHP));
         animateHeal(this.uuid, health);
-    }
-
-    public resetAttackCounter(): void {
-        this._attackCounter = 0;
     }
 
     get name(): PokemonNameType {
@@ -199,14 +183,6 @@ export class BattleTreePokemon {
         return this._speed();
     }
 
-    get attacksPerSecond(): number {
-        return this.processModifierEffects(this._attacksPerSecond(), 'attacks-per-second');
-    }
-
-    get canAttack(): boolean {
-        return this._attackCounter >= 1 / this.attacksPerSecond;
-    }
-
     get shiny(): boolean | undefined {
         return this._shiny();
     }
@@ -230,7 +206,6 @@ export class BattleTreePokemon {
             level: this._properties.level,
             targetID: this._properties.modifierTargetID,
             hp: this._hp(),
-            attackCounter: this._attackCounter,
             shiny: this._shiny() || undefined,
             gender: this._gender(),
         };
@@ -245,7 +220,6 @@ export class BattleTreePokemon {
         });
 
         pokemon._hp(json.hp ?? pokemon.maxHP);
-        pokemon._attackCounter = json.attackCounter ?? 0;
         pokemon._shiny(json.shiny);
         pokemon._gender(json.gender);
 
