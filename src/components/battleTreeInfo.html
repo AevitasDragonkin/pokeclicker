@@ -14,8 +14,10 @@
             <div class="card-body p-2">
                 <div class="d-flex justify-content-center mb-2" style="gap: 1rem;">
                     <!-- ko foreach: App.game.battleTree.currentRun.teamA -->
-                    <div class="card clickable" style="width: 75px; height: 75px;" data-bind="
-                        click: () => App.game.battleTree.currentRun.removePokemonFromPlayerATeam($data.name),
+                    <div class="card clickable" style="width: 75px; height: 75px;" href="#battleTreeTeamSelectionModal" data-toggle="modal" data-bind="
+                        event: {
+                            contextmenu: () => App.game.battleTree.currentRun.removePokemonFromPlayerATeam($data.name)
+                        },
                         tooltip: {
                             trigger: 'hover',
                             title: PokemonHelper.displayName($data.name),
