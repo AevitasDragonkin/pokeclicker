@@ -43,6 +43,8 @@ import UndergroundItemValueType from '../enums/UndergroundItemValueType';
 import TreasureItem from './TreasureItem';
 import { pokemonMap } from '../pokemons/PokemonList';
 import AttackGainConsumable from './AttackGainConsumable';
+import { BattleTreeExperienceItem } from '../battleTree/rewards/BattleTreeExperienceItem';
+import { CurrencyItem } from './CurrencyItem';
 // eslint-disable-next-line import/prefer-default-export
 export const ItemList: { [name: string]: Item } = {};
 
@@ -502,3 +504,8 @@ ItemList['Pikachu (Libre)'] = new PokemonItem('Pikachu (Libre)', 1000, Currency.
 // Event
 ItemList['Elf Munchlax'] = new PokemonItem('Elf Munchlax', 3108, Currency.questPoint, undefined, undefined,
     { visible: new MultiRequirement([new SpecialEventRequirement('Merry Christmas!'), new ObtainedPokemonRequirement('Santa Snorlax')]) });
+
+// Battle Tree Rewards
+ItemList['Battle Tree Experience'] = new BattleTreeExperienceItem();
+ItemList['Battle Point'] = new CurrencyItem('Battle Point', Currency.battlePoint, 'Battle Point', 'Battle Point');
+ItemList.Money = new CurrencyItem('Money', Currency.money, 'Pokédollar', 'Pokédollar');

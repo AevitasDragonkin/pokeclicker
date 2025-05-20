@@ -6,6 +6,7 @@ import {
     BattleTreeModifierImpact,
     BattleTreeModifierRarity,
 } from './BattleTreeModifier';
+import { BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER } from '../GameConstants';
 
 export const MODIFIER_LIST: BattleTreeModifier[] = [
     new BattleTreeModifier({
@@ -252,6 +253,19 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     }),
 ];
 
+const UNPICKABLE_MODIFIER_LIST: BattleTreeModifier[] = [
+    new BattleTreeModifier({
+        id: -1,
+        name: 'Aborted run',
+        description: `Reduced rewards by ${(BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER).toLocaleString('en-US', { style: 'percent' })}`,
+        impact: BattleTreeModifierImpact.Negative,
+        rarity: BattleTreeModifierRarity.Common,
+        effects: [
+            { source: 'reward-tokens', type: BattleTreeModifierEffectType.Multiplicative, value: BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER },
+        ],
+    }),
+];
+
 export class BattleTreeModifiers {
     private static modifiers: Map<string, ObservableArray<BattleTreeModifier>> = new Map();
 
@@ -260,7 +274,7 @@ export class BattleTreeModifiers {
     }
 
     public static addModifier(runID: string, modifierID: number): BattleTreeModifier | undefined {
-        const modifier = MODIFIER_LIST.find(mod => mod.id === modifierID);
+        const modifier = [...MODIFIER_LIST, ...UNPICKABLE_MODIFIER_LIST].find(mod => mod.id === modifierID);
         if (modifier) {
             this.getModifierList(runID).push(modifier);
         }

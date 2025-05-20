@@ -90,7 +90,18 @@ export class BattleTreeController {
             }, initialAttackSpeed);
     }
 
-    public static addBattleTreeExp(name: PokemonNameType, level: number): void {
+    public static calculateRewardMultiplier(runID: string) {
+        return BattleTreeModifiers.getModifierList(runID)()
+            .flatMap(value => value.effects)
+            .filter(value => value.source === 'reward-tokens')
+            .reduce((previousValue, currentValue) => {
+                switch (currentValue.type) {
+                    case BattleTreeModifierEffectType.Multiplicative: return previousValue * currentValue.value;
+                }
+            }, 1);
+    }
+
+    public static calculateBattleTreeExp(name: PokemonNameType, level: number): number {
         // TODO : BT : Correct EXP scaling
         const b = pokemonMap[name]?.exp ?? 0;
         const l = level;
@@ -104,6 +115,6 @@ export class BattleTreeController {
 
         const expGen7 = Math.min(((b * l / 5) * (1 / s) * Math.pow(((2 * l + 10) / (l + lp + 10)), 2.5) + 1) * t * e * v * f * p, b * 10);
 
-        App.game.battleTree.addExp(Math.floor(expGen7));
+        return Math.floor(expGen7);
     }
 }

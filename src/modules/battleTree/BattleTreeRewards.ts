@@ -1,36 +1,38 @@
-import PokemonType from '../enums/PokemonType';
 import { Observable, ObservableArray } from 'knockout';
-import { Currency } from '../GameConstants';
 import { ItemNameType } from '../items/ItemNameType';
 
-/* eslint-disable @typescript-eslint/no-shadow */
-export enum BattleTreeRewardType {
-    Gem = 'Gem',
-    Currency = 'Currency',
-    Item = 'Item',
+export class BattleTreeReward {
+    private readonly _item: ItemNameType;
+    private readonly _amount: Observable<number>;
+
+    constructor(item: ItemNameType, amount: number = 0) {
+        this._item = item;
+        this._amount = ko.observable(amount ?? 0);
+    }
+
+    get item(): ItemNameType {
+        return this._item;
+    }
+
+    get amount(): number {
+        return this._amount();
+    }
+
+    set amount(value: number) {
+        this._amount(value);
+    }
+
+    toJSON(): Record<string, any> {
+        return {
+            item: this.item,
+            amount: this.amount,
+        };
+    }
+
+    static fromJSON(json): BattleTreeReward {
+        return new BattleTreeReward(json.item, json.amount);
+    }
 }
-/* eslint-enable @typescript-eslint/no-shadow */
-
-type BattleTreeBaseReward = {
-    amount: Observable<number>;
-};
-
-type BattleTreeGemReward = {
-    type: BattleTreeRewardType.Gem;
-    gemType: PokemonType;
-} & BattleTreeBaseReward;
-
-type BattleTreeCurrencyReward = {
-    type: BattleTreeRewardType.Currency;
-    currency: Currency;
-} & BattleTreeBaseReward;
-
-type BattleTreeItemReward = {
-    type: BattleTreeRewardType.Item;
-    item: ItemNameType;
-} & BattleTreeBaseReward;
-
-type BattleTreeReward = BattleTreeGemReward | BattleTreeCurrencyReward | BattleTreeItemReward;
 
 export class BattleTreeRewards {
     private static _rewards: Map<string, ObservableArray<BattleTreeReward>> = new Map();
@@ -39,22 +41,13 @@ export class BattleTreeRewards {
         return this._rewards.get(runID) ?? this._rewards.set(runID, ko.observableArray()).get(runID);
     }
 
-    public static addReward(runID: string, reward: BattleTreeReward): void {
-        const existingReward = this.getRewardList(runID)()
-            .filter(r => r.type === reward.type)
-            .find(r => {
-                switch (r.type) {
-                    case BattleTreeRewardType.Gem: return r.gemType === (reward as BattleTreeGemReward).gemType;
-                    case BattleTreeRewardType.Currency: return r.currency === (reward as BattleTreeCurrencyReward).currency;
-                    case BattleTreeRewardType.Item: return r.item === (reward as BattleTreeItemReward).item;
-                }
-            });
+    public static addReward(runID: string, reward: ItemNameType, amount: number): void {
+        const existing = this.getRewardList(runID)().find(r => r.item === reward);
 
-        if (existingReward) {
-            existingReward.amount(existingReward.amount() + reward.amount());
+        if (existing) {
+            existing.amount += amount;
         } else {
-            this.getRewardList(runID).push(reward);
+            this.getRewardList(runID).push(new BattleTreeReward(reward, amount));
         }
-        this.getRewardList(runID).sort((a, b) => a.type.localeCompare(b.type));
     }
 }

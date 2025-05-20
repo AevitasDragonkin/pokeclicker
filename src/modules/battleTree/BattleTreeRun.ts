@@ -7,10 +7,13 @@ import Rand from '../utilities/Rand';
 import Settings from '../settings';
 import { BattleTreeModifier, BattleTreeModifierEffectTarget } from './BattleTreeModifier';
 import { BattleTreeModifiers } from './BattleTreeModifiers';
-import { Currency, SHINY_CHANCE_BATTLE } from '../GameConstants';
+import { SHINY_CHANCE_BATTLE } from '../GameConstants';
 import { pokemonMap } from '../pokemons/PokemonList';
 import GameHelper from '../GameHelper';
-import { BattleTreeRewards, BattleTreeRewardType } from './BattleTreeRewards';
+import { BattleTreeReward, BattleTreeRewards } from './BattleTreeRewards';
+import { ItemList } from '../items/ItemList';
+import Notifier from '../notifications/Notifier';
+import NotificationOption from '../notifications/NotificationOption';
 
 export enum BattleTreeRunState {
     TEAM_SELECTION,
@@ -62,13 +65,13 @@ export class BattleTreeRun {
                 const teamBCanContinue: boolean = this._teamB().some(p => p.HP > 0);
 
                 if (this._battle().winner === BattleTreeBattleWinner.PLAYER_A || this._battle().winner === BattleTreeBattleWinner.DRAW) {
-                    BattleTreeRun.handlePokemonDefeat(this._battle().pokemonB);
+                    this.handlePokemonDefeat(this._battle().pokemonB);
 
-                    const pokemonTypeA = pokemonMap[this._battle().pokemonB.name].type[0];
-                    const pokemonTypeB = pokemonMap[this._battle().pokemonB.name].type[1] ?? pokemonTypeA;
+                    // const pokemonTypeA = pokemonMap[this._battle().pokemonB.name].type[0];
+                    // const pokemonTypeB = pokemonMap[this._battle().pokemonB.name].type[1] ?? pokemonTypeA;
 
-                    BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Gem, gemType: pokemonTypeA, amount: ko.observable(5) });
-                    BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Gem, gemType: pokemonTypeB, amount: ko.observable(5) });
+                    // BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Gem, gemType: pokemonTypeA, amount: ko.observable(5) });
+                    // BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Gem, gemType: pokemonTypeB, amount: ko.observable(5) });
                 }
 
                 if (teamACanContinue && teamBCanContinue) {
@@ -102,7 +105,7 @@ export class BattleTreeRun {
                     GameHelper.incrementObservable(App.game.statistics.battleTreeTotalRunsCompleted, 1);
 
                     this.addRunReward();
-                    this._state(BattleTreeRunState.FINISHED);
+                    this.handleRunFinished();
                 }
             }
         }
@@ -196,13 +199,30 @@ export class BattleTreeRun {
 
     private addStageReward(): void {
         // TODO : BT : Give stage reward
-        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Currency, currency: Currency.money, amount: ko.observable(1000 * this._stage()) });
+        BattleTreeRewards.addReward(this.uuid, 'Money', 1000 * this._stage());
     }
 
     private addRunReward(): void {
         // TODO : BT : Give final reward
-        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Currency, currency: Currency.battlePoint, amount: ko.observable(1000) });
-        BattleTreeRewards.addReward(this.uuid, { type: BattleTreeRewardType.Item, item: 'xAttack', amount: ko.observable(1) });
+        BattleTreeRewards.addReward(this.uuid, 'Battle Point', 1000);
+        BattleTreeRewards.addReward(this.uuid, 'xAttack', 1);
+    }
+
+    public handleRunFinished(): void {
+        this._state(BattleTreeRunState.FINISHED);
+
+        const rewardMultiplier = BattleTreeController.calculateRewardMultiplier(this.uuid);
+
+        BattleTreeRewards.getRewardList(this.uuid)().forEach(reward => {
+            ItemList[reward.item].gain(Math.floor(reward.amount * rewardMultiplier));
+        });
+
+        Notifier.notify({
+            title: '[Battle Tree]',
+            message: 'You have finished your Battle Tree run. Rewards have been send out.',
+            type: NotificationOption.success,
+            timeout: 30e3,
+        });
     }
 
     get seed(): number {
@@ -249,7 +269,7 @@ export class BattleTreeRun {
             state: this._state(),
             battle: this._battle()?.toJSON(),
             modifiers: BattleTreeModifiers.getModifierList(this.uuid)().map(modifier => modifier.id),
-            rewards: ko.toJS(BattleTreeRewards.getRewardList(this.uuid)),
+            rewards: BattleTreeRewards.getRewardList(this.uuid)().map(r => r.toJSON()),
             runTime: this._runTimer(),
             combatTime: this._combatTimer(),
             teamA: this._teamA().map((p: BattleTreePokemon) => p.toJSON()),
@@ -265,7 +285,11 @@ export class BattleTreeRun {
         run._state(json.state ?? BattleTreeRunState.TEAM_SELECTION);
 
         json.modifiers?.forEach(id => BattleTreeModifiers.addModifier(run.uuid, id));
-        json.rewards?.forEach(reward => BattleTreeRewards.addReward(run.uuid, { ...reward, amount: ko.observable(reward.amount) }));
+        // json.rewards?.forEach(reward => BattleTreeRewards.addReward(run.uuid, { ...reward, amount: ko.observable(reward.amount) }));
+        json.rewards?.forEach(value => {
+            const reward: BattleTreeReward = BattleTreeReward.fromJSON(value);
+            BattleTreeRewards.addReward(run.uuid, reward.item, reward.amount);
+        });
 
         run._teamA(json.teamA?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);
         run._teamB(json.teamB?.map(p => BattleTreePokemon.fromJSON(p)) ?? []);
@@ -286,8 +310,10 @@ export class BattleTreeRun {
         return run;
     }
 
-    public static handlePokemonDefeat(pokemon: BattleTreePokemon): void {
+    private handlePokemonDefeat(pokemon: BattleTreePokemon): void {
         // TODO : BT : Handle statistics and defeat rewards (gems, egg steps, xp...)
-        BattleTreeController.addBattleTreeExp(pokemon.name, pokemon.level);
+        const exp = BattleTreeController.calculateBattleTreeExp(pokemon.name, pokemon.level);
+
+        BattleTreeRewards.addReward(this.uuid, 'Battle Tree Experience', exp);
     }
 }

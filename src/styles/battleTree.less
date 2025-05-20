@@ -8,19 +8,3 @@
     opacity: 1;
     z-index: 50;
 }
-
-.table-battle-tree-rewards {
-    [data-toggle="collapse"]::after {
-        content: '❯';
-        position: absolute;
-        font-size: 10px;
-        right: 10px;
-        top: 50%;
-        transform-origin: center 0;
-        transform: rotate(90deg) translateY(-50%);
-    }
-
-    [data-toggle="collapse"].collapsed::after {
-        transform: rotate(0deg) translateY(-50%);
-    }
-}

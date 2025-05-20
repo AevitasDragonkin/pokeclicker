@@ -275,43 +275,37 @@
 
         <!-- Rewards -->
         <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD, BattleTreeRunState.FINISHED].includes(App.game.battleTree.currentRun.state) -->
-        <table class="table table-striped table-hover table-bordered table-sm m-0 table-battle-tree-rewards">
-            <thead>
-            <tr class="thead-dark clickable position-relative" href="#battle-tree-rewards-currencies" data-toggle="collapse">
-                <th colspan="2">Currencies</th>
-            </tr>
-            </thead>
-            <tbody id="battle-tree-rewards-currencies" class="">
-            <!-- ko foreach: BattleTreeRewards.getRewardList(App.game.battleTree.currentRun.uuid)().filter(r => r.type === 'Currency') -->
-            <!-- ko template: { name: 'battleTreeRewardTemplate', data: { model: $data } } -->
-            <!-- /ko -->
-            <!-- /ko -->
-            </tbody>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered table-sm m-0">
+                <thead>
+                <tr>
+                    <th colspan="2">Rewards</th>
+                    <th data-bind="text: BattleTreeController.calculateRewardMultiplier(App.game.battleTree.currentRun.uuid).toLocaleString('en-US', { style: 'percent' })"></th>
+                </tr>
+                </thead>
 
-            <thead>
-            <tr class="thead-dark clickable position-relative" href="#battle-tree-rewards-items" data-toggle="collapse">
-                <th colspan="2">Items</th>
-            </tr>
-            </thead>
-            <tbody id="battle-tree-rewards-items" class="">
-            <!-- ko foreach: BattleTreeRewards.getRewardList(App.game.battleTree.currentRun.uuid)().filter(r => r.type === 'Item') -->
-            <!-- ko template: { name: 'battleTreeRewardTemplate', data: { model: $data } } -->
-            <!-- /ko -->
-            <!-- /ko -->
-            </tbody>
+                <tbody>
+                <!-- ko foreach: BattleTreeRewards.getRewardList(App.game.battleTree.currentRun.uuid)() -->
+                <tr>
+                    <td>
+                        <div class="d-flex justify-content-start vertical-middle" style="gap: 0.5rem;">
+                            <img height="24px" data-bind="attr: {src: ItemList[$data.item].image }"/>
+                            <div data-bind="text: ItemList[$data.item].displayName"></div>
+                        </div>
+                    </td>
 
-            <thead>
-            <tr class="thead-dark clickable collapsed position-relative" href="#battle-tree-rewards-gems" data-toggle="collapse">
-                <th colspan="2">Gems</th>
-            </tr>
-            </thead>
-            <tbody id="battle-tree-rewards-gems" class="collapse">
-            <!-- ko foreach: BattleTreeRewards.getRewardList(App.game.battleTree.currentRun.uuid)().filter(r => r.type === 'Gem') -->
-            <!-- ko template: { name: 'battleTreeRewardTemplate', data: { model: $data } } -->
-            <!-- /ko -->
-            <!-- /ko -->
-            </tbody>
-        </table>
+                    <td class="text-center vertical-middle">
+                        <code data-bind="text: $data.amount.toLocaleString('en-US')"></code>
+                    </td>
+
+                    <td class="text-center vertical-middle">
+                        <code data-bind="text: Math.floor($data.amount * BattleTreeController.calculateRewardMultiplier(App.game.battleTree.currentRun.uuid)).toLocaleString('en-US')"></code>
+                    </td>
+                </tr>
+                <!-- /ko -->
+                </tbody>
+            </table>
+        </div>
         <!-- /ko -->
 
         <div class="card">
@@ -338,7 +332,7 @@
                         click: () => App.game.battleTree.abortRun(),
                         tooltip: {
                             trigger: 'hover',
-                            title: `Forfeiting will end the current run, and you will only receive ${BattleTree.FORFEIT_REWARD_MULTIPLIER.toLocaleString('en-US', { style: 'percent' })} of your rewards.`,
+                            title: `Forfeiting will end the current run, and you will only receive ${GameConstants.BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER.toLocaleString('en-US', { style: 'percent' })} of your rewards.`,
                             placement: 'top'
                         }
                     ">

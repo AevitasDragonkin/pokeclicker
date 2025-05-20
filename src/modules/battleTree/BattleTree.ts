@@ -1,10 +1,11 @@
 import { Feature } from '../DataStore/common/Feature';
-import { GameState } from '../GameConstants';
+import { BATTLE_TREE_MAX_LEVEL, GameState } from '../GameConstants';
 import { Observable, ObservableArray, PureComputed } from 'knockout';
 import { BattleTreeRun } from './BattleTreeRun';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
+import { BattleTreeModifiers } from './BattleTreeModifiers';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -14,7 +15,7 @@ export class BattleTree implements Feature {
     private _battleTreeExp: Observable<number> = ko.observable(0);
     private _battleTreeLevel: PureComputed<number> = ko.pureComputed(() => BattleTree.convertExperienceToLevel(this._battleTreeExp()));
     private _progressToNextLevel: PureComputed<number> = ko.pureComputed(() => {
-        if (this._battleTreeLevel() >= BattleTree.MAX_LEVEL) {
+        if (this._battleTreeLevel() >= BATTLE_TREE_MAX_LEVEL) {
             return 1;
         }
 
@@ -25,9 +26,6 @@ export class BattleTree implements Feature {
     private _currentRun: Observable<BattleTreeRun | null> = ko.observable(null);
 
     private _previousTeam: ObservableArray<PokemonNameType> = ko.observableArray();
-
-    public static MAX_LEVEL: number = 100;
-    public static FORFEIT_REWARD_MULTIPLIER: number = 0.25;
 
     canAccess(): boolean {
         return true;
@@ -65,7 +63,10 @@ export class BattleTree implements Feature {
     }
 
     public abortRun(): void {
-        this.createNewBattleTreeRun();
+        if (this.currentRun) {
+            BattleTreeModifiers.addModifier(this.currentRun.uuid, -1);
+            this.currentRun.handleRunFinished();
+        }
     }
 
     public addExp(amount: number): void {
@@ -125,6 +126,6 @@ export class BattleTree implements Feature {
         while (experience >= this.convertLevelToExperience(level + 1)) {
             ++level;
         }
-        return Math.min(Math.max(level, 1), BattleTree.MAX_LEVEL);
+        return Math.min(Math.max(level, 1), BATTLE_TREE_MAX_LEVEL);
     }
 }

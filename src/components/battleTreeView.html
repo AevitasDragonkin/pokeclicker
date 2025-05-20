@@ -137,7 +137,7 @@
 
         <div class="small px-3 py-1" style="background-color: rgba(0,0,0,70%); margin: 0;">
             <div data-bind="tooltip: {
-                title: App.game.battleTree.battleTreeLevel >= BattleTree.MAX_LEVEL ? (App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US') : `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
+                title: App.game.battleTree.battleTreeLevel >= GameConstants.BATTLE_TREE_MAX_LEVEL ? (App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US') : `${(App.game.battleTree.battleTreeExp - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.battleTreeLevel)).toLocaleString('en-US')}`,
                 trigger: 'hover'
             }">
                 <div>Lvl. <knockout data-bind="text: App.game.battleTree.battleTreeLevel"></knockout></div>
