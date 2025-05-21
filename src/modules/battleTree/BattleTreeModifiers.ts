@@ -111,25 +111,15 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
     }),
     new BattleTreeModifier({
         id: 11,
-        name: "Tactician's Insight",
-        description: 'Double XP<br/>Zero rewards',
-        impact: BattleTreeModifierImpact.Neutral,
-        rarity: BattleTreeModifierRarity.Epic,
-        effects: [
-            { source: 'experience', type: BattleTreeModifierEffectType.Multiplicative, value: 2 },
-            { source: 'reward-tokens', type: BattleTreeModifierEffectType.Multiplicative, value: 0 },
-        ],
-        limit: 1,
-    }),
-    new BattleTreeModifier({
-        id: 12,
-        name: 'Trainer Discipline',
-        description: 'Double rewards<br/>Zero XP',
+        name: 'Cash In',
+        description: 'Double Rewards<br/>End current run',
         impact: BattleTreeModifierImpact.Neutral,
         rarity: BattleTreeModifierRarity.Epic,
         effects: [
             { source: 'reward-tokens', type: BattleTreeModifierEffectType.Multiplicative, value: 2 },
-            { source: 'experience', type: BattleTreeModifierEffectType.Multiplicative, value: 0 },
+        ],
+        instantEffects: [
+            run => run.handleRunFinished(),
         ],
         limit: 1,
     }),
