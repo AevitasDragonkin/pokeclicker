@@ -83,13 +83,13 @@ export class BattleTreePokemon {
     // BASE VALUES
     private _baseAttack: PureComputed<number> = ko.pureComputed(() => Math.max(this.processModifierEffects(pokemonMap[this._properties.name].base.attack, 'base-attack'), 0));
     private _baseDefense: PureComputed<number> = ko.pureComputed(() => Math.max(this.processModifierEffects(pokemonMap[this._properties.name].base.defense, 'base-defense'), 0));
-    private _baseMaxHitPoints: PureComputed<number> = ko.pureComputed(() => Math.max(this.processModifierEffects(pokemonMap[this._properties.name].base.hitpoints, 'base-max-hitpoints'), 0));
+    private _baseMaxHitPoints: PureComputed<number> = ko.pureComputed(() => Math.max(this.processModifierEffects(pokemonMap[this._properties.name].base.hitpoints, 'base-hitpoints'), 0));
     private _baseSpeed: PureComputed<number> = ko.pureComputed(() => Math.max(this.processModifierEffects(pokemonMap[this._properties.name].base.speed, 'base-speed'), 0));
 
     // CALCULATED VALUES
     private _attack: PureComputed<number> = ko.pureComputed(() => Math.floor(this.processModifierEffects(statPointFormula(this._baseAttack(), this.level), 'attack')));
     private _defense: PureComputed<number> = ko.pureComputed(() => Math.floor(this.processModifierEffects(statPointFormula(this._baseDefense(), this.level), 'defense')));
-    private _maxHitPoints: PureComputed<number> = ko.pureComputed(() => Math.max(Math.floor(this.processModifierEffects(hitPointFormula(this._baseMaxHitPoints(), this.level), 'max-hitpoints')), 1));
+    private _maxHitPoints: PureComputed<number> = ko.pureComputed(() => Math.max(Math.floor(this.processModifierEffects(hitPointFormula(this._baseMaxHitPoints(), this.level), 'hitpoints')), 1));
     private _speed: PureComputed<number> = ko.pureComputed(() => Math.floor(this.processModifierEffects(statPointFormula(this._baseSpeed(), this.level), 'speed')));
 
     private _shiny: Observable<boolean | undefined> = ko.observable(undefined);

@@ -93,7 +93,7 @@ export class BattleTreeController {
     public static calculateRewardMultiplier(runID: string) {
         return BattleTreeModifiers.getModifierList(runID)()
             .flatMap(value => value.effects)
-            .filter(value => value.source === 'reward-tokens')
+            .filter(value => value.source === 'reward')
             .reduce((previousValue, currentValue) => {
                 switch (currentValue.type) {
                     case BattleTreeModifierEffectType.Multiplicative: return previousValue * currentValue.value;

@@ -36,7 +36,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
-            { source: 'max-hitpoints', type: BattleTreeModifierEffectType.Additive, value: 10, target: BattleTreeModifierEffectTarget.Player },
+            { source: 'hitpoints', type: BattleTreeModifierEffectType.Additive, value: 10, target: BattleTreeModifierEffectTarget.Player },
         ],
     }),
     new BattleTreeModifier({
@@ -66,7 +66,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         impact: BattleTreeModifierImpact.Positive,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
-            { source: 'max-hitpoints', type: BattleTreeModifierEffectType.Multiplicative, value: 1.1, target: BattleTreeModifierEffectTarget.Player },
+            { source: 'hitpoints', type: BattleTreeModifierEffectType.Multiplicative, value: 1.1, target: BattleTreeModifierEffectTarget.Player },
         ],
     }),
     new BattleTreeModifier({
@@ -116,7 +116,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         impact: BattleTreeModifierImpact.Neutral,
         rarity: BattleTreeModifierRarity.Epic,
         effects: [
-            { source: 'reward-tokens', type: BattleTreeModifierEffectType.Multiplicative, value: 2 },
+            { source: 'reward', type: BattleTreeModifierEffectType.Multiplicative, value: 2 },
         ],
         instantEffects: [
             run => run.handleRunFinished(),
@@ -238,7 +238,7 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Rare,
         effects: [
-            { source: 'max-hitpoints', type: BattleTreeModifierEffectType.Additive, value: run => -1 * Math.floor(run.combatTime / 5), target: BattleTreeModifierEffectTarget.Player },
+            { source: 'hitpoints', type: BattleTreeModifierEffectType.Additive, value: run => -1 * Math.floor(run.combatTime / 5), target: BattleTreeModifierEffectTarget.Player },
         ],
     }),
 ];
@@ -251,7 +251,7 @@ const UNPICKABLE_MODIFIER_LIST: BattleTreeModifier[] = [
         impact: BattleTreeModifierImpact.Negative,
         rarity: BattleTreeModifierRarity.Common,
         effects: [
-            { source: 'reward-tokens', type: BattleTreeModifierEffectType.Multiplicative, value: BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER },
+            { source: 'reward', type: BattleTreeModifierEffectType.Multiplicative, value: BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER },
         ],
     }),
 ];
