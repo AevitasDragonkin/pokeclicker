@@ -496,7 +496,7 @@ class Game implements TmpGameType {
                 // Refresh Friend Safari Pokemon List
                 SafariPokemonList.generateKalosSafariList();
                 // Reset the highest daily battle tree stage
-                App.game.statistics.battleTreeHighestDailyStageCompleted(0);
+                App.game.statistics.battleTreeHighestDailyStageCompleted(-1);
 
                 // Reset some temporary battles
                 Object.values(TemporaryBattleList).forEach(t => {

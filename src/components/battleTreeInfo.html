@@ -495,6 +495,39 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="card mb-2">
+                    <div class="card-header d-flex align-items-center p-0">
+                        <span class="flex-grow-1 text-center font-weight-bold">Today</span>
+                    </div>
+
+                    <div class="card-body">
+                        <table class="table table-hover table-striped table-sm m-0">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Stage</th>
+                                <th class="text-center" colspan="3">Team</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- ko foreach: new Array(App.game.statistics.battleTreeHighestDailyStageCompleted() + 1).fill(0).map((v, i) => i + 1) -->
+                            <tr>
+                                <td class="vertical-middle text-center" data-bind="text: `Stage ${$data}`"></td>
+                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[0]).id, false, false, false) }"></td>
+                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[1]).id, false, false, false) }"></td>
+                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[2]).id, false, false, false) }"></td>
+                            </tr>
+                            <!-- /ko -->
+                            <tr>
+                                <td class="vertical-middle text-center" data-bind="text: `Stage ${App.game.statistics.battleTreeHighestDailyStageCompleted() + 2}`"></td>
+                                <td class="text-center">???</td>
+                                <td class="text-center">???</td>
+                                <td class="text-center">???</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <div class="modal-footer">
