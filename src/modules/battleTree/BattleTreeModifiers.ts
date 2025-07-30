@@ -241,6 +241,26 @@ export const MODIFIER_LIST: BattleTreeModifier[] = [
             { source: 'hitpoints', type: BattleTreeModifierEffectType.Additive, value: run => -1 * Math.floor(run.combatTime / 5), target: BattleTreeModifierEffectTarget.Player },
         ],
     }),
+    new BattleTreeModifier({
+        id: 24,
+        name: 'Level UP',
+        description: '+10 Player Pokemon levels',
+        impact: BattleTreeModifierImpact.Positive,
+        rarity: BattleTreeModifierRarity.Common,
+        effects: [
+            { source: 'level', type: BattleTreeModifierEffectType.Additive, value: 10, target: BattleTreeModifierEffectTarget.Player },
+        ],
+    }),
+    new BattleTreeModifier({
+        id: 25,
+        name: 'Level UP',
+        description: '+10 Enemy Pokemon levels',
+        impact: BattleTreeModifierImpact.Negative,
+        rarity: BattleTreeModifierRarity.Common,
+        effects: [
+            { source: 'level', type: BattleTreeModifierEffectType.Additive, value: 10, target: BattleTreeModifierEffectTarget.Enemy },
+        ],
+    }),
 ];
 
 const UNPICKABLE_MODIFIER_LIST: BattleTreeModifier[] = [
