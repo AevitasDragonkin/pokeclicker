@@ -501,32 +501,35 @@
                         <span class="flex-grow-1 text-center font-weight-bold">Today</span>
                     </div>
 
-                    <div class="card-body">
-                        <table class="table table-hover table-striped table-sm m-0">
-                            <thead>
-                            <tr>
-                                <th class="text-center">Stage</th>
-                                <th class="text-center" colspan="3">Team</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <!-- ko foreach: new Array(App.game.statistics.battleTreeHighestDailyStageCompleted() + 1).fill(0).map((v, i) => i + 1) -->
-                            <tr>
-                                <td class="vertical-middle text-center" data-bind="text: `Stage ${$data}`"></td>
-                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[0]).id, false, false, false) }"></td>
-                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[1]).id, false, false, false) }"></td>
-                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[2]).id, false, false, false) }"></td>
-                            </tr>
-                            <!-- /ko -->
-                            <tr>
-                                <td class="vertical-middle text-center" data-bind="text: `Stage ${App.game.statistics.battleTreeHighestDailyStageCompleted() + 2}`"></td>
-                                <td class="text-center">???</td>
-                                <td class="text-center">???</td>
-                                <td class="text-center">???</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+<!--                    Currently bugged because the highest daily resets at midnight, but a run does not abort at midnight -->
+<!--                    If you save a run past midnight and defeat one more stage, you'll see the entire roster for that new day -->
+
+<!--                    <div class="card-body">-->
+<!--                        <table class="table table-hover table-striped table-sm m-0">-->
+<!--                            <thead>-->
+<!--                            <tr>-->
+<!--                                <th class="text-center">Stage</th>-->
+<!--                                <th class="text-center" colspan="3">Team</th>-->
+<!--                            </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                            &lt;!&ndash; ko foreach: new Array(App.game.statistics.battleTreeHighestDailyStageCompleted() + 1).fill(0).map((v, i) => i + 1) &ndash;&gt;-->
+<!--                            <tr>-->
+<!--                                <td class="vertical-middle text-center" data-bind="text: `Stage ${$data}`"></td>-->
+<!--                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[0]).id, false, false, false) }"></td>-->
+<!--                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[1]).id, false, false, false) }"></td>-->
+<!--                                <td class="text-center"><img width="40" height="40" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName(BattleTreeController.getRandomTeamForStage(App.game.battleTree.currentRun.seed, $data, 3)[2]).id, false, false, false) }"></td>-->
+<!--                            </tr>-->
+<!--                            &lt;!&ndash; /ko &ndash;&gt;-->
+<!--                            <tr>-->
+<!--                                <td class="vertical-middle text-center" data-bind="text: `Stage ${App.game.statistics.battleTreeHighestDailyStageCompleted() + 2}`"></td>-->
+<!--                                <td class="text-center">???</td>-->
+<!--                                <td class="text-center">???</td>-->
+<!--                                <td class="text-center">???</td>-->
+<!--                            </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
+<!--                    </div>-->
                 </div>
             </div>
 
