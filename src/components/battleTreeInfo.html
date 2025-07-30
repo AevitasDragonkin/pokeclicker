@@ -83,6 +83,9 @@
 
         <!-- Team Management -->
         <!-- ko if: App.game.battleTree.currentRun && [BattleTreeRunState.BATTLE, BattleTreeRunState.MODIFIER, BattleTreeRunState.REWARD].includes(App.game.battleTree.currentRun.state) -->
+        <div class="d-flex flex-wrap justify-content-center">
+            <div data-bind="text: BattleTreeController.getRandomFilter(App.game.battleTree.currentRun.seed).name"></div>
+        </div>
         <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem">
             <!-- Your Team -->
             <div class="card" style="flex: 1 1 0;">
@@ -359,6 +362,7 @@
 
             <div class="modal-body">
                 <p>Every day, a new selection of pokemon will be available for you to create your team from.</p>
+                <p class="text-center" data-bind="text: BattleTreeController.getRandomFilter(App.game.battleTree.currentRun.seed + 5000).name"></p>
                 <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem;">
                     <!-- ko foreach: App.game.battleTree.currentRun?.longListSelection().sort((a, b) => pokemonMap[a].id - pokemonMap[b].id) ?? [] -->
                     <!-- ko with: pokemonMap[$data] -->

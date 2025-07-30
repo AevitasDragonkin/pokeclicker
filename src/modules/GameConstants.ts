@@ -2656,3 +2656,33 @@ export const ZMOVE_COUNTERACTIVE_TIME = 4 * MINUTE;
 
 export const BATTLE_TREE_MAX_LEVEL = 100;
 export const BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER = 0.25;
+
+export const LEGENDARIES: { [region in Region]: PokemonNameType[] } = {
+    [Region.none]: [],
+    [Region.kanto]: [ 'Articuno', 'Zapdos', 'Moltres', 'Mewtwo' ],
+    [Region.johto]: [ 'Raikou', 'Entei', 'Suicune', 'Lugia', 'Ho-Oh' ],
+    [Region.hoenn]: [ 'Regirock', 'Regice', 'Registeel', 'Latios', 'Latias', 'Kyogre', 'Groudon', 'Rayquaza' ],
+    [Region.sinnoh]: [ 'Uxie', 'Mesprit', 'Azelf', 'Dialga', 'Palkia', 'Giratina (Origin)', 'Heatran', 'Regigigas', 'Cresselia' ],
+    [Region.unova]: [ 'Cobalion', 'Terrakion', 'Virizion', 'Tornadus', 'Thundurus', 'Landorus', 'Reshiram', 'Zekrom', 'Kyurem' ],
+    [Region.kalos]: [ 'Xerneas', 'Yveltal', 'Zygarde' ],
+    [Region.alola]: [ 'Type: Null', 'Silvally (Normal)', 'Tapu Koko', 'Tapu Lele', 'Tapu Bulu', 'Tapu Fini', 'Cosmog', 'Cosmoem', 'Solgaleo', 'Lunala', 'Necrozma' ],
+    [Region.galar]: [ 'Zacian (Battle Hero)', 'Zamazenta (Battle Hero)', 'Eternatus', 'Kubfu', 'Urshifu (Single Strike)', 'Regieleki', 'Regidrago', 'Calyrex', 'Glastrier', 'Spectrier', 'Enamorus', 'Galarian Articuno', 'Galarian Zapdos', 'Galarian Moltres' ],
+    [Region.hisui]: [],
+    [Region.paldea]: [],
+    [Region.final]: [],
+};
+
+export const MYTHICALS: { [region in Region]: PokemonNameType[] } = {
+    [Region.none]: [],
+    [Region.kanto]: [ 'Mew' ],
+    [Region.johto]: [ 'Celebi' ],
+    [Region.hoenn]: [ 'Jirachi', 'Deoxys' ],
+    [Region.sinnoh]: [ 'Manaphy', 'Phione', 'Darkrai', 'Shaymin (Sky)', 'Arceus (Normal)' ],
+    [Region.unova]: [ 'Victini', 'Keldeo', 'Meloetta (Aria)', 'Genesect' ],
+    [Region.kalos]: [ 'Diancie', 'Hoopa', 'Volcanion' ],
+    [Region.alola]: [ 'Magearna', 'Marshadow', 'Zeraora', 'Meltan', 'Melmetal' ],
+    [Region.galar]: [ 'Zarude' ],
+    [Region.hisui]: [],
+    [Region.paldea]: [],
+    [Region.final]: [],
+};

@@ -5,7 +5,19 @@ import { PureComputed } from 'knockout';
 import { BattleTreeModifier, BattleTreeModifierEffectType } from './BattleTreeModifier';
 import { BattleTreeModifiers, MODIFIER_LIST } from './BattleTreeModifiers';
 import GameHelper from '../GameHelper';
-import { Region } from '../GameConstants';
+import { camelCaseToString, LEGENDARIES, MYTHICALS, Region } from '../GameConstants';
+import PokemonType from '../enums/PokemonType';
+
+const filters: { name: string, filter: (list: PokemonListData[]) => PokemonListData[] }[] = [
+    ...GameHelper.enumNumbers(PokemonType).map(type => {
+        return { name: camelCaseToString(PokemonType[type]), filter: list => list.filter(p => p.type.includes(type)) };
+    }),
+    ...GameHelper.enumNumbers(PokemonType).map(type => {
+        return { name: `Pure ${camelCaseToString(PokemonType[type])}`, filter: list => list.filter(p => p.type.every(t => t === type)) };
+    }),
+    { name: 'All', filter: list => list },
+    { name: 'Legendaries and Mythicals', filter: list => list.filter(p => [...Object.values(LEGENDARIES).flatMap(m => m), ...Object.values(MYTHICALS).flatMap(m => m)].includes(p.name)) },
+];
 
 export class BattleTreeController {
     public static availablePokemonNames: PureComputed<PokemonListData[]> = ko.pureComputed(() => pokemonMap.filter(p => PokemonLocations.isObtainable(p.name)));
@@ -23,26 +35,33 @@ export class BattleTreeController {
         return allowedShuffledRegions[0] ?? Region.alola;
     }
 
+    public static getRandomFilter(seed: number, modifier: number = 0) {
+        BattleTreeRand.seed(seed + modifier);
+        return BattleTreeRand.fromArray(filters);
+    }
+
     public static getRandomTeamForStage(seed: number, stage: number, amount: number): PokemonNameType[] {
         const regionPokemon = this.availablePokemonNames().filter(p => pokemonMap[p.name].nativeRegion <= player.highestRegion());
-        const regionPokemonUniqueIDs = [...new Set(regionPokemon.map(p => Math.floor(p.id)))];
+        const filteredRegionPokemon = this.getRandomFilter(seed).filter(regionPokemon);
+
+        const uniqueIDs = [...new Set(filteredRegionPokemon.map(p => Math.floor(p.id)))];
 
         BattleTreeRand.seed(seed + stage);
-        const shuffledUniqueIDs = BattleTreeRand.shuffleArray(regionPokemonUniqueIDs);
+        const shuffledUniqueIDs = BattleTreeRand.shuffleArray(uniqueIDs);
 
-        return shuffledUniqueIDs.slice(0, amount).map(id => BattleTreeRand.fromArray(pokemonMap.filter(p => Math.floor(p.id) === id && p.nativeRegion <= player.highestRegion())).name);
+        return shuffledUniqueIDs.slice(0, amount).map(id => BattleTreeRand.fromArray(filteredRegionPokemon.filter(p => Math.floor(p.id) === id)).name);
     }
 
     public static getLongListTeamSelection(seed: number, amount: number): PokemonNameType[] {
-        const selectedRegion = this.getRegion(seed);
+        const regionPokemon = this.availablePokemonNames().filter(p => pokemonMap[p.name].nativeRegion <= player.highestRegion());
+        const filteredRegionPokemon = this.getRandomFilter(seed + 5000).filter(regionPokemon);
 
-        const regionPokemon = this.availablePokemonNames().filter(p => pokemonMap[p.name].nativeRegion === selectedRegion);
-        const regionPokemonUniqueIDs = [...new Set(regionPokemon.map(p => Math.floor(p.id)))];
+        const uniqueIDs = [...new Set(filteredRegionPokemon.map(p => Math.floor(p.id)))];
 
         BattleTreeRand.seed(seed);
-        const shuffledUniqueIDs = BattleTreeRand.shuffleArray(regionPokemonUniqueIDs);
+        const shuffledUniqueIDs = BattleTreeRand.shuffleArray(uniqueIDs);
 
-        return shuffledUniqueIDs.slice(0, amount).map(id => BattleTreeRand.fromArray(pokemonMap.filter(p => Math.floor(p.id) === id && p.nativeRegion === selectedRegion)).name);
+        return shuffledUniqueIDs.slice(0, amount).map(id => BattleTreeRand.fromArray(filteredRegionPokemon.filter(p => Math.floor(p.id) === id)).name);
     }
 
     public static getModifierOptionsForStage(seed: number, runID: string, stage: number, amount: number): BattleTreeModifier[] {
