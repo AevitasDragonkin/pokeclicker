@@ -418,6 +418,19 @@
             <div class="modal-body">
                 <div class="card mb-2">
                     <div class="card-header d-flex align-items-center p-0">
+                        <span class="flex-grow-1 text-center font-weight-bold">DEV TOOLS</span>
+                    </div>
+
+                    <div class="card-body">
+                        <div>
+                            <label>Change level:</label>
+                            <input type="number" onchange="App.game.battleTree._battleTreeExp(BattleTree.convertLevelToExperience(parseInt($(this).val().toString(), 10) || 0))">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-2">
+                    <div class="card-header d-flex align-items-center p-0">
                         <span class="flex-grow-1 text-center font-weight-bold">Title</span>
                     </div>
 

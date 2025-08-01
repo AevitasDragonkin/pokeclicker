@@ -7,6 +7,7 @@ import { BattleTreeModifiers, MODIFIER_LIST } from './BattleTreeModifiers';
 import GameHelper from '../GameHelper';
 import { camelCaseToString, LEGENDARIES, MYTHICALS, Region } from '../GameConstants';
 import PokemonType from '../enums/PokemonType';
+import { BattleTreePokemonSubset, TypedBattleTreePokemonSubset } from './BattleTreePokemonSubset/BattleTreePokemonSubset';
 
 const filters: { name: string, filter: (list: PokemonListData[]) => PokemonListData[] }[] = [
     ...GameHelper.enumNumbers(PokemonType).map(type => {
@@ -19,12 +20,20 @@ const filters: { name: string, filter: (list: PokemonListData[]) => PokemonListD
     { name: 'Legendaries and Mythicals', filter: list => list.filter(p => [...Object.values(LEGENDARIES).flatMap(m => m), ...Object.values(MYTHICALS).flatMap(m => m)].includes(p.name)) },
 ];
 
+const newFilters: BattleTreePokemonSubset[] = [
+    new TypedBattleTreePokemonSubset('Pure Fire', PokemonType.Fire, true),
+    new TypedBattleTreePokemonSubset('Pure Grass', PokemonType.Grass, true),
+    new TypedBattleTreePokemonSubset('Pure Water', PokemonType.Water, true),
+    new TypedBattleTreePokemonSubset('Normal', PokemonType.Normal, false),
+];
+
 export class BattleTreeController {
     public static availablePokemonNames: PureComputed<PokemonListData[]> = ko.pureComputed(() => pokemonMap.filter(p => PokemonLocations.isObtainable(p.name)));
 
     public static calculateSeed(): number {
         const now = new Date();
-        return Number((now.getFullYear() - 1900) * now.getDate() + 1000 * now.getMonth() + 100000 * now.getDate());
+        // return Number((now.getFullYear() - 1900) * now.getDate() + 1000 * now.getMonth() + 100000 * now.getDate());
+        return Number((now.getFullYear() - 1900) * now.getDate() + 1000 * now.getMonth() + 100000 * now.getDate() * now.getHours() * (Math.floor(now.getMinutes() / 15) + 1));
     }
 
     public static getRegion(seed: number): Region {
@@ -41,8 +50,8 @@ export class BattleTreeController {
     }
 
     public static getRandomTeamForStage(seed: number, stage: number, amount: number): PokemonNameType[] {
-        const regionPokemon = this.availablePokemonNames().filter(p => pokemonMap[p.name].nativeRegion <= player.highestRegion());
-        const filteredRegionPokemon = this.getRandomFilter(seed).filter(regionPokemon);
+        BattleTreeRand.seed(seed + 1000);
+        const filteredRegionPokemon = BattleTreeRand.fromArray(newFilters).subset;
 
         const uniqueIDs = [...new Set(filteredRegionPokemon.map(p => Math.floor(p.id)))];
 
@@ -53,8 +62,8 @@ export class BattleTreeController {
     }
 
     public static getLongListTeamSelection(seed: number, amount: number): PokemonNameType[] {
-        const regionPokemon = this.availablePokemonNames().filter(p => pokemonMap[p.name].nativeRegion <= player.highestRegion());
-        const filteredRegionPokemon = this.getRandomFilter(seed + 5000).filter(regionPokemon);
+        BattleTreeRand.seed(seed);
+        const filteredRegionPokemon = BattleTreeRand.fromArray(newFilters).subset;
 
         const uniqueIDs = [...new Set(filteredRegionPokemon.map(p => Math.floor(p.id)))];
 
