@@ -1,4 +1,5 @@
 import { Feature } from '../DataStore/common/Feature';
+import { GameState } from '../GameConstants';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -14,6 +15,14 @@ export class BattleTree implements Feature {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     update(delta: number) {
+    }
+
+    public enter(): void {
+        App.game.gameState = GameState.battleTree;
+    }
+
+    public leave(): void {
+        App.game.gameState = GameState.town;
     }
 
     toJSON(): Record<string, any> {
