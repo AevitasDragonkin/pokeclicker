@@ -46,6 +46,7 @@ class Game implements TmpGameType {
     public purifyChamber: PurifyChamber;
     public weatherApp: WeatherApp;
     public zMoves: ZMoves;
+    public battleTree: BattleTree;
 
     constructor() {
         // Needs to be loaded first so save data can be updated (specifically "player" data)
@@ -85,6 +86,7 @@ class Game implements TmpGameType {
         this.purifyChamber = new PurifyChamber();
         this.weatherApp = new WeatherApp();
         this.zMoves = new ZMoves();
+        this.battleTree = new BattleTree();
 
         this._gameState = ko.observable(GameConstants.GameState.loading);
     }
@@ -123,6 +125,7 @@ class Game implements TmpGameType {
         this.farming.initialize();
         this.specialEvents.initialize();
         this.pokeballFilters.initialize();
+        this.battleTree.initialize();
         this.load();
 
         // Unlock achievements that have already been completed, avoids renotifying
@@ -529,6 +532,11 @@ class Game implements TmpGameType {
 
         // Farm
         this.farming.update(GameConstants.TICK_TIME / GameConstants.SECOND);
+
+        // Battle Tree
+        if (this.battleTree.canAccess()) {
+            this.battleTree.update(GameConstants.TICK_TIME / GameConstants.SECOND);
+        }
 
         // Effect Engine (battle items and flutes)
         EffectEngineRunner.counter += GameConstants.TICK_TIME;
