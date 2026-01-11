@@ -1,10 +1,24 @@
 import { Feature } from '../DataStore/common/Feature';
-import { GameState } from '../GameConstants';
+import { BATTLE_TREE_MAX_LEVEL, GameState } from '../GameConstants';
+import { Observable, PureComputed } from 'knockout';
+import Notifier from '../notifications/Notifier';
+import NotificationConstants from '../notifications/NotificationConstants';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
     saveKey: string = 'battleTree';
     defaults: Record<string, any> = { };
+
+    private _experience: Observable<number> = ko.observable(0);
+    private _level: PureComputed<number> = ko.pureComputed(() => BattleTree.convertExperienceToLevel(this._experience()));
+    private _progressToNextLevel: PureComputed<number> = ko.pureComputed(() => {
+        if (this._level() >= BATTLE_TREE_MAX_LEVEL) {
+            return 1;
+        }
+
+        return (this._experience() - BattleTree.convertLevelToExperience(this._level())) /
+            (BattleTree.convertLevelToExperience(this._level() + 1) - BattleTree.convertLevelToExperience(this._level()));
+    });
 
     canAccess(): boolean {
         return true;
@@ -25,11 +39,50 @@ export class BattleTree implements Feature {
         App.game.gameState = GameState.town;
     }
 
-    toJSON(): Record<string, any> {
-        return { };
+    public addExp(amount: number): void {
+        const currentLevel = this._level();
+        this._experience(this._experience() + amount);
+
+        if (this._level() > currentLevel) {
+            Notifier.notify({
+                message: `Your Battle Tree level has increased ${currentLevel} > ${this._level()}`,
+                type: NotificationConstants.NotificationOption.success,
+                timeout: 1e4,
+            });
+        }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    fromJSON(json: Record<string, any>) {
+    get experience(): number {
+        return this._experience();
+    }
+
+    get level(): number {
+        return this._level();
+    }
+
+    get progressToNextLevel(): number {
+        return this._progressToNextLevel();
+    }
+
+    toJSON(): Record<string, any> {
+        return {
+            exp: this._experience(),
+        };
+    }
+
+    fromJSON(json: Record<string, any>): void {
+        this._experience(json.exp ?? 0);
+    }
+
+    public static convertLevelToExperience(level: number): number {
+        return level <= 1 ? 0 : Math.floor(5 * Math.pow(level, 3) / 4);
+    }
+
+    public static convertExperienceToLevel(experience: number): number {
+        let level = 0;
+        while (experience >= this.convertLevelToExperience(level + 1)) {
+            ++level;
+        }
+        return Math.min(Math.max(level, 1), BATTLE_TREE_MAX_LEVEL);
     }
 }
