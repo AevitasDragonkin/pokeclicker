@@ -233,6 +233,7 @@ import areaStatus from './enums/AreaStatus';
 import TranslationHelper from './translation/TranslationHelper';
 import * as DownloadUtil from './utilities/DownloadUtil';
 import { BattleTree } from './battleTree/BattleTree';
+import { BattleTreeUtil } from './battleTree/util/BattleTreeUtil';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -481,4 +482,5 @@ Object.assign(<any>window, {
     TranslationHelper,
     DownloadUtil,
     BattleTree,
+    BattleTreeUtil,
 });
