@@ -1,3 +1,33 @@
-<div class="row justify-content-center no-gutters" data-bind="if: App.game.gameState === GameConstants.GameState.battleTree">
-    <div class="col no-gutters">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquam autem ea et nihil quod rem voluptatem? A architecto blanditiis consectetur dignissimos dolor ea eum inventore ipsum iure labore laborum libero, minus mollitia non pariatur possimus quia vitae voluptas! Ab accusamus ex id itaque labore laboriosam laborum nam, necessitatibus, quos sapiente sint veniam? Animi ducimus, eaque incidunt nobis nostrum optio possimus quidem reprehenderit rerum soluta temporibus ullam velit? Dolor labore suscipit tempora veniam voluptatum. A eos expedita, illo magni maiores pariatur reiciendis rem sint! A consequuntur deserunt earum eum fugit illo, neque non odit quos sint suscipit temporibus totam voluptate!</div>
+<div data-bind="if: App.game.gameState === GameConstants.GameState.battleTree">
+    <div class="d-flex flex-column justify-content-between flex-wrap" style="min-height: 310px;">
+
+        <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
+            <div>Stage 0</div>
+            <div><code data-bind="text: GameConstants.formatTime(300)"></code></div>
+            <div>Speed • 0</div>
+        </div>
+
+        <div>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, ducimus?
+        </div>
+
+        <div class="small px-3 py-1" style="background-color: rgba(0,0,0,70%); margin: 0">
+            <div data-bind="tooltip: {
+                title: App.game.battleTree.level >= GameConstants.BATTLE_TREE_MAX_LEVEL ? (App.game.battleTree.experience - BattleTree.convertLevelToExperience(App.game.battleTree.level)).toLocaleString('en-US') : `${(App.game.battleTree.experience - BattleTree.convertLevelToExperience(App.game.battleTree.level)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.level + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.level)).toLocaleString('en-US')}`,
+                trigger: 'hover'
+            }">
+                <div>Level <knockout data-bind="text: App.game.battleTree.level"></knockout></div>
+                <div class="progress" style="min-height: 10px; height: 10px;">
+                    <div class="progress-bar bg-info"
+                         role="progressbar"
+                         data-bind="style: { width: App.game.battleTree.progressToNextLevel.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }) }"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                    >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
