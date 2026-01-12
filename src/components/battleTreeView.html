@@ -1,4 +1,4 @@
-<div data-bind="if: App.game.gameState === GameConstants.GameState.battleTree">
+<div id="battle-tree-view" data-bind="if: App.game.gameState === GameConstants.GameState.battleTree">
     <div class="d-flex flex-column justify-content-between flex-wrap" style="min-height: 310px;">
 
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
@@ -7,8 +7,140 @@
             <div>Speed • 0</div>
         </div>
 
-        <div>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, ducimus?
+        <div class="d-flex flex-grow-1">
+            <section class="d-flex flex-column flex-grow-1">
+
+                <section class="flex-grow-1" style="display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 1rem; gap: 1rem;">
+                    <div class="flex-grow-1">
+                        <img width="96" height="96" src="" alt="" data-bind="
+                        attr: {
+                            id: `animate-damage-${$data.uuid}`,
+                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id)
+                        }
+                        ">
+                        <div class="small" data-bind="text: PokemonHelper.displayName('Rayquaza')" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                css: {
+                                    'bg-success': true,
+                                },
+                                style: { width: '75%' }
+                            ">
+                                <!-- ko if: $data.HP > 0 -->
+                                <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
+                                <!-- /ko -->
+                                <!-- ko ifnot: $data.HP > 0 -->
+                                <span class="font-italic">Fainted</span>
+                                <!-- /ko -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <img width="96" height="96" src="" alt="" data-bind="
+                        attr: {
+                            id: `animate-damage-${$data.uuid}`,
+                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id)
+                        }
+                        ">
+                        <div class="small" data-bind="text: PokemonHelper.displayName('Rayquaza')" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                        css: {
+                            'bg-success': true,
+                        },
+                        style: { width: '75%' }
+                    ">
+                                <!-- ko if: $data.HP > 0 -->
+                                <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
+                                <!-- /ko -->
+                                <!-- ko ifnot: $data.HP > 0 -->
+                                <span class="font-italic">Fainted</span>
+                                <!-- /ko -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="display: grid; grid-template-columns: 1fr 1fr; background-color: rgba(0 0 0 / 0.35); border-top: 1px solid rgba(0 0 0 / 0.7);">
+                    <div class="d-flex justify-content-center p-1" style="gap: 0.25rem;">
+                        <div>
+                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <div class="progress" style="min-height: 3px; height: 3px;">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                css: {
+                                    'bg-success': true,
+                                },
+                                style: { width: '75%' }
+                            ">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <div class="progress" style="min-height: 3px; height: 3px;">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                css: {
+                                    'bg-success': true,
+                                },
+                                style: { width: '75%' }
+                            ">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <div class="progress" style="min-height: 3px; height: 3px;">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                css: {
+                                    'bg-success': true,
+                                },
+                                style: { width: '75%' }
+                            ">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center p-1" style="gap: 0.25rem;">
+                        <div>
+                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <div class="progress" style="min-height: 3px; height: 3px;">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                css: {
+                                    'bg-success': true,
+                                },
+                                style: { width: '75%' }
+                            ">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <div class="progress" style="min-height: 3px; height: 3px;">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                css: {
+                                    'bg-success': true,
+                                },
+                                style: { width: '75%' }
+                            ">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <div class="progress" style="min-height: 3px; height: 3px;">
+                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
+                                css: {
+                                    'bg-success': true,
+                                },
+                                style: { width: '75%' }
+                            ">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
         </div>
 
         <div class="small px-3 py-1" style="background-color: rgba(0,0,0,70%); margin: 0">
