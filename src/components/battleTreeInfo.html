@@ -4,7 +4,28 @@
         <span>Battle Tree</span>
     </div>
 
-    <div class="card-body">
+    <div class="card-body d-flex flex-column p-2" style="gap: 0.5rem;">
+
+        <section class="d-flex flex-column">
+            <small class="text-center" style="font-size: 0.675rem">State: <knockout data-bind="text: App.game.battleTree.sequence.state"></knockout></small>
+            <small class="text-center" style="font-size: 0.675rem">Seed: <knockout data-bind="text: App.game.battleTree.sequence.seed"></knockout></small>
+        </section>
+
+        <!-- ko if: App.game.battleTree.sequence.state === BattleTreeState.PREPARATION -->
+        <section>
+            <h4>Team selection</h4>
+            <div><small class="text-center" style="font-size: 0.675rem"><knockout data-bind="text: App.game.battleTree.sequence.sequenceSubset().name"></knockout></small></div>
+
+            <div>
+                <!-- ko foreach: App.game.battleTree.sequence.candidates -->
+                <!-- ko with: pokemonMap[$data] -->
+                <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage($data.id) }">
+                <!-- /ko -->
+                <!-- /ko -->
+            </div>
+        </section>
+        <!-- /ko -->
+
         <a class="btn btn-block btn-danger text-light" onclick="App.game.battleTree.leave()">Leave</a>
     </div>
 </div>

@@ -3,6 +3,7 @@ import { BATTLE_TREE_MAX_LEVEL, GameState } from '../GameConstants';
 import { Observable, PureComputed } from 'knockout';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
+import { BattleTreeSequence } from './BattleTreeSequence';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -20,6 +21,8 @@ export class BattleTree implements Feature {
             (BattleTree.convertLevelToExperience(this._level() + 1) - BattleTree.convertLevelToExperience(this._level()));
     });
 
+    private _sequence: Observable<BattleTreeSequence> = ko.observable(new BattleTreeSequence());
+
     canAccess(): boolean {
         return true;
     }
@@ -27,8 +30,10 @@ export class BattleTree implements Feature {
     initialize(): void {
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     update(delta: number) {
+        if (App.game.gameState === GameState.battleTree) {
+            this.sequence?.update(delta);
+        }
     }
 
     public enter(): void {
@@ -64,14 +69,23 @@ export class BattleTree implements Feature {
         return this._progressToNextLevel();
     }
 
+    get sequence(): BattleTreeSequence | null {
+        return this._sequence();
+    }
+
     toJSON(): Record<string, any> {
         return {
             exp: this._experience(),
+            sequence: this._sequence()?.toJSON(),
         };
     }
 
     fromJSON(json: Record<string, any>): void {
         this._experience(json.exp ?? 0);
+
+        if (json.sequence) {
+            this._sequence(BattleTreeSequence.fromJSON(json.sequence));
+        }
     }
 
     public static convertLevelToExperience(level: number): number {
