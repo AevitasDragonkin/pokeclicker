@@ -11,15 +11,17 @@
             <small class="text-center" style="font-size: 0.675rem">Seed: <knockout data-bind="text: App.game.battleTree.sequence.seed"></knockout></small>
         </section>
 
-        <!-- ko if: App.game.battleTree.sequence.state === BattleTreeState.PREPARATION -->
+        <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.PREPARATION -->
         <section>
             <h4>Team selection</h4>
             <div><small class="text-center" style="font-size: 0.675rem"><knockout data-bind="text: App.game.battleTree.sequence.sequenceSubset().name"></knockout></small></div>
 
-            <div>
+            <div class="d-flex flex-wrap justify-content-center" style="gap: 0.25rem;">
                 <!-- ko foreach: App.game.battleTree.sequence.candidates -->
                 <!-- ko with: pokemonMap[$data] -->
-                <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage($data.id) }">
+                <div class="" style="border: 1px solid;" data-bind="style: { background: GameConstants.TypeColor[$data.type[0]] }">
+                    <img width="36" height="36" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage($data.id) }">
+                </div>
                 <!-- /ko -->
                 <!-- /ko -->
             </div>

@@ -8,6 +8,47 @@
         </div>
 
         <div class="d-flex flex-grow-1">
+            <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.PREPARATION -->
+            <section class="d-flex flex-column flex-grow-1">
+                <div class="d-flex flex-grow-1 justify-content-center align-items-center" style="gap: 1rem;">
+                    <div class="d-flex flex-column justify-content-center">
+                        <img width="96" height="96" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                        <div class="d-flex justify-content-center" style="gap: 0.25rem;">
+                            <span class="flex-grow-1 text-center badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="style: { 'background-color': GameConstants.TypeColor[pokemonMap['Rayquaza'].type[0]] }">
+                              <small><strong data-bind="text: PokemonType[pokemonMap['Rayquaza'].type[0]]"></strong></small>
+                            </span>
+                            <span class="flex-grow-1 text-center badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="style: { 'background-color': GameConstants.TypeColor[pokemonMap['Rayquaza'].type[1] ?? pokemonMap['Rayquaza'].type[0]] }">
+                              <small><strong data-bind="text: PokemonType[pokemonMap['Rayquaza'].type[1] ?? pokemonMap['Rayquaza'].type[0]]"></strong></small>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <img width="96" height="96" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Blastoise').id) }">
+                        <div class="d-flex justify-content-center" style="gap: 0.25rem;">
+                            <span class="flex-grow-1 text-center badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="style: { 'background-color': GameConstants.TypeColor[pokemonMap['Blastoise'].type[0]] }">
+                              <small><strong data-bind="text: PokemonType[pokemonMap['Blastoise'].type[0]]"></strong></small>
+                            </span>
+                            <span class="flex-grow-1 text-center badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="style: { 'background-color': GameConstants.TypeColor[pokemonMap['Blastoise'].type[1] ?? pokemonMap['Blastoise'].type[0]] }">
+                              <small><strong data-bind="text: PokemonType[pokemonMap['Blastoise'].type[1] ?? pokemonMap['Blastoise'].type[0]]"></strong></small>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <img width="96" height="96" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Charizard').id) }">
+                        <div class="d-flex justify-content-center" style="gap: 0.25rem;">
+                            <span class="flex-grow-1 text-center badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="style: { 'background-color': GameConstants.TypeColor[pokemonMap['Charizard'].type[0]] }">
+                              <small><strong data-bind="text: PokemonType[pokemonMap['Charizard'].type[0]]"></strong></small>
+                            </span>
+                            <span class="flex-grow-1 text-center badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="style: { 'background-color': GameConstants.TypeColor[pokemonMap['Charizard'].type[1] ?? pokemonMap['Charizard'].type[0]] }">
+                              <small><strong data-bind="text: PokemonType[pokemonMap['Charizard'].type[1] ?? pokemonMap['Charizard'].type[0]]"></strong></small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- /ko -->
+
+            <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.BATTLE -->
             <section class="d-flex flex-column flex-grow-1">
 
                 <section class="flex-grow-1" style="display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 1rem; gap: 1rem;">
@@ -141,6 +182,7 @@
                 </section>
 
             </section>
+            <!-- /ko -->
         </div>
 
         <div class="small px-3 py-1" style="background-color: rgba(0,0,0,70%); margin: 0">
