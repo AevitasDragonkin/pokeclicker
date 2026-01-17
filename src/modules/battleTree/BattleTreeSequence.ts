@@ -3,6 +3,9 @@ import { BattleTreeUtil } from './util/BattleTreeUtil';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
 import { BattleTreePokemonSubset } from './subset/BattleTreePokemonSubset';
+import { BattleTreeTeam } from './BattleTreeTeam';
+
+type TeamType = 'Team_A' | 'Team_B';
 
 interface BattleTreeSequenceSaveData {
     seed: number;
@@ -29,6 +32,7 @@ export class BattleTreeSequence {
     private _sequenceTimer: Observable<number>;
     private _combatTimer: Observable<number>;
 
+    private _teams: Record<TeamType, BattleTreeTeam>;
 
     public sequenceSubset: PureComputed<BattleTreePokemonSubset> = ko.pureComputed(() => {
         return BattleTreeUtil.getRandomSubset({ seed: this.seed });
@@ -47,6 +51,20 @@ export class BattleTreeSequence {
 
         this._sequenceTimer = ko.observable(0);
         this._combatTimer = ko.observable(0);
+
+        this._teams = {
+            Team_A: new BattleTreeTeam({}),
+            Team_B: new BattleTreeTeam({}),
+        };
+    }
+
+    public start(): boolean {
+        if (this._state() === BattleTreeSequenceState.PREPARATION) {
+            this._state(BattleTreeSequenceState.BATTLE);
+            return true;
+        }
+
+        return false;
     }
 
     public update(delta: number): void {
@@ -72,6 +90,10 @@ export class BattleTreeSequence {
 
     get stage(): number {
         return this._stage();
+    }
+
+    get teams(): Record<TeamType, BattleTreeTeam> {
+        return this._teams;
     }
 
     public toJSON(): BattleTreeSequenceSaveData {

@@ -23,4 +23,10 @@ export class BattleTreeUtil {
         const shuffledUniqueIds = SeededRand.shuffleArray(uniqueIds);
         return shuffledUniqueIds.slice(0, amount).map(id => SeededRand.fromArray(subsets[subset].subset.filter(p => Math.floor(p.id) === id)).name);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static calculatePokemonLevelForPlayer(pokemon: PokemonNameType): number {
+        // TODO : BT : Calculate proper level for the player's pokemon
+        return App.game.battleTree.battleTreeLevel;
+    }
 }

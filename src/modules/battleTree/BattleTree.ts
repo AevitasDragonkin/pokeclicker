@@ -3,7 +3,9 @@ import { BATTLE_TREE_MAX_LEVEL, GameState } from '../GameConstants';
 import { Observable, PureComputed } from 'knockout';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
-import { BattleTreeSequence } from './BattleTreeSequence';
+import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
+import { BattleTreeUtil } from './util/BattleTreeUtil';
+import Rand from '../utilities/Rand';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -31,6 +33,10 @@ export class BattleTree implements Feature {
     }
 
     update(delta: number) {
+        // if (this.sequence.state === BattleTreeSequenceState.PREPARATION && this.sequence.seed !== BattleTreeUtil.calculateSeed()) {
+        //     this._sequence(new BattleTreeSequence());
+        // }
+
         if (App.game.gameState === GameState.battleTree) {
             this.sequence?.update(delta);
         }
@@ -42,6 +48,13 @@ export class BattleTree implements Feature {
 
     public leave(): void {
         App.game.gameState = GameState.town;
+    }
+
+    public fillPlayerTeamRandomly(): void {
+        this.sequence.teams.Team_A.removeAllPokemon();
+        Rand.shuffleArray(this.sequence.candidates().filter(name => App.game.party.alreadyCaughtPokemonByName(name)))
+            .slice(0, 3)
+            .forEach(value => this.sequence.teams.Team_A.addPokemon(value, 100));
     }
 
     public addExp(amount: number): void {
@@ -69,7 +82,7 @@ export class BattleTree implements Feature {
         return this._progressToNextLevel();
     }
 
-    get sequence(): BattleTreeSequence | null {
+    get sequence(): BattleTreeSequence {
         return this._sequence();
     }
 

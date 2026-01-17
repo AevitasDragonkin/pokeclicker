@@ -16,14 +16,58 @@
             <h4>Team selection</h4>
             <div><small class="text-center" style="font-size: 0.675rem"><knockout data-bind="text: App.game.battleTree.sequence.sequenceSubset().name"></knockout></small></div>
 
-            <div class="d-flex flex-wrap justify-content-center" style="gap: 0.25rem;">
+            <div class="d-flex flex-wrap justify-content-center mt-3" style="gap: 0.25rem;">
                 <!-- ko foreach: App.game.battleTree.sequence.candidates -->
                 <!-- ko with: pokemonMap[$data] -->
-                <div class="" style="border: 1px solid;" data-bind="style: { background: GameConstants.TypeColor[$data.type[0]] }">
+                <div class="" style="border: 2px solid;" data-bind="
+                    click: () => { App.game.battleTree.sequence.teams['Team_A'].addPokemon($data.name, BattleTreeUtil.calc) },
+                    style: {
+                        'border-image': `linear-gradient(90deg, ${GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 40%, ${GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 60%) 1`
+                    }
+                ">
+<!--                <div class="" data-bind="style: { background: `linear-gradient(90deg, ${GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 40%, ${GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 60%)` }">-->
+<!--                <div class="" style="border: 1px solid; border-image: linear-gradient(red, blue)">-->
                     <img width="36" height="36" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage($data.id) }">
                 </div>
                 <!-- /ko -->
                 <!-- /ko -->
+            </div>
+
+            <div class="d-flex justify-content-center mt-3" style="gap: 1rem;">
+                <button class="btn btn-info" data-bind="
+                        click: () => App.game.battleTree.fillPlayerTeamRandomly(),
+                        tooltip: {
+                            trigger: 'hover',
+                            title: 'Load random team',
+                            placement: 'bottom',
+                        }
+                    ">
+                    ↻
+                </button>
+
+                <button class="btn btn-success" style="width: 150px;" data-bind="
+                        click: () => App.game.battleTree.sequence.start(),
+                        enable: App.game.battleTree.sequence.teams['Team_A'].canStart > 0,
+                        tooltip: {
+                            trigger: 'hover',
+                            title: `Select between ${App.game.battleTree.sequence.teams['Team_A'].minTeamSize} and ${App.game.battleTree.sequence.teams['Team_A'].maxTeamSize} pokemon for your team.`,
+                            placement: 'bottom',
+                        }
+                    ">
+                    Start
+                </button>
+
+                <button class="btn btn-info" data-bind="
+                        click: () => { },
+                        enable: false,
+                        tooltip: {
+                            trigger: 'hover',
+                            title: 'Load previous team',
+                            placement: 'bottom',
+                        }
+                    ">
+                    ⏎
+                </button>
             </div>
         </section>
         <!-- /ko -->
