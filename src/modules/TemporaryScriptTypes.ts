@@ -34,6 +34,7 @@ import type WeatherType from './weather/WeatherType';
 import type { MultiplierDecreaser } from './items/types';
 import type BagItem from './interfaces/BagItem';
 import type BattlePokemon from './battles/BattlePokemon';
+import { BattleTree } from './battleTree/BattleTree';
 
 /*
     These types are only temporary while we are converting things to modules. As things are converted,
@@ -102,7 +103,6 @@ export type TmpPurifyChamberType = any;
 export type TmpWeatherAppType = any;
 export type TmpZMovesType = any;
 export type TmpHeldItemType = any;
-export type TmpBattleTreeType = any;
 
 export type TmpGameType = {
     gameState: GameConstants.GameState;
@@ -139,7 +139,7 @@ export type TmpGameType = {
     purifyChamber: TmpPurifyChamberType;
     weatherApp: TmpWeatherAppType;
     zMoves: TmpZMovesType;
-    battleTree: TmpBattleTreeType;
+    battleTree: BattleTree;
 
     // functions
     load: () => void;

@@ -2,6 +2,7 @@ import { BattleTreePokemonSubset, BattleTreePokemonSubsetNameType } from '../sub
 import SeededRand from '../../utilities/SeededRand';
 import { subsets } from '../BattleTree.config';
 import { PokemonNameType } from '../../pokemons/PokemonNameType';
+import Rand from '../../utilities/Rand';
 
 export class BattleTreeUtil {
     public static calculateSeed(): number {
@@ -28,5 +29,23 @@ export class BattleTreeUtil {
     public static calculatePokemonLevelForPlayer(pokemon: PokemonNameType): number {
         // TODO : BT : Calculate proper level for the player's pokemon
         return App.game.battleTree.level;
+    }
+
+    public static clickCandidate(name: PokemonNameType): void {
+        if (!App.game.party.alreadyCaughtPokemonByName(name))
+            return;
+
+        if (App.game.battleTree.sequence.teams.Team_A.hasPokemon(name)) {
+            App.game.battleTree.sequence.teams.Team_A.removePokemon(name);
+        } else {
+            App.game.battleTree.sequence.teams.Team_A.addPokemon(name, BattleTreeUtil.calculatePokemonLevelForPlayer(name));
+        }
+    }
+
+    public static clickRandomTeam(): void {
+        App.game.battleTree.sequence.teams.Team_A.removeAllPokemon();
+        Rand.shuffleArray(App.game.battleTree.sequence.candidates().filter(name => App.game.party.alreadyCaughtPokemonByName(name)))
+            .slice(0, App.game.battleTree.sequence.teams.Team_A.maxTeamSize)
+            .forEach(name => App.game.battleTree.sequence.teams.Team_A.addPokemon(name, BattleTreeUtil.calculatePokemonLevelForPlayer(name)));
     }
 }

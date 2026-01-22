@@ -6,6 +6,7 @@ import NotificationConstants from '../notifications/NotificationConstants';
 import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
 import Rand from '../utilities/Rand';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
+import {PokemonNameType} from '../pokemons/PokemonNameType';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -54,11 +55,8 @@ export class BattleTree implements Feature {
         App.game.gameState = GameState.town;
     }
 
-    public fillPlayerTeamRandomly(): void {
-        this.sequence.teams.Team_A.removeAllPokemon();
-        Rand.shuffleArray(this.sequence.candidates().filter(name => App.game.party.alreadyCaughtPokemonByName(name)))
-            .slice(0, this.sequence.teams.Team_A.maxTeamSize)
-            .forEach(name => this.sequence.teams.Team_A.addPokemon(name, BattleTreeUtil.calculatePokemonLevelForPlayer(name)));
+    public addPokemonToPlayerTeam(name: PokemonNameType): void {
+
     }
 
     public addExp(amount: number): void {

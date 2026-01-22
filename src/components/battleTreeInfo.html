@@ -19,21 +19,44 @@
             <div class="d-flex flex-wrap justify-content-center mt-3" style="gap: 0.25rem;">
                 <!-- ko foreach: App.game.battleTree.sequence.candidates -->
                 <!-- ko with: pokemonMap[$data] -->
-                <div class="p-1" style="border: 2px solid;" data-bind="
-                    click: () => { App.game.battleTree.sequence.teams['Team_A'].addPokemon($data.name, BattleTreeUtil.calculatePokemonLevelForPlayer($data.name)) },
+                <a class="select-pokemon p-1" style="" data-caught="App.game.party.alreadyCaughtPokemonByName($data.name)" data-bind="
+                    enable: App.game.battleTree.sequence.teams['Team_A'].hasPokemon($data.name) || (!App.game.battleTree.sequence.teams['Team_A'].isFull && App.game.party.alreadyCaughtPokemonByName($data.name)),
+                    click: () => { BattleTreeUtil.clickCandidate($data.name) },
+                    css: {
+                        'clickable': App.game.battleTree.sequence.teams['Team_A'].hasPokemon($data.name) || (!App.game.battleTree.sequence.teams['Team_A'].isFull && App.game.party.alreadyCaughtPokemonByName($data.name))
+                    },
                     style: {
-                        'border-image': `linear-gradient(90deg, ${GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 40%, ${GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 60%) 1`
-                    }
+                        '--type-0': GameConstants.TypeColor[pokemonMap[$data.name].type[0]],
+                        '--type-1': GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]],
+                        'opacity': App.game.battleTree.sequence.teams['Team_A'].isFull && !App.game.battleTree.sequence.teams.Team_A.hasPokemon($data.name) ? 0.4 : 1
+                    },
+                    attr: {
+                        'data-seen': PokedexHelper.pokemonSeen($data.id)(),
+                        'data-caught': App.game.party.alreadyCaughtPokemonByName($data.name) ? 'true' : 'false',
+                        'data-in-team': App.game.battleTree.sequence.teams['Team_A'].hasPokemon($data.name),
+                    },
+                    tooltip: PokedexHelper.pokemonSeen($data.id)() ? {
+                        trigger: 'hover',
+                        title: PokemonHelper.displayName($data.name),
+                        placement: 'bottom'
+                    } : null,
                 ">
-                    <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage($data.id) }">
-                </div>
+                    <img width="32" height="32" src="" alt="" data-bind="
+                        css: {
+                            'pokemon-not-seen': !PokedexHelper.pokemonSeen($data.id)(),
+                            'pokemon-seen-but-not-caught': !App.game.party.alreadyCaughtPokemonByName($data.name) && PokedexHelper.pokemonSeen($data.id)()
+                        },
+                        attr: {
+                            src: PokemonHelper.getImage($data.id)
+                        }
+                    ">
+                </a>
                 <!-- /ko -->
                 <!-- /ko -->
             </div>
 
             <div class="d-flex justify-content-center mt-3" style="gap: 1rem;">
-                <button class="btn btn-info" data-bind="
-                        click: () => App.game.battleTree.fillPlayerTeamRandomly(),
+                <button class="btn btn-info" onclick="BattleTreeUtil.clickRandomTeam()" data-bind="
                         tooltip: {
                             trigger: 'hover',
                             title: 'Load random team',
@@ -43,8 +66,7 @@
                     ↻
                 </button>
 
-                <button class="btn btn-success" style="width: 150px;" data-bind="
-                        click: () => App.game.battleTree.sequence.start(),
+                <button class="btn btn-success" style="width: 150px;" onclick="App.game.battleTree.sequence.start()" data-bind="
                         enable: App.game.battleTree.sequence.teams['Team_A'].canStart > 0,
                         tooltip: {
                             trigger: 'hover',

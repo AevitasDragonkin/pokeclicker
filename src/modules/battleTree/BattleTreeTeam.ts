@@ -24,9 +24,13 @@ export class BattleTreeTeam {
         this._list = ko.observableArray();
     }
 
+    public hasPokemon(name: PokemonNameType): boolean {
+        return this.list.findIndex(p => p.name === name) >= 0;
+    }
+
     public addPokemon(name: PokemonNameType, level: number): boolean {
         if (this.isFull) return false;
-        if (this.list.findIndex(p => p.name === name) >= 0) return false;
+        if (this.hasPokemon(name)) return false;
 
         this._list.push(new BattleTreePokemon({
             name,
