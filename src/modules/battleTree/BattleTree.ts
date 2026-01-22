@@ -4,8 +4,8 @@ import { Observable, PureComputed } from 'knockout';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
 import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
-import { BattleTreeUtil } from './util/BattleTreeUtil';
 import Rand from '../utilities/Rand';
+import { BattleTreeUtil } from './util/BattleTreeUtil';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -33,12 +33,16 @@ export class BattleTree implements Feature {
     }
 
     update(delta: number) {
-        // if (this.sequence.state === BattleTreeSequenceState.PREPARATION && this.sequence.seed !== BattleTreeUtil.calculateSeed()) {
-        //     this._sequence(new BattleTreeSequence());
-        // }
+        this.checkNewSequenceAvailable();
 
         if (App.game.gameState === GameState.battleTree) {
             this.sequence?.update(delta);
+        }
+    }
+
+    public checkNewSequenceAvailable(): void {
+        if (this.sequence.state === BattleTreeSequenceState.PREPARATION && this.sequence.seed !== BattleTreeUtil.calculateSeed()) {
+            this._sequence(new BattleTreeSequence());
         }
     }
 
@@ -53,8 +57,8 @@ export class BattleTree implements Feature {
     public fillPlayerTeamRandomly(): void {
         this.sequence.teams.Team_A.removeAllPokemon();
         Rand.shuffleArray(this.sequence.candidates().filter(name => App.game.party.alreadyCaughtPokemonByName(name)))
-            .slice(0, 3)
-            .forEach(value => this.sequence.teams.Team_A.addPokemon(value, 100));
+            .slice(0, this.sequence.teams.Team_A.maxTeamSize)
+            .forEach(name => this.sequence.teams.Team_A.addPokemon(name, BattleTreeUtil.calculatePokemonLevelForPlayer(name)));
     }
 
     public addExp(amount: number): void {

@@ -20,7 +20,7 @@
                 <!-- ko foreach: App.game.battleTree.sequence.candidates -->
                 <!-- ko with: pokemonMap[$data] -->
                 <div class="p-1" style="border: 2px solid;" data-bind="
-                    click: () => { App.game.battleTree.sequence.teams['Team_A'].addPokemon($data.name, BattleTreeUtil.calc) },
+                    click: () => { App.game.battleTree.sequence.teams['Team_A'].addPokemon($data.name, BattleTreeUtil.calculatePokemonLevelForPlayer($data.name)) },
                     style: {
                         'border-image': `linear-gradient(90deg, ${GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 40%, ${GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 60%) 1`
                     }
