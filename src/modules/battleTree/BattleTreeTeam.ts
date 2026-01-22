@@ -1,5 +1,5 @@
 import { ObservableArray } from 'knockout';
-import {BattleTreePokemon, BattleTreePokemonSaveData} from './BattleTreePokemon';
+import { BattleTreePokemon, BattleTreePokemonSaveData } from './BattleTreePokemon';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 
 interface BattleTreeTeamProperties {

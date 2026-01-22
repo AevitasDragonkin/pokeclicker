@@ -3,7 +3,7 @@ import { BattleTreeUtil } from './util/BattleTreeUtil';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
 import { BattleTreePokemonSubset } from './subset/BattleTreePokemonSubset';
-import {BattleTreeTeam, BattleTreeTeamSaveData} from './BattleTreeTeam';
+import { BattleTreeTeam, BattleTreeTeamSaveData } from './BattleTreeTeam';
 
 type TeamType = 'Team_A' | 'Team_B';
 
@@ -107,7 +107,7 @@ export class BattleTreeSequence {
             combatTime: this._combatTimer(),
             teams: Object
                 .fromEntries(Object.entries(this.teams)
-                    .map(([key, value]: [key: TeamType, value: BattleTreeTeam]) => [key as TeamType, value.toJSON()])
+                    .map(([key, value]: [key: TeamType, value: BattleTreeTeam]) => [key as TeamType, value.toJSON()]),
                 ) as Record<TeamType, BattleTreeTeamSaveData>,
         };
     }
@@ -124,7 +124,7 @@ export class BattleTreeSequence {
 
         sequence._teams = Object
             .fromEntries(Object.entries(json.teams)
-                .map(([key, value]) => [key, BattleTreeTeam.fromJSON(value)])
+                .map(([key, value]) => [key, BattleTreeTeam.fromJSON(value)]),
             ) as Record<TeamType, BattleTreeTeam>;
 
         return sequence;

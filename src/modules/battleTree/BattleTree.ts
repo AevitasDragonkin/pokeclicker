@@ -4,9 +4,7 @@ import { Observable, PureComputed } from 'knockout';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
 import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
-import Rand from '../utilities/Rand';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
-import {PokemonNameType} from '../pokemons/PokemonNameType';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';

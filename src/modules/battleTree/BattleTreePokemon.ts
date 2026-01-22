@@ -1,6 +1,6 @@
 import { PokemonNameType } from '../pokemons/PokemonNameType';
-import {Observable, PureComputed} from 'knockout';
-import {pokemonMap} from '../pokemons/PokemonList';
+import { Observable, PureComputed } from 'knockout';
+import { pokemonMap } from '../pokemons/PokemonList';
 
 interface BattleTreePokemonProperties {
     name: PokemonNameType;
