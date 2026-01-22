@@ -10,12 +10,14 @@
         <div class="d-flex flex-grow-1">
             <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.PREPARATION -->
             <section class="d-flex flex-column flex-grow-1">
-                <div class="d-flex flex-grow-1 justify-content-center align-items-center" style="gap: 1rem;">
+                <div class="d-flex flex-grow-1 p-1 justify-content-center align-items-center" style="gap: 1rem;">
                     <!-- ko foreach: App.game.battleTree.sequence.teams['Team_A'].list -->
-                    <div class="d-flex flex-column justify-content-center">
-                        <img width="96" height="96" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
-                        <div class="small" data-bind="text: PokemonHelper.displayName($data.name)" style="background-color: rgba(0 0 0 / 0.5); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
-                        <div class="d-flex flex-wrap justify-content-center rounded p-1" style="gap: 0.25rem; background-color: rgba(0 0 0 / 0.35)">
+                    <div class="d-flex flex-column h-100 justify-content-center">
+                        <div class="small px-1" data-bind="text: PokemonHelper.displayName($data.name)" style="background-color: rgba(0 0 0 / 0.5); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="flex-grow-1">
+                            <img width="96" height="96" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }">
+                        </div>
+                        <div class="d-flex flex-wrap justify-content-center rounded p-1" style="gap: 0.25rem; margin-bottom: 0.25rem; background-color: rgba(0 0 0 / 0.35)">
                             <span class="flex-grow-1 text-center badge text-light text-uppercase px-1" style="line-height: normal; text-shadow: 0px 0px 1px black, 0px 0px 1px black, 0px 0px 1px black, 0px 0px 2px black, 0px 0px 2px black, 0px 0px 3px black;" data-bind="style: { 'background-color': GameConstants.TypeColor[pokemonMap[$data.name].type[0]] }">
                               <small><strong data-bind="text: PokemonType[pokemonMap[$data.name].type[0]]"></strong></small>
                             </span>
@@ -24,6 +26,11 @@
                               <small><strong data-bind="text: PokemonType[pokemonMap[$data.name].type[1]]"></strong></small>
                             </span>
                             <!-- /ko -->
+                        </div>
+                        <div class="d-flex flex-column rounded px-1" style="background-color: rgba(0 0 0 / 0.35)">
+                            <div class="small"><knockout data-bind="text: $data.attack"></knockout> Attack</div>
+                            <div class="small"><knockout data-bind="text: $data.defence"></knockout> Defence</div>
+                            <div class="small"><knockout data-bind="text: $data.speed"></knockout> Speed</div>
                         </div>
                     </div>
                     <!-- /ko -->

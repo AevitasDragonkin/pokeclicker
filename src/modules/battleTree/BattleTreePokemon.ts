@@ -21,4 +21,16 @@ export class BattleTreePokemon {
     get level(): number {
         return this._level;
     }
+
+    get attack(): number {
+        return Math.floor(Math.random() * 100);
+    }
+
+    get defence(): number {
+        return Math.floor(Math.random() * 100);
+    }
+
+    get speed(): number {
+        return Math.floor(Math.random() * 100);
+    }
 }

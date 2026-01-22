@@ -19,15 +19,13 @@
             <div class="d-flex flex-wrap justify-content-center mt-3" style="gap: 0.25rem;">
                 <!-- ko foreach: App.game.battleTree.sequence.candidates -->
                 <!-- ko with: pokemonMap[$data] -->
-                <div class="" style="border: 2px solid;" data-bind="
+                <div class="p-1" style="border: 2px solid;" data-bind="
                     click: () => { App.game.battleTree.sequence.teams['Team_A'].addPokemon($data.name, BattleTreeUtil.calc) },
                     style: {
                         'border-image': `linear-gradient(90deg, ${GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 40%, ${GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 60%) 1`
                     }
                 ">
-<!--                <div class="" data-bind="style: { background: `linear-gradient(90deg, ${GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 40%, ${GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]]} 60%)` }">-->
-<!--                <div class="" style="border: 1px solid; border-image: linear-gradient(red, blue)">-->
-                    <img width="36" height="36" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage($data.id) }">
+                    <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage($data.id) }">
                 </div>
                 <!-- /ko -->
                 <!-- /ko -->
