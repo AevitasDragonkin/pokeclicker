@@ -55,10 +55,6 @@ export class BattleTree implements Feature {
         App.game.gameState = GameState.town;
     }
 
-    public addPokemonToPlayerTeam(name: PokemonNameType): void {
-
-    }
-
     public addExp(amount: number): void {
         const currentLevel = this._level();
         this._experience(this._experience() + amount);
