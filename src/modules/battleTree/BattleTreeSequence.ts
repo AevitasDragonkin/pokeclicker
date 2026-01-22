@@ -3,7 +3,7 @@ import { BattleTreeUtil } from './util/BattleTreeUtil';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
 import { BattleTreePokemonSubset } from './subset/BattleTreePokemonSubset';
-import { BattleTreeTeam } from './BattleTreeTeam';
+import {BattleTreeTeam, BattleTreeTeamSaveData} from './BattleTreeTeam';
 
 type TeamType = 'Team_A' | 'Team_B';
 
@@ -14,6 +14,8 @@ interface BattleTreeSequenceSaveData {
 
     sequenceTime: number;
     combatTime: number;
+
+    teams: Record<TeamType, BattleTreeTeamSaveData>;
 }
 
 export enum BattleTreeSequenceState {
@@ -103,6 +105,10 @@ export class BattleTreeSequence {
             stage: this._stage(),
             sequenceTime: this._sequenceTimer(),
             combatTime: this._combatTimer(),
+            teams: Object
+                .fromEntries(Object.entries(this.teams)
+                    .map(([key, value]: [key: TeamType, value: BattleTreeTeam]) => [key as TeamType, value.toJSON()])
+                ) as Record<TeamType, BattleTreeTeamSaveData>,
         };
     }
 
@@ -115,6 +121,11 @@ export class BattleTreeSequence {
 
         sequence._sequenceTimer(json.sequenceTime);
         sequence._combatTimer(json.combatTime);
+
+        sequence._teams = Object
+            .fromEntries(Object.entries(json.teams)
+                .map(([key, value]) => [key, BattleTreeTeam.fromJSON(value)])
+            ) as Record<TeamType, BattleTreeTeam>;
 
         return sequence;
     }

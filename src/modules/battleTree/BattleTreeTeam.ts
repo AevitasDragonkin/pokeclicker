@@ -1,5 +1,5 @@
 import { ObservableArray } from 'knockout';
-import { BattleTreePokemon } from './BattleTreePokemon';
+import {BattleTreePokemon, BattleTreePokemonSaveData} from './BattleTreePokemon';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 
 interface BattleTreeTeamProperties {
@@ -7,8 +7,10 @@ interface BattleTreeTeamProperties {
     maxTeamSize?: number;
 }
 
-interface BattleTreeTeamSaveData {
-
+export interface BattleTreeTeamSaveData {
+    minTeamSize: number;
+    maxTeamSize: number;
+    list: BattleTreePokemonSaveData[];
 }
 
 export class BattleTreeTeam {
@@ -64,12 +66,19 @@ export class BattleTreeTeam {
 
     public toJSON(): BattleTreeTeamSaveData {
         return {
-
+            minTeamSize: this.minTeamSize,
+            maxTeamSize: this.maxTeamSize,
+            list: this.list.map(value => value.toJSON()),
         };
     }
 
     static fromJSON(json: BattleTreeTeamSaveData): BattleTreeTeam {
-        const team: BattleTreeTeam = new BattleTreeTeam({  });
+        const team: BattleTreeTeam = new BattleTreeTeam({
+            minTeamSize: json.minTeamSize,
+            maxTeamSize: json.maxTeamSize,
+        });
+
+        team._list.push(...json.list.map(value => BattleTreePokemon.fromJSON(value)));
 
         return team;
     }
