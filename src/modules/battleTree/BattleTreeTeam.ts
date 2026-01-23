@@ -28,6 +28,12 @@ export class BattleTreeTeam {
         return this.list.findIndex(p => p.name === name) >= 0;
     }
 
+    public getPokemonAvailableToFight(name?: PokemonNameType): BattleTreePokemon {
+        return this.list.find(value => value.hitpoints > 0 && value.name === name) ??
+            this.list.find(value => value.hitpoints > 0) ??
+            this.list[0];
+    }
+
     public addPokemon(name: PokemonNameType, level: number): boolean {
         if (this.isFull) return false;
         if (this.hasPokemon(name)) return false;
@@ -62,6 +68,10 @@ export class BattleTreeTeam {
 
     get canStart(): boolean {
         return this._list().length >= this._minTeamSize;
+    }
+
+    get canContinueToFight(): boolean {
+        return this.list.some(value => value.hitpoints > 0);
     }
 
     get isFull(): boolean {

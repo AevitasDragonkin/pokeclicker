@@ -41,8 +41,12 @@ export class BattleTree implements Feature {
 
     public checkNewSequenceAvailable(): void {
         if (this.sequence.state === BattleTreeSequenceState.PREPARATION && this.sequence.seed !== BattleTreeUtil.calculateSeed()) {
-            this._sequence(new BattleTreeSequence());
+            this.startNewSequence();
         }
+    }
+
+    public startNewSequence(): void {
+        this._sequence(new BattleTreeSequence());
     }
 
     public enter(): void {

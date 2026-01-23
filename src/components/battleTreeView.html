@@ -2,9 +2,9 @@
     <div class="d-flex flex-column justify-content-between flex-wrap" style="min-height: 310px;">
 
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
-            <div>Stage 0</div>
+            <div>Stage <knockout data-bind="text: App.game.battleTree.sequence.stage"></knockout></div>
             <div><code data-bind="text: GameConstants.formatTime(300)"></code></div>
-            <div>Speed • 0</div>
+            <div>Speed • <knockout data-bind="text: BattleTreeUtil.calculateAttackSpeed().toFixed(2)"></knockout></div>
         </div>
 
         <div class="d-flex flex-grow-1">
@@ -43,134 +43,120 @@
 
                 <section class="flex-grow-1" style="display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 1rem; gap: 1rem;">
                     <div class="flex-grow-1">
+                        <!-- ko with: App.game.battleTree.sequence.fight.pokemonA -->
                         <img width="96" height="96" src="" alt="" data-bind="
                         attr: {
                             id: `animate-damage-${$data.uuid}`,
-                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id)
+                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
                         }
                         ">
-                        <div class="small" data-bind="text: PokemonHelper.displayName('Rayquaza')" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="small" data-bind="text: PokemonHelper.displayName($data.name)" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
                         <div class="progress">
                             <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                 css: {
-                                    'bg-success': true,
+                                    'bg-success': $data.hitpoints / $data.maxHitpoints >= 0.5,
+                                    'bg-warning': $data.hitpoints / $data.maxHitpoints >= 0.2 && $data.hitpoints / $data.maxHitpoints < 0.5,
+                                    'bg-danger': $data.hitpoints / $data.maxHitpoints < 0.2
                                 },
-                                style: { width: '75%' }
+                                style: { width: ($data.hitpoints / $data.maxHitpoints).toLocaleString('en-US', { style: 'percent' }) }
                             ">
-                                <!-- ko if: $data.HP > 0 -->
-                                <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
+                                <!-- ko if: $data.hitpoints > 0 -->
+                                <span><knockout data-bind="text: $data.hitpoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitpoints.toLocaleString('en-US')"></knockout></span>
                                 <!-- /ko -->
-                                <!-- ko ifnot: $data.HP > 0 -->
+                                <!-- ko ifnot: $data.hitpoints > 0 -->
                                 <span class="font-italic">Fainted</span>
                                 <!-- /ko -->
                             </div>
                         </div>
+                        <!-- /ko -->
                     </div>
                     <div class="flex-grow-1">
+                        <!-- ko with: App.game.battleTree.sequence.fight.pokemonB -->
                         <img width="96" height="96" src="" alt="" data-bind="
                         attr: {
                             id: `animate-damage-${$data.uuid}`,
-                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id)
+                            src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
                         }
                         ">
-                        <div class="small" data-bind="text: PokemonHelper.displayName('Rayquaza')" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="small" data-bind="text: PokemonHelper.displayName($data.name)" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
                         <div class="progress">
                             <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                        css: {
-                            'bg-success': true,
-                        },
-                        style: { width: '75%' }
-                    ">
-                                <!-- ko if: $data.HP > 0 -->
-                                <span><knockout data-bind="text: $data.HP.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHP.toLocaleString('en-US')"></knockout></span>
+                                css: {
+                                    'bg-success': $data.hitpoints / $data.maxHitpoints >= 0.5,
+                                    'bg-warning': $data.hitpoints / $data.maxHitpoints >= 0.2 && $data.hitpoints / $data.maxHitpoints < 0.5,
+                                    'bg-danger': $data.hitpoints / $data.maxHitpoints < 0.2
+                                },
+                                style: { width: ($data.hitpoints / $data.maxHitpoints).toLocaleString('en-US', { style: 'percent' }) }
+                            ">
+                                <!-- ko if: $data.hitpoints > 0 -->
+                                <span><knockout data-bind="text: $data.hitpoints.toLocaleString('en-US')"></knockout> / <knockout data-bind="text: $data.maxHitpoints.toLocaleString('en-US')"></knockout></span>
                                 <!-- /ko -->
-                                <!-- ko ifnot: $data.HP > 0 -->
+                                <!-- ko ifnot: $data.hitpoints > 0 -->
                                 <span class="font-italic">Fainted</span>
                                 <!-- /ko -->
                             </div>
                         </div>
+                        <!-- /ko -->
                     </div>
                 </section>
 
                 <section style="display: grid; grid-template-columns: 1fr 1fr; background-color: rgba(0 0 0 / 0.35); border-top: 1px solid rgba(0 0 0 / 0.7);">
                     <div class="d-flex justify-content-center p-1" style="gap: 0.25rem;">
+                        <!-- ko foreach: App.game.battleTree.sequence.teams['Team_A'].list -->
                         <div>
-                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <img width="32" height="32" src="" alt="" data-bind="
+                                css: { 'battle-tree-pokemon-fainted': $data.hitpoints === 0 },
+                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                            ">
                             <div class="progress" style="min-height: 3px; height: 3px;">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                                css: {
-                                    'bg-success': true,
-                                },
-                                style: { width: '75%' }
-                            ">
+                                    css: {
+                                        'bg-success': $data.hitpoints / $data.maxHitpoints >= 0.5,
+                                        'bg-warning': $data.hitpoints / $data.maxHitpoints >= 0.2 && $data.hitpoints / $data.maxHitpoints < 0.5,
+                                        'bg-danger': $data.hitpoints / $data.maxHitpoints < 0.2
+                                    },
+                                    style: { width: ($data.hitpoints / $data.maxHitpoints).toLocaleString('en-US', { style: 'percent' }) }
+                                ">
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
-                            <div class="progress" style="min-height: 3px; height: 3px;">
-                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                                css: {
-                                    'bg-success': true,
-                                },
-                                style: { width: '75%' }
-                            ">
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
-                            <div class="progress" style="min-height: 3px; height: 3px;">
-                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                                css: {
-                                    'bg-success': true,
-                                },
-                                style: { width: '75%' }
-                            ">
-                                </div>
-                            </div>
-                        </div>
+                        <!-- /ko -->
                     </div>
                     <div class="d-flex justify-content-center p-1" style="gap: 0.25rem;">
+                        <!-- ko foreach: App.game.battleTree.sequence.teams['Team_B'].list -->
                         <div>
-                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
+                            <img width="32" height="32" src="" alt="" data-bind="
+                                css: { 'battle-tree-pokemon-fainted': $data.hitpoints === 0 },
+                                attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
+                            ">
                             <div class="progress" style="min-height: 3px; height: 3px;">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                                css: {
-                                    'bg-success': true,
-                                },
-                                style: { width: '75%' }
-                            ">
+                                    css: {
+                                        'bg-success': $data.hitpoints / $data.maxHitpoints >= 0.5,
+                                        'bg-warning': $data.hitpoints / $data.maxHitpoints >= 0.2 && $data.hitpoints / $data.maxHitpoints < 0.5,
+                                        'bg-danger': $data.hitpoints / $data.maxHitpoints < 0.2
+                                    },
+                                    style: { width: ($data.hitpoints / $data.maxHitpoints).toLocaleString('en-US', { style: 'percent' }) }
+                                ">
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
-                            <div class="progress" style="min-height: 3px; height: 3px;">
-                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                                css: {
-                                    'bg-success': true,
-                                },
-                                style: { width: '75%' }
-                            ">
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <img width="32" height="32" src="" alt="" data-bind="attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName('Rayquaza').id) }">
-                            <div class="progress" style="min-height: 3px; height: 3px;">
-                                <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
-                                css: {
-                                    'bg-success': true,
-                                },
-                                style: { width: '75%' }
-                            ">
-                                </div>
-                            </div>
-                        </div>
+                        <!-- /ko -->
                     </div>
                 </section>
 
+            </section>
+            <!-- /ko -->
+
+            <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD -->
+            <section class="d-flex flex-column flex-grow-1">
+                <button onclick="App.game.battleTree.sequence.claimRewards()">Claim rewards</button>
+            </section>
+            <!-- /ko -->
+
+            <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.FINISHED -->
+            <section class="d-flex flex-column flex-grow-1">
+                <button onclick="App.game.battleTree.startNewSequence()">Start new</button>
             </section>
             <!-- /ko -->
         </div>

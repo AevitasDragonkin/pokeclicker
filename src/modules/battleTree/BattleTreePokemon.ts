@@ -76,6 +76,10 @@ export class BattleTreePokemon {
         return this._maxHitpoints();
     }
 
+    get hitpoints(): number {
+        return this._hp();
+    }
+
     public toJSON(): BattleTreePokemonSaveData {
         return {
             name: this._name,

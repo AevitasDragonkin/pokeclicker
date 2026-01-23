@@ -31,6 +31,16 @@ export class BattleTreeUtil {
         return App.game.battleTree.level;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static calculatePokemonLevelForOpponent(pokemon: PokemonNameType, stage: number): number {
+        // TODO : BT : Calculate proper level for the opponent's pokemon
+        return stage;
+    }
+
+    public static calculateAttackSpeed(): number {
+        return 1;
+    }
+
     public static clickCandidate(name: PokemonNameType): void {
         if (!App.game.party.alreadyCaughtPokemonByName(name))
             return;
