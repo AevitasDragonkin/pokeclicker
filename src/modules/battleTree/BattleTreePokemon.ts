@@ -1,6 +1,8 @@
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { Observable, PureComputed } from 'knockout';
 import { pokemonMap } from '../pokemons/PokemonList';
+import PokemonType from '../enums/PokemonType';
+import TypeHelper from '../types/TypeHelper';
 
 interface BattleTreePokemonProperties {
     name: PokemonNameType;
@@ -41,11 +43,27 @@ export class BattleTreePokemon {
     public attackTarget(target: BattleTreePokemon): void {
         const baseDamage = ((2 * this.level / 5 + 2) * this.power * this.attack / target.defense / 50 + 2);
 
-        target.takeDamage(baseDamage);
+        const attacker = pokemonMap[this._name];
+
+        target.takeDamage([...attacker.type.map(type => ({
+            damage: baseDamage / attacker.type.length,
+            type,
+        }))]);
     }
 
-    public takeDamage(damage: number): void {
-        this._hp(Math.max(this._hp() - damage, 0));
+    public takeDamage(damages: Array<{ damage: number, type: PokemonType }>): void {
+        const defender = pokemonMap[this._name];
+
+        const transformedDamages = damages.map(({ damage: incomingBaseDamage, type }) => ({
+            damage: defender.type.reduce((previousValue, currentValue) => {
+                return incomingBaseDamage / defender.type.length * TypeHelper.typeMatrix[type][currentValue];
+            }, 0),
+            type: type,
+        }));
+
+        const totalDamageTaken = transformedDamages.reduce((previousValue, currentValue) => previousValue + currentValue.damage, 0);
+
+        this._hp(Math.max(this._hp() - totalDamageTaken, 0));
     }
 
     get name(): PokemonNameType {
