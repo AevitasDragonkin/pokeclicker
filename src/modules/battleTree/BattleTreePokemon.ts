@@ -3,6 +3,7 @@ import { Observable, PureComputed } from 'knockout';
 import { pokemonMap } from '../pokemons/PokemonList';
 import PokemonType from '../enums/PokemonType';
 import TypeHelper from '../types/TypeHelper';
+import Rand from '../utilities/Rand';
 
 interface BattleTreePokemonProperties {
     name: PokemonNameType;
@@ -15,10 +16,69 @@ export interface BattleTreePokemonSaveData {
     hp: number;
 }
 
+interface TypedDamage {
+    type: PokemonType;
+    damage: number;
+}
+
 const hitPointFormula = (base: number, level: number) => Math.floor(0.01 * (2 * base) * level) + level + 10;
 const statPointFormula = (base: number, level: number) => (Math.floor(0.01 * (2 * base) * level) + 5);
 
+const animateDamage = (uuid: string, damage: number) => {
+    const target = $(`#animate-damage-${uuid}`);
+
+    if (!target.length || !target.is(':visible')) {
+        return;
+    }
+
+    const left = (target.position().left + Rand.float(target.width() - 25)).toFixed(2);
+    const top = target.position().top;
+    const animatedElement = document.createElement('p');
+    animatedElement.className = 'animated-damage';
+    animatedElement.style.cssText = `top: ${top}px; left: ${left}px; font-size: 1rem;`;
+    animatedElement.innerText = damage.toLocaleString('en-US');
+
+    const animationDirection = { top: top - 100 };
+    const animationTime = 1500;
+
+    $(animatedElement).prependTo(target.parent()).animate({
+        ...animationDirection,
+        opacity: 0,
+    }, animationTime, 'linear',
+    () => {
+        $(animatedElement).remove();
+    });
+};
+
+// const animateHeal = (uuid: string, health: number) => {
+//     const target = $(`#animate-damage-${uuid}`);
+//
+//     if (!target.length || !target.is(':visible')) {
+//         return;
+//     }
+//
+//     const left = (target.position().left + Rand.float(target.width() - 25)).toFixed(2);
+//     const top = target.position().top;
+//     const animatedElement = document.createElement('p');
+//     animatedElement.className = 'animated-damage';
+//     animatedElement.style.cssText = `top: ${top}px; left: ${left}px; font-size: 1rem; color: var(--success)`;
+//     animatedElement.innerText = health.toLocaleString('en-US');
+//
+//     const animationDirection = { top: top - 100 };
+//     const animationTime = 1500;
+//
+//     $(animatedElement).prependTo(target.parent()).animate({
+//         ...animationDirection,
+//         opacity: 0,
+//     }, animationTime, 'linear',
+//     () => {
+//         $(animatedElement).remove();
+//     });
+// };
+
 export class BattleTreePokemon {
+    public readonly uuid: string;
+
     private _name: PokemonNameType;
     private _level: number;
 
@@ -30,6 +90,8 @@ export class BattleTreePokemon {
     private _hp: Observable<number> = ko.observable(0).extend({ numeric: 0 });
 
     constructor(properties: BattleTreePokemonProperties) {
+        this.uuid = crypto.randomUUID();
+
         this._name = properties.name;
         this._level = properties.level;
 
@@ -51,19 +113,18 @@ export class BattleTreePokemon {
         }))]);
     }
 
-    public takeDamage(damages: Array<{ damage: number, type: PokemonType }>): void {
+    public takeDamage(damages: TypedDamage[]): void {
         const defender = pokemonMap[this._name];
 
-        const transformedDamages = damages.map(({ damage: incomingBaseDamage, type }) => ({
-            damage: defender.type.reduce((previousValue, currentValue) => {
-                return incomingBaseDamage / defender.type.length * TypeHelper.typeMatrix[type][currentValue];
-            }, 0),
-            type: type,
+        const transformedDamages: TypedDamage[] = damages.map(({ type, damage }) => ({
+            type,
+            damage: defender.type.reduce((prev, curr) => prev + damage / defender.type.length * TypeHelper.typeMatrix[type][curr], 0),
         }));
 
-        const totalDamageTaken = transformedDamages.reduce((previousValue, currentValue) => previousValue + currentValue.damage, 0);
+        const totalDamage = Math.floor(transformedDamages.reduce((cumulative, typedDamage) => cumulative + typedDamage.damage, 0));
 
-        this._hp(Math.max(this._hp() - totalDamageTaken, 0));
+        this._hp(Math.max(this._hp() - totalDamage, 0));
+        animateDamage(this.uuid, totalDamage);
     }
 
     get name(): PokemonNameType {
