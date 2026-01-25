@@ -1,10 +1,13 @@
-import { Observable, PureComputed } from 'knockout';
+import { Observable, ObservableArray, PureComputed } from 'knockout';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { pokemonMap } from '../pokemons/PokemonList';
 import { BattleTreePokemonSubset } from './subset/BattleTreePokemonSubset';
 import { BattleTreeTeam, BattleTreeTeamSaveData } from './BattleTreeTeam';
 import { BattleTreeFight, BattleTreeFightSaveData, BattleTreeFightWinner } from './BattleTreeFight';
+import { BattleTreeReward } from './BattleTreeReward';
+import { ItemNameType } from '../items/ItemNameType';
+import { BattleTreePokemon } from './BattleTreePokemon';
 
 type TeamType = 'Team_A' | 'Team_B';
 
@@ -18,6 +21,7 @@ interface BattleTreeSequenceSaveData {
     combatTime: number;
 
     teams: Record<TeamType, BattleTreeTeamSaveData>;
+    rewards: Record<ItemNameType, number>;
 }
 
 export enum BattleTreeSequenceState {
@@ -38,6 +42,7 @@ export class BattleTreeSequence {
     private _combatTimer: Observable<number>;
 
     private _teams: Record<TeamType, BattleTreeTeam>;
+    private _rewards: ObservableArray<BattleTreeReward>;
 
     public sequenceSubset: PureComputed<BattleTreePokemonSubset> = ko.pureComputed(() => {
         return BattleTreeUtil.getRandomSubset({ seed: this.seed });
@@ -62,6 +67,7 @@ export class BattleTreeSequence {
             Team_A: new BattleTreeTeam({}),
             Team_B: new BattleTreeTeam({}),
         };
+        this._rewards = ko.observableArray();
     }
 
     public startFighting(): boolean {
@@ -116,6 +122,7 @@ export class BattleTreeSequence {
 
         if (this.fight.winner === BattleTreeFightWinner.POKEMON_A || this.fight.winner === BattleTreeFightWinner.DRAW) {
             // TODO : handle player winning this fight
+            this.handleSinglePokemonDefeat(this.fight.pokemonB);
         }
 
         if (this.teams.Team_A.canContinueToFight && this.teams.Team_B.canContinueToFight) {
@@ -129,6 +136,22 @@ export class BattleTreeSequence {
         } else {
             // TODO : Handle defeat
             this._state(BattleTreeSequenceState.REWARD);
+        }
+    }
+
+    private handleSinglePokemonDefeat(pokemon: BattleTreePokemon): void {
+        const experience = BattleTreeUtil.calculateBattleTreeExperienceForPokemonDefeat(pokemon);
+
+        this.addReward('Battle Tree Experience', experience);
+    }
+
+    public addReward(item: ItemNameType, amount: number): void {
+        const existing = this._rewards().find(i => i.item === item);
+
+        if (existing) {
+            existing.amount += amount;
+        } else {
+            this._rewards.push(new BattleTreeReward({ item, amount }));
         }
     }
 
@@ -152,6 +175,10 @@ export class BattleTreeSequence {
         return this._teams;
     }
 
+    get rewards(): BattleTreeReward[] {
+        return this._rewards();
+    }
+
     get fight(): BattleTreeFight | null {
         return this._fight();
     }
@@ -168,6 +195,7 @@ export class BattleTreeSequence {
                 .fromEntries(Object.entries(this.teams)
                     .map(([key, value]: [key: TeamType, value: BattleTreeTeam]) => [key as TeamType, value.toJSON()]),
                 ) as Record<TeamType, BattleTreeTeamSaveData>,
+            rewards: Object.fromEntries(this._rewards().map(value => [value.item as ItemNameType, value.amount])) as Record<ItemNameType, number>,
         };
     }
 
@@ -185,6 +213,7 @@ export class BattleTreeSequence {
             .fromEntries(Object.entries(json.teams)
                 .map(([key, value]) => [key, BattleTreeTeam.fromJSON(value)]),
             ) as Record<TeamType, BattleTreeTeam>;
+        sequence._rewards(Object.entries(json.rewards).map(([key, value]) => BattleTreeReward.fromJSON({ item: key as ItemNameType, amount: value })));
 
         if (json.fight) {
             sequence._fight(new BattleTreeFight({

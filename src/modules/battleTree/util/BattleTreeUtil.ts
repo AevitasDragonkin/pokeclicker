@@ -3,6 +3,8 @@ import SeededRand from '../../utilities/SeededRand';
 import { subsets } from '../BattleTree.config';
 import { PokemonNameType } from '../../pokemons/PokemonNameType';
 import Rand from '../../utilities/Rand';
+import { BattleTreePokemon } from '../BattleTreePokemon';
+import { pokemonMap } from '../../pokemons/PokemonList';
 
 export class BattleTreeUtil {
     public static calculateSeed(): number {
@@ -38,6 +40,27 @@ export class BattleTreeUtil {
     }
 
     public static calculateAttackSpeed(): number {
+        return 1;
+    }
+
+    public static calculateBattleTreeExperienceForPokemonDefeat(pokemon: BattleTreePokemon): number {
+        // TODO : BT : Correct EXP scaling
+        const b = pokemonMap[pokemon.name]?.exp ?? 0;
+        const l = pokemon.level;
+        const lp = App.game.battleTree.level;
+        const e = false ? 1.5 : 1;
+        const s = 1;
+        const t = 1;
+        const v = 1;
+        const f = 1;
+        const p = 1;
+
+        const expGen7 = Math.min(((b * l / 5) * (1 / s) * Math.pow(((2 * l + 10) / (l + lp + 10)), 2.5) + 1) * t * e * v * f * p, b * 10);
+
+        return Math.floor(expGen7);
+    }
+
+    public static calculateRewardMultiplier(): number {
         return 1;
     }
 
