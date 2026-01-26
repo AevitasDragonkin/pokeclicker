@@ -8,6 +8,9 @@ import { BattleTreeFight, BattleTreeFightSaveData, BattleTreeFightWinner } from 
 import { BattleTreeReward } from './BattleTreeReward';
 import { ItemNameType } from '../items/ItemNameType';
 import { BattleTreePokemon } from './BattleTreePokemon';
+import { ItemList } from '../items/ItemList';
+import Notifier from '../notifications/Notifier';
+import NotificationOption from '../notifications/NotificationOption';
 
 type TeamType = 'Team_A' | 'Team_B';
 
@@ -155,7 +158,37 @@ export class BattleTreeSequence {
         }
     }
 
+    public forfeit(): void {
+        // TODO : Add forfeit modifier
+        this.claimRewards();
+    }
+
+    public async discardRewards(): Promise<void> {
+        if (await Notifier.confirm({
+            title: 'Discard all rewards',
+            message: 'Are you sure you want to discard all rewards?',
+            type: NotificationOption.danger,
+            confirm: 'Discard',
+        })) {
+            this._rewards([]);
+            this.claimRewards();
+        }
+    }
+
     public claimRewards(): void {
+        const rewardMultiplier = BattleTreeUtil.calculateRewardMultiplier();
+
+        this._rewards().forEach(reward => {
+            ItemList[reward.item].gain(Math.floor(Math.max(reward.amount * rewardMultiplier, 0)));
+        });
+
+        Notifier.notify({
+            title: '[Battle Tree]',
+            message: 'You have finished your Battle Tree run. Claim your rewards.',
+            type: NotificationOption.success,
+            timeout: 30e3,
+        });
+
         this._state(BattleTreeSequenceState.FINISHED);
     }
 

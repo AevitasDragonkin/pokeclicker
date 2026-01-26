@@ -93,7 +93,7 @@
         <!-- /ko -->
 
         <!-- Rewards -->
-        <!-- ko if: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.REWARD, BattleTreeSequenceState.MODIFIER, BattleTreeSequenceState.FINISHED].includes(App.game.battleTree.sequence.state) -->
+        <!-- ko if: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER, BattleTreeSequenceState.REWARD, BattleTreeSequenceState.FINISHED].includes(App.game.battleTree.sequence.state) -->
         <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered table-sm m-0">
                 <thead>
@@ -124,10 +124,35 @@
                 <!-- /ko -->
                 </tbody>
             </table>
+
+            <!-- ko if: App.game.battleTree.sequence.state !== BattleTreeSequenceState.FINISHED -->
+            <div class="d-flex flex-wrap justify-content-center mt-2" style="gap: 1rem;">
+                <button class="btn btn-success text-light" onclick="App.game.battleTree.sequence.claimRewards()" data-bind="
+                    enable: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD
+                ">
+                    Claim rewards
+                </button>
+<!--                <button class="btn btn-danger text-light" onclick="App.game.battleTree.sequence.discardRewards()" data-bind="-->
+<!--                    enable: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD-->
+<!--                ">-->
+<!--                    Discard rewards-->
+<!--                </button>-->
+                <button class="btn btn-danger text-light" onclick="App.game.battleTree.sequence.forfeit()" data-bind="
+                    enable: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER].includes(App.game.battleTree.sequence.state),
+                    tooltip: {
+                        trigger: 'hover',
+                        title: `Forfeiting will end the current run, and you will only receive ${GameConstants.BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER.toLocaleString('en-US', { style: 'percent' })} of your rewards.`,
+                        placement: 'top'
+                    }
+                ">
+                    Forfeit
+                </button>
+            </div>
+            <!-- /ko -->
         </div>
         <!-- /ko -->
 
-        <a class="btn btn-block btn-danger text-light" onclick="App.game.battleTree.leave()">Leave</a>
+        <button class="btn btn-danger text-light" onclick="App.game.battleTree.leave()">Return to town</button>
     </div>
 </div>
 <!-- /ko -->

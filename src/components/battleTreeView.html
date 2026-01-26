@@ -149,14 +149,14 @@
             <!-- /ko -->
 
             <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD -->
-            <section class="d-flex flex-column flex-grow-1">
-                <button onclick="App.game.battleTree.sequence.claimRewards()">Claim rewards</button>
+            <section class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
+                <button class="btn btn-success text-light" onclick="App.game.battleTree.sequence.claimRewards()">Claim rewards</button>
             </section>
             <!-- /ko -->
 
             <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.FINISHED -->
-            <section class="d-flex flex-column flex-grow-1">
-                <button onclick="App.game.battleTree.startNewSequence()">Start new</button>
+            <section class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
+                <button class="btn btn-success text-light" onclick="App.game.battleTree.startNewSequence()">Start new</button>
             </section>
             <!-- /ko -->
         </div>
