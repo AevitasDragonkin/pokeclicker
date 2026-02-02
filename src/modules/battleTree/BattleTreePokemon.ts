@@ -50,31 +50,31 @@ const animateDamage = (uuid: string, damage: number) => {
     });
 };
 
-// const animateHeal = (uuid: string, health: number) => {
-//     const target = $(`#animate-damage-${uuid}`);
-//
-//     if (!target.length || !target.is(':visible')) {
-//         return;
-//     }
-//
-//     const left = (target.position().left + Rand.float(target.width() - 25)).toFixed(2);
-//     const top = target.position().top;
-//     const animatedElement = document.createElement('p');
-//     animatedElement.className = 'animated-damage';
-//     animatedElement.style.cssText = `top: ${top}px; left: ${left}px; font-size: 1rem; color: var(--success)`;
-//     animatedElement.innerText = health.toLocaleString('en-US');
-//
-//     const animationDirection = { top: top - 100 };
-//     const animationTime = 1500;
-//
-//     $(animatedElement).prependTo(target.parent()).animate({
-//         ...animationDirection,
-//         opacity: 0,
-//     }, animationTime, 'linear',
-//     () => {
-//         $(animatedElement).remove();
-//     });
-// };
+const animateHeal = (uuid: string, health: number) => {
+    const target = $(`#animate-damage-${uuid}`);
+
+    if (!target.length || !target.is(':visible')) {
+        return;
+    }
+
+    const left = (target.position().left + Rand.float(target.width() - 25)).toFixed(2);
+    const top = target.position().top;
+    const animatedElement = document.createElement('p');
+    animatedElement.className = 'animated-damage';
+    animatedElement.style.cssText = `top: ${top}px; left: ${left}px; font-size: 1rem; color: var(--success)`;
+    animatedElement.innerText = health.toLocaleString('en-US');
+
+    const animationDirection = { top: top - 100 };
+    const animationTime = 1500;
+
+    $(animatedElement).prependTo(target.parent()).animate({
+        ...animationDirection,
+        opacity: 0,
+    }, animationTime, 'linear',
+    () => {
+        $(animatedElement).remove();
+    });
+};
 
 export class BattleTreePokemon {
     public readonly uuid: string;
@@ -100,6 +100,15 @@ export class BattleTreePokemon {
         this._maxHitpoints.subscribe(function () {
             this._hp(Math.min(this.maxHitpoints, this._hp()));
         }, this, 'spectate');
+    }
+
+    public heal(opts: { percentage?: number, flat?: number }): void {
+        const p = this._maxHitpoints() * (opts.percentage ?? 0);
+        const f = opts.flat ?? 0;
+
+        const total = Math.min(this._maxHitpoints() - this._hp(), p + f);
+        this._hp(this._hp() + total);
+        animateHeal(this.uuid, total);
     }
 
     public attackTarget(target: BattleTreePokemon): void {
