@@ -5,6 +5,7 @@ import { PokemonNameType } from '../../pokemons/PokemonNameType';
 import Rand from '../../utilities/Rand';
 import { BattleTreePokemon } from '../BattleTreePokemon';
 import { pokemonMap } from '../../pokemons/PokemonList';
+import { BattleTreeModifierDefinition, BattleTreeModifierDescription } from '../modifier/BattleTreeModifiers';
 
 export class BattleTreeUtil {
     public static calculateSeed(): number {
@@ -61,7 +62,7 @@ export class BattleTreeUtil {
     }
 
     public static calculateRewardMultiplier(): number {
-        return 1;
+        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'rewards', base: 1 });
     }
 
     public static clickCandidate(name: PokemonNameType): void {
@@ -80,5 +81,10 @@ export class BattleTreeUtil {
         Rand.shuffleArray(App.game.battleTree.sequence.candidates().filter(name => App.game.party.alreadyCaughtPokemonByName(name)))
             .slice(0, App.game.battleTree.sequence.teams.Team_A.maxTeamSize)
             .forEach(name => App.game.battleTree.sequence.teams.Team_A.addPokemon(name, BattleTreeUtil.calculatePokemonLevelForPlayer(name)));
+    }
+
+    public static resolveModifierDescription(modifier: BattleTreeModifierDefinition, d?: any) {
+        const resolve = <D>(des: BattleTreeModifierDescription<D>, data: D) => typeof des === 'function' ? (des as ((data: D) => string))(data) : des;
+        return resolve(modifier.description, d);
     }
 }

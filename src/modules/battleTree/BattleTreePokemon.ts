@@ -61,7 +61,7 @@ const animateHeal = (uuid: string, health: number) => {
     const top = target.position().top;
     const animatedElement = document.createElement('p');
     animatedElement.className = 'animated-damage';
-    animatedElement.style.cssText = `top: ${top}px; left: ${left}px; font-size: 1rem; color: var(--success)`;
+    animatedElement.style.cssText = `top: ${top}px; left: ${left}px; font-size: 1rem; color: var(--success); text-shadow: 2px 2px 2px #000000;`;
     animatedElement.innerText = health.toLocaleString('en-US');
 
     const animationDirection = { top: top - 100 };

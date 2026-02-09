@@ -11,8 +11,14 @@ import { BattleTreePokemon } from './BattleTreePokemon';
 import { ItemList } from '../items/ItemList';
 import Notifier from '../notifications/Notifier';
 import NotificationOption from '../notifications/NotificationOption';
+import {
+    BattleTreeModifierManager,
+    BattleTreeModifierManagerSaveData
+} from './modifier/BattleTreeModifierManager';
+import { BattleTreeModifierContext } from './modifier/BattleTreeModifierContext';
+import GameHelper from '../GameHelper';
 
-type TeamType = 'Team_A' | 'Team_B';
+export type TeamType = 'Team_A' | 'Team_B';
 
 interface BattleTreeSequenceSaveData {
     seed: number;
@@ -20,11 +26,13 @@ interface BattleTreeSequenceSaveData {
     stage: number;
 
     fight: BattleTreeFightSaveData | null;
-    sequenceTime: number;
-    combatTime: number;
+    timers: Record<BattleTreeSequenceState, number>;
+
+    autoPickModifiers: boolean;
 
     teams: Record<TeamType, BattleTreeTeamSaveData>;
     rewards: Record<ItemNameType, number>;
+    modifierManager: BattleTreeModifierManagerSaveData;
 }
 
 export enum BattleTreeSequenceState {
@@ -41,11 +49,14 @@ export class BattleTreeSequence {
     private _stage: Observable<number>;
 
     private _fight: Observable<BattleTreeFight | null>;
-    private _sequenceTimer: Observable<number>;
-    private _combatTimer: Observable<number>;
+    private _timers: Record<BattleTreeSequenceState, Observable<number>>;
 
     private _teams: Record<TeamType, BattleTreeTeam>;
     private _rewards: ObservableArray<BattleTreeReward>;
+
+    private _modifierManager: BattleTreeModifierManager;
+
+    private _autoPickModifiers: Observable<boolean>;
 
     public sequenceSubset: PureComputed<BattleTreePokemonSubset> = ko.pureComputed(() => {
         return BattleTreeUtil.getRandomSubset({ seed: this.seed });
@@ -63,14 +74,28 @@ export class BattleTreeSequence {
         this._stage = ko.observable(0);
 
         this._fight = ko.observable(null);
-        this._sequenceTimer = ko.observable(0);
-        this._combatTimer = ko.observable(0);
+
+        this._timers = GameHelper.objectFromEnumStrings(BattleTreeSequenceState, () => ko.observable(0));
+        this._autoPickModifiers = ko.observable(false);
 
         this._teams = {
             Team_A: new BattleTreeTeam({}),
             Team_B: new BattleTreeTeam({}),
         };
         this._rewards = ko.observableArray();
+
+        this._modifierManager = new BattleTreeModifierManager(this.createContext());
+    }
+
+    private createContext(): BattleTreeModifierContext {
+        return {
+            sequence: this,
+            setAutoPickModifiers: enabled => this._autoPickModifiers(enabled),
+            endSequence: reason => {
+                console.log(`[BATTLE TREE] Context ending run: ${reason}`);
+                this._state(BattleTreeSequenceState.REWARD);
+            },
+        };
     }
 
     public startFighting(): boolean {
@@ -100,10 +125,18 @@ export class BattleTreeSequence {
     }
 
     public update(delta: number): void {
-        this.updateTimers(delta);
+        const gameSpeedDelta = delta * this._modifierManager.getValue({ key: 'game_speed', base: 1 });
+        const attackSpeed = this._modifierManager.getValue({ key: 'attack_speed', base: 1 });
+
+        this.updateTimers(gameSpeedDelta);
+
+        this._modifierManager.update({
+            sequenceDeltaTime: gameSpeedDelta,
+            combatDeltaTime: this.state === BattleTreeSequenceState.BATTLE && this.fight ? gameSpeedDelta * attackSpeed : 0,
+        });
 
         if (this.state === BattleTreeSequenceState.BATTLE && this.fight) {
-            this.fight.update(delta);
+            this.fight.update(gameSpeedDelta * attackSpeed);
 
             if (this.fight.isFinished) {
                 this.handleFightFinished();
@@ -112,12 +145,7 @@ export class BattleTreeSequence {
     }
 
     private updateTimers(delta: number): void {
-        if (this.state === BattleTreeSequenceState.BATTLE) {
-            this._combatTimer(this._combatTimer() + delta);
-        }
-        if (this.state !== BattleTreeSequenceState.FINISHED) {
-            this._sequenceTimer(this._sequenceTimer() + delta);
-        }
+        this._timers[this.state](this._timers[this.state]() + delta);
     }
 
     private handleFightFinished(): void {
@@ -159,8 +187,7 @@ export class BattleTreeSequence {
     }
 
     public forfeit(): void {
-        // TODO : Add forfeit modifier
-        this.claimRewards();
+        this._modifierManager.addSystemModifier('forfeit');
     }
 
     public async discardRewards(): Promise<void> {
@@ -216,19 +243,32 @@ export class BattleTreeSequence {
         return this._fight();
     }
 
+    get sequenceTime(): number {
+        return this._timers.MODIFIER() + this._timers.BATTLE();
+    }
+
+    get combatTime(): number {
+        return this._timers.BATTLE();
+    }
+
+    get modifierManager(): BattleTreeModifierManager {
+        return this._modifierManager;
+    }
+
     public toJSON(): BattleTreeSequenceSaveData {
         return {
             seed: this._seed(),
             state: this._state(),
             stage: this._stage(),
             fight: this._fight()?.toJSON() ?? null,
-            sequenceTime: this._sequenceTimer(),
-            combatTime: this._combatTimer(),
+            timers: ko.toJS(this._timers),
+            autoPickModifiers: this._autoPickModifiers(),
             teams: Object
                 .fromEntries(Object.entries(this.teams)
                     .map(([key, value]: [key: TeamType, value: BattleTreeTeam]) => [key as TeamType, value.toJSON()]),
                 ) as Record<TeamType, BattleTreeTeamSaveData>,
             rewards: Object.fromEntries(this._rewards().map(value => [value.item as ItemNameType, value.amount])) as Record<ItemNameType, number>,
+            modifierManager: this._modifierManager.toJSON(),
         };
     }
 
@@ -239,8 +279,8 @@ export class BattleTreeSequence {
         sequence._state(json.state);
         sequence._stage(json.stage);
 
-        sequence._sequenceTimer(json.sequenceTime);
-        sequence._combatTimer(json.combatTime);
+        Object.keys(sequence._timers).forEach(key => sequence._timers[key](json.timers[key] ?? 0));
+        sequence._autoPickModifiers(json.autoPickModifiers);
 
         sequence._teams = Object
             .fromEntries(Object.entries(json.teams)
@@ -256,6 +296,8 @@ export class BattleTreeSequence {
                 attacker: json.fight.attacker,
             }));
         }
+
+        sequence._modifierManager.fromJSON(json.modifierManager);
 
         return sequence;
     }

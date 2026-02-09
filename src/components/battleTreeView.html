@@ -3,7 +3,7 @@
 
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
             <div>Stage <knockout data-bind="text: App.game.battleTree.sequence.stage"></knockout></div>
-            <div><code data-bind="text: GameConstants.formatTime(300)"></code></div>
+            <div><code data-bind="text: GameConstants.formatTime(App.game.battleTree.sequence.sequenceTime)"></code></div>
             <div>Speed • <knockout data-bind="text: BattleTreeUtil.calculateAttackSpeed().toFixed(2)"></knockout></div>
         </div>
 
