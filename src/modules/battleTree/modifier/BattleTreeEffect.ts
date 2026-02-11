@@ -1,22 +1,20 @@
 import { TeamType } from '../BattleTreeSequence';
 import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 
+export type BattleTreeEffectKey = 'rewards' | 'game_speed' | 'attack_speed' | 'attack';
 export type Operation = 'additive' | 'multiplicative' | 'reset' | 'override' | 'final';
 
 export type BattleTreeEffectValue<Data = unknown> = number | ((ctx: BattleTreeModifierContext, data: Data) => number);
 
 export interface BattleTreeEffectTarget {
-    key: string;
+    key: BattleTreeEffectKey;
     scope?: TeamType[];
-    bucket?: string[];
-    tags?: string[];
 }
 
 export interface BattleTreeEffect<Data = unknown> {
     target?: BattleTreeEffectTarget;
     operation: Operation;
     value: BattleTreeEffectValue<Data>;
-    tags?: string[];
 }
 
 

@@ -5,7 +5,7 @@ import {
 import { ObservableArray, PureComputed } from 'knockout';
 import SeededRand from '../../utilities/SeededRand';
 import { TeamType } from '../BattleTreeSequence';
-import { BattleTreeEffect, BattleTreeEffectValue } from './BattleTreeEffect';
+import { BattleTreeEffect, BattleTreeEffectKey, BattleTreeEffectValue } from './BattleTreeEffect';
 
 
 type Active<Data> = {
@@ -17,9 +17,8 @@ type IndexStamp<Data> = { active: Active<Data>; effect: BattleTreeEffect<Data>; 
 
 
 export interface ValueQuery {
-    key: string;
+    key: BattleTreeEffectKey;
     scope?: TeamType;
-    tags?: string[];
     base?: number;
 }
 
@@ -84,24 +83,17 @@ export class BattleTreeModifierManager {
         definition.onAcquire?.(this._ctx);
     }
 
-    private matchesTags(required?: string[], candidate?: string[]) {
-        if (!required || required.length === 0) return true;
-        const set = new Set(candidate ?? []);
-        return required.every(t => set.has(t));
-    }
-
     private *iterMatching(query: ValueQuery): Iterable<IndexStamp<any>> {
-        for (const a of this._history()) {
-            const { definition, data } = a;
-
-            if (!this.matchesTags(query.tags, definition.tags)) continue;
+        for (const historyEntry of this._history()) {
+            const { definition } = historyEntry;
 
             if (!definition.effects) continue;
 
             for (const effect of definition.effects) {
                 if (effect.target.key !== query.key) continue;
+                if (query.scope && effect.target.scope.includes(query.scope)) continue;
 
-                yield { active: a, effect };
+                yield { active: historyEntry, effect };
             }
         }
     }

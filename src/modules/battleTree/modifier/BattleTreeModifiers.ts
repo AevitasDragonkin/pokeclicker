@@ -45,7 +45,6 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
     onStageStart?: (ctx: BattleTreeModifierContext) => void;
     onTick?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, tickData: TickData }) => void;
 
-    tags?: string[];
     stateScope?: BattleTreeSequenceState[];
     effects?: BattleTreeEffect<Data>[];
 
@@ -113,7 +112,7 @@ const ChallengeAccepted: BattleTreeModifierDefinition<StageData> = {
     description: (data: StageData) => `Rewards are reduced by 90%. Reach stage ${data.acquiredStage + 20}.`,
     weight: 1,
     effects: [{
-        target: { key: 'rewards', tags: ['rewards'] },
+        target: { key: 'rewards' },
         value: (ctx, data) => ctx.sequence.stage >= data.acquiredStage + 20 ? 1 : 0.1,
         operation: 'multiplicative',
     }],
@@ -138,17 +137,13 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         onAcquire: ctx => {
             ctx.endSequence('Forfeiting');
         },
-        effects: [{
-            target: { key: 'rewards', tags: ['rewards'] },
-            value: 0.25,
-            operation: 'multiplicative',
-        }],
+        effects: [{ target: { key: 'rewards' }, value: 0.25, operation: 'multiplicative' }],
     },
     {
         id: 'first_aid',
         name: 'First aid',
         description: 'Heal for 20%',
-        weight: 0,
+        weight: 1,
         stack: { max: 1 },
         onAcquire: ctx => {
             ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.2 }));
@@ -160,11 +155,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         description: 'Gain +10% attack',
         weight: 1,
         stack: { max: 5 },
-        effects: [{
-            target: { key: 'attack', scope: ['Team_A'], tags: ['attack'] },
-            value: 0.1,
-            operation: 'additive',
-        }],
+        effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 0.1, operation: 'additive' }],
     },
     {
         id: 'fast_start',
@@ -172,10 +163,6 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         description: 'While below stage 50, gain x3 game speed',
         weight: 1,
         stack: { max: 1 },
-        effects: [{
-            target: { key: 'game_speed', tags: ['game_speed'] },
-            value: 3,
-            operation: 'multiplicative',
-        }],
+        effects: [{ target: { key: 'game_speed' }, value: 3, operation: 'multiplicative' }],
     },
 ];
