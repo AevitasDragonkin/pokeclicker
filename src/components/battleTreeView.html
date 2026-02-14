@@ -150,6 +150,7 @@
 
             <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.MODIFIER -->
             <section class="d-flex flex-column flex-grow-1">
+                <div class="p-1 text-center small font-italic" style="background-color: rgba(0 0 0 / 0.35);">Click to select a modifier</div>
                 <div class="p-1" style="display: grid; gap: 0.25rem;">
                     <!-- ko foreach: App.game.battleTree.sequence.modifierManager.candidates() -->
                     <!-- ko with: App.game.battleTree.sequence.modifierManager.getModifierById($data) -->
