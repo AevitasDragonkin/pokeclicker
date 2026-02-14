@@ -102,7 +102,7 @@
                 <div class="p-1 border" data-bind="
                     tooltip: {
                         trigger: 'hover',
-                        title: `<strong><u>${$data.definition.name}</u></strong><br/>${BattleTreeUtil.resolveModifierDescription($data.definition, $data.data)}`,
+                        title: `<strong><u>${$data.definition.name}</u></strong><br/>${App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.definition.id, $data.data)}`,
                         placement: 'bottom',
                         html: true,
                         class: 'no-click'

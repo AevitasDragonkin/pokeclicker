@@ -1,8 +1,10 @@
 import { ObservableArray } from 'knockout';
 import { BattleTreePokemon, BattleTreePokemonSaveData } from './BattleTreePokemon';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
+import { TeamType } from './BattleTreeSequence';
 
 interface BattleTreeTeamProperties {
+    team: TeamType;
     minTeamSize?: number;
     maxTeamSize?: number;
 }
@@ -14,11 +16,13 @@ export interface BattleTreeTeamSaveData {
 }
 
 export class BattleTreeTeam {
+    private _team: TeamType;
     private _minTeamSize: number;
     private _maxTeamSize: number;
     private _list: ObservableArray<BattleTreePokemon>;
 
     constructor(properties: BattleTreeTeamProperties) {
+        this._team = properties.team;
         this._minTeamSize = properties.minTeamSize ?? 1;
         this._maxTeamSize = properties.maxTeamSize ?? 3;
         this._list = ko.observableArray();
@@ -41,6 +45,7 @@ export class BattleTreeTeam {
         this._list.push(new BattleTreePokemon({
             name,
             level,
+            team: this._team,
         }));
 
         return true;
@@ -86,14 +91,15 @@ export class BattleTreeTeam {
         };
     }
 
-    static fromJSON(json: BattleTreeTeamSaveData): BattleTreeTeam {
-        const team: BattleTreeTeam = new BattleTreeTeam({
+    static fromJSON(json: BattleTreeTeamSaveData, team: TeamType): BattleTreeTeam {
+        const btTeam: BattleTreeTeam = new BattleTreeTeam({
+            team,
             minTeamSize: json.minTeamSize,
             maxTeamSize: json.maxTeamSize,
         });
 
-        team._list.push(...json.list.map(value => BattleTreePokemon.fromJSON(value)));
+        btTeam._list.push(...json.list.map(value => BattleTreePokemon.fromJSON(value, team)));
 
-        return team;
+        return btTeam;
     }
 }

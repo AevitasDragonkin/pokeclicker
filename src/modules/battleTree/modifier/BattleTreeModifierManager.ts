@@ -1,6 +1,7 @@
 import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import {
-    BattleTreeModifierDefinition, BattleTreeModifierNameType, BattleTreeModifiers, TickData,
+    BattleTreeModifierDefinition,
+    BattleTreeModifierDescription, BattleTreeModifierNameType, BattleTreeModifiers, TickData,
 } from './BattleTreeModifiers';
 import { ObservableArray, PureComputed } from 'knockout';
 import SeededRand from '../../utilities/SeededRand';
@@ -83,6 +84,10 @@ export class BattleTreeModifierManager {
         definition.onAcquire?.(this._ctx);
     }
 
+    public getModifierById(id: BattleTreeModifierNameType): BattleTreeModifierDefinition | undefined {
+        return BattleTreeModifiers.find(mod => mod.id === id);
+    }
+
     private *iterMatching(query: ValueQuery): Iterable<IndexStamp<any>> {
         for (const historyEntry of this._history()) {
             const { definition } = historyEntry;
@@ -123,6 +128,15 @@ export class BattleTreeModifierManager {
 
     get history(): BattleTreeModifierHistoryEntry<unknown>[] {
         return this._history();
+    }
+
+    public resolveModifierDescription(id: BattleTreeModifierNameType, d?: any) {
+        const modifier: BattleTreeModifierDefinition = this.getModifierById(id);
+
+        if (!modifier) return 'Modifier not found';
+
+        const resolve = <D>(des: BattleTreeModifierDescription<D>, data: D) => typeof des === 'function' ? (des as ((data: D) => string))(data) : des;
+        return resolve(modifier.description, d ?? modifier.createData?.(this._ctx));
     }
 
     public toJSON(): BattleTreeModifierManagerSaveData {

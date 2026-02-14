@@ -82,9 +82,4 @@ export class BattleTreeUtil {
             .slice(0, App.game.battleTree.sequence.teams.Team_A.maxTeamSize)
             .forEach(name => App.game.battleTree.sequence.teams.Team_A.addPokemon(name, BattleTreeUtil.calculatePokemonLevelForPlayer(name)));
     }
-
-    public static resolveModifierDescription(modifier: BattleTreeModifierDefinition, d?: any) {
-        const resolve = <D>(des: BattleTreeModifierDescription<D>, data: D) => typeof des === 'function' ? (des as ((data: D) => string))(data) : des;
-        return resolve(modifier.description, d);
-    }
 }

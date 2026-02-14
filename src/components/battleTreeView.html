@@ -148,6 +148,31 @@
             </section>
             <!-- /ko -->
 
+            <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.MODIFIER -->
+            <section class="d-flex flex-column flex-grow-1">
+                <div class="p-1" style="display: grid; gap: 0.25rem;">
+                    <!-- ko foreach: App.game.battleTree.sequence.modifierManager.candidates() -->
+                    <!-- ko with: App.game.battleTree.sequence.modifierManager.getModifierById($data) -->
+                    <div class="d-flex p-1" data-bind="click: () => { App.game.battleTree.sequence.pickModifier($data.id) }" style="background-color: rgba(0 0 0 / 0.35); border-radius: 0.25rem; gap: 0.25rem;">
+                        <div class="p-1 border">
+                            <img width="32" height="32" src="" alt="" data-bind="
+                                attr: {
+                                    src: PokemonHelper.getImage(0),
+                                }
+                            ">
+                        </div>
+
+                        <div class="d-flex flex-column flex-grow-1 text-left">
+                            <div class="font-weight-bold" data-bind="text: $data.name"></div>
+                            <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id)"></div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- /ko -->
+                </div>
+            </section>
+            <!-- /ko -->
+
             <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD -->
             <section class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
                 <button class="btn btn-success text-light" onclick="App.game.battleTree.sequence.claimRewards()">Claim rewards</button>

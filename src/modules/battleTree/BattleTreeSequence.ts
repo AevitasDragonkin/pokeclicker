@@ -13,10 +13,11 @@ import Notifier from '../notifications/Notifier';
 import NotificationOption from '../notifications/NotificationOption';
 import {
     BattleTreeModifierManager,
-    BattleTreeModifierManagerSaveData
+    BattleTreeModifierManagerSaveData,
 } from './modifier/BattleTreeModifierManager';
 import { BattleTreeModifierContext } from './modifier/BattleTreeModifierContext';
 import GameHelper from '../GameHelper';
+import { BattleTreeModifierNameType } from './modifier/BattleTreeModifiers';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -79,8 +80,8 @@ export class BattleTreeSequence {
         this._autoPickModifiers = ko.observable(false);
 
         this._teams = {
-            Team_A: new BattleTreeTeam({}),
-            Team_B: new BattleTreeTeam({}),
+            Team_A: new BattleTreeTeam({ team: 'Team_A' }),
+            Team_B: new BattleTreeTeam({ team: 'Team_B' }),
         };
         this._rewards = ko.observableArray();
 
@@ -162,8 +163,12 @@ export class BattleTreeSequence {
                 pokemonB: this.teams.Team_B.getPokemonAvailableToFight(this.fight.pokemonB.name),
             }));
         } else if (this.fight.winner === BattleTreeFightWinner.POKEMON_A) {
-            // TODO : Handle finishing the sage
-            this.nextStage();
+            // TODO : Handle finishing the stage
+            if (this.stage % 5 === 0 && this.stage > 0) {
+                this._state(BattleTreeSequenceState.MODIFIER);
+            } else {
+                this.nextStage();
+            }
         } else {
             // TODO : Handle defeat
             this._state(BattleTreeSequenceState.REWARD);
@@ -174,6 +179,11 @@ export class BattleTreeSequence {
         const experience = BattleTreeUtil.calculateBattleTreeExperienceForPokemonDefeat(pokemon);
 
         this.addReward('Battle Tree Experience', experience);
+    }
+
+    public pickModifier(id: BattleTreeModifierNameType) {
+        this._modifierManager.addPlayerModifier(id);
+        this.nextStage();
     }
 
     public addReward(item: ItemNameType, amount: number): void {
@@ -284,7 +294,7 @@ export class BattleTreeSequence {
 
         sequence._teams = Object
             .fromEntries(Object.entries(json.teams)
-                .map(([key, value]) => [key, BattleTreeTeam.fromJSON(value)]),
+                .map(([key, value]: [TeamType, BattleTreeTeamSaveData]) => [key, BattleTreeTeam.fromJSON(value, key)]),
             ) as Record<TeamType, BattleTreeTeam>;
         sequence._rewards(Object.entries(json.rewards).map(([key, value]) => BattleTreeReward.fromJSON({ item: key as ItemNameType, amount: value })));
 

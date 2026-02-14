@@ -4,10 +4,12 @@ import { pokemonMap } from '../pokemons/PokemonList';
 import PokemonType from '../enums/PokemonType';
 import TypeHelper from '../types/TypeHelper';
 import Rand from '../utilities/Rand';
+import { TeamType } from './BattleTreeSequence';
 
 interface BattleTreePokemonProperties {
     name: PokemonNameType;
     level: number;
+    team: TeamType;
 }
 
 export interface BattleTreePokemonSaveData {
@@ -80,12 +82,14 @@ export class BattleTreePokemon {
     public readonly uuid: string;
 
     private _name: PokemonNameType;
-    private _level: number;
+    private _baseLevel: number;
+    private _teamId: TeamType;
 
-    private _attack: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.attack, this.level));
-    private _defense: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.defense, this.level));
-    private _speed: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.speed, this.level));
-    private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level));
+    private _level: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'level', scope: this._teamId, base: this._baseLevel }));
+    private _attack: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.attack, this.level) }));
+    private _defense: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'defense', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.defense, this.level) }));
+    private _speed: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'speed', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.speed, this.level) }));
+    private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_hitpoints', scope: this._teamId, base: hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level) }));
 
     private _hp: Observable<number> = ko.observable(0).extend({ numeric: 0 });
 
@@ -93,7 +97,8 @@ export class BattleTreePokemon {
         this.uuid = crypto.randomUUID();
 
         this._name = properties.name;
-        this._level = properties.level;
+        this._baseLevel = properties.level;
+        this._teamId = properties.team;
 
         this._hp(this.maxHitpoints);
 
@@ -141,7 +146,7 @@ export class BattleTreePokemon {
     }
 
     get level(): number {
-        return this._level;
+        return this._level();
     }
 
     get power(): number {
@@ -171,15 +176,16 @@ export class BattleTreePokemon {
     public toJSON(): BattleTreePokemonSaveData {
         return {
             name: this._name,
-            level: this._level,
+            level: this._baseLevel,
             hp: this._hp(),
         };
     }
 
-    static fromJSON(json: BattleTreePokemonSaveData): BattleTreePokemon {
+    static fromJSON(json: BattleTreePokemonSaveData, team: TeamType): BattleTreePokemon {
         const pokemon: BattleTreePokemon = new BattleTreePokemon({
             name: json.name,
             level: json.level,
+            team: team,
         });
 
         pokemon._hp(json.hp ?? pokemon.maxHitpoints);

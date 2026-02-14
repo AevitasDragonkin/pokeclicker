@@ -4,7 +4,7 @@ import { BattleTreeSequenceState } from '../BattleTreeSequence';
 
 export type BattleTreeModifierSource = 'player' | 'system';
 export type BattleTreeModifierOperation = 'additive' | 'multiplicative';
-export type BattleTreeModifierNameType = 'forfeit' | 'first_aid' | 'attack_10' | 'fast_start' | 'tick_heal' | 'challenge_accepted' | 'times_up';
+export type BattleTreeModifierNameType = 'forfeit' | 'first_aid' | 'attack_10' | 'defense_10' | 'speed_10' | 'max_hitpoints_10' | 'level_5' | 'fast_start' | 'tick_heal' | 'challenge_accepted' | 'times_up';
 
 export type StageData = {
     acquiredStage: number;
@@ -155,7 +155,39 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         description: 'Gain +10% attack',
         weight: 1,
         stack: { max: 5 },
-        effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 0.1, operation: 'additive' }],
+        effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
+    },
+    {
+        id: 'defense_10',
+        name: 'Defense 10',
+        description: 'Gain +10% defense',
+        weight: 1,
+        stack: { max: 5 },
+        effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
+    },
+    {
+        id: 'speed_10',
+        name: 'Speed 10',
+        description: 'Gain +10% speed',
+        weight: 1,
+        stack: { max: 5 },
+        effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
+    },
+    {
+        id: 'level_5',
+        name: 'Level 5',
+        description: 'Gain +5 pokemon levels',
+        weight: 1,
+        stack: { max: 5 },
+        effects: [{ target: { key: 'level', scope: ['Team_A'] }, value: 5, operation: 'additive' }],
+    },
+    {
+        id: 'max_hitpoints_10',
+        name: 'Max hitpoints 10',
+        description: 'Gain +10 Max Hitpoints',
+        weight: 1,
+        stack: { max: 5 },
+        effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: 10, operation: 'additive' }],
     },
     {
         id: 'fast_start',

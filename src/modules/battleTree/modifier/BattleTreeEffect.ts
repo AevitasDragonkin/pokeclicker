@@ -1,7 +1,7 @@
 import { TeamType } from '../BattleTreeSequence';
 import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 
-export type BattleTreeEffectKey = 'rewards' | 'game_speed' | 'attack_speed' | 'attack';
+export type BattleTreeEffectKey = 'rewards' | 'game_speed' | 'attack_speed' | 'attack' | 'defense' | 'speed' | 'max_hitpoints' | 'level';
 export type Operation = 'additive' | 'multiplicative' | 'reset' | 'override' | 'final';
 
 export type BattleTreeEffectValue<Data = unknown> = number | ((ctx: BattleTreeModifierContext, data: Data) => number);
