@@ -1,5 +1,6 @@
 import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import {
+    BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT,
     BattleTreeModifierDefinition,
     BattleTreeModifierDescription, BattleTreeModifierNameType, BattleTreeModifiers, TickData,
 } from './BattleTreeModifiers';
@@ -41,12 +42,27 @@ export class BattleTreeModifierManager {
     private _history: ObservableArray<BattleTreeModifierHistoryEntry<any>>;
 
     public candidates: PureComputed<BattleTreeModifierNameType[]> = ko.pureComputed(() => {
-        const allOffers = BattleTreeModifiers.filter(value => value.canOffer ? value.canOffer(this._ctx) : true);
+        const allOffers = BattleTreeModifiers
+            .filter(value => {
+                // Abort when the weight is 0 or less
+                if ((value.weight ?? BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT) <= 0)
+                    return false;
+
+                // Abort when the MAX STACKS has been reached
+                if (this._history().filter(h => h.definition.id === value.id).length >= (value.stack?.max ?? Infinity))
+                    return false;
+
+                // Abort when canOffer exists and the result is false
+                if (value.canOffer && !value.canOffer(this._ctx))
+                    return false;
+
+                return true;
+            });
 
         SeededRand.seed(this._ctx.sequence.seed + this._ctx.sequence.stage);
         return SeededRand
-            .shuffleWeightedArray(allOffers, allOffers.map(value => value.weight ?? 1))
-            .slice(0, 3)
+            .shuffleWeightedArray(allOffers, allOffers.map(value => value.weight ?? BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT))
+            .slice(0, this.getValue({ key: 'modifier_count', base: 3 }))
             .map(value => value.id);
     });
 
