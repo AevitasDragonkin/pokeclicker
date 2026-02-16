@@ -1,7 +1,11 @@
 <!-- ko if: App.game.gameState === GameConstants.GameState.battleTree -->
 <div id="battleTreeInformation" class="card sortable-disabled border-secondary mb-3 no-select">
-    <div class="card-header p-0">
+    <div class="card-header position-relative p-0">
         <span>Battle Tree</span>
+
+        <button class="btn btn-sm btn-primary" href="#battleTreeHelpModal" data-toggle="modal" style="position: absolute; inset: 0 0 0 auto; width: auto;">
+            Info
+        </button>
     </div>
 
     <div class="card-body d-flex flex-column p-2" style="gap: 0.5rem;">
@@ -180,6 +184,74 @@
         <!-- /ko -->
 
         <button class="btn btn-danger text-light" onclick="App.game.battleTree.leave()">Return to town</button>
+    </div>
+</div>
+
+<div id="battleTreeHelpModal" aria-labelledby="battleTreeHelpModal" class="modal fade no-select" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content text-left">
+            <div class="modal-header p-0">
+                <ul class="nav nav-tabs nav-fill w-100">
+                    <li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#battle-tree-help__info">Info</a></li>
+                    <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#battle-tree-help__modifiers">Modifiers</a></li>
+                    <li class="d-block"><button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 18px; font-weight: 700;">×</button></li>
+                </ul>
+            </div>
+
+            <div class="modal-body tab-content p-0">
+                <div id="battle-tree-help__info" class="tab-pane fade in p-2 text-left active show">
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Info</span>
+                        </div>
+
+                        <div class="card-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi in unde voluptatibus? Atque est itaque, nesciunt nobis quos repudiandae rerum ullam? Alias aliquid culpa eos error eveniet exercitationem facilis hic illo incidunt ipsum labore laboriosam maiores minima, nam optio possimus provident quam, quas reiciendis repellat reprehenderit rerum vel voluptate voluptatum!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="battle-tree-help__modifiers" class="tab-pane fade p-2 text-left">
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Modifiers</span>
+                        </div>
+
+                        <div class="card-body">
+                            <table class="table table-sm table-striped text-left">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th colspan="2">Modifier</th>
+                                    <th>Requirement</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- ko foreach: BattleTreeModifiers -->
+                                <tr>
+                                    <td>
+                                        <img width="32" height="32" src="" alt="" data-bind="
+                                            attr: {
+                                                src: PokemonHelper.getImage(0),
+                                            }
+                                        ">
+                                    </td>
+                                    <td>
+                                        <div class="font-weight-bold" data-bind="text: $data.name"></div>
+                                        <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id)"></div>
+                                    </td>
+                                    <td>
+                                        <div class="small" data-bind="text: $data.requirement?.hint() || '-'"></div>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 <!-- /ko -->

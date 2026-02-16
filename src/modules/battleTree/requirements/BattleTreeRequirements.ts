@@ -45,7 +45,7 @@ export class BattleTreeHighestStageRequirement extends Requirement {
                 return `You need to have reached a highest stage ${this.requiredValue} in your Battle Tree today.`;
             case 'ever':
             default:
-                return `You need to have reached a highest stage ${this.requiredValue} in your Battle Tree.`;
+                return `You need to have reached a highest stage ${this.requiredValue} in your Battle Tree, ever.`;
         }
     }
 }

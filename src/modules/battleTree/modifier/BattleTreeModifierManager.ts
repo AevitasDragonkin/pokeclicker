@@ -56,6 +56,10 @@ export class BattleTreeModifierManager {
                 if (value.canOffer && !value.canOffer(this._ctx))
                     return false;
 
+                // Abort when a requirement exists and it's not completed yet
+                if (!(value.requirement?.isCompleted() ?? true))
+                    return false;
+
                 return true;
             });
 

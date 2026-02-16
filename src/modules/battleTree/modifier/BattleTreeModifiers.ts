@@ -1,6 +1,8 @@
 import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import { BattleTreeEffect } from './BattleTreeEffect';
 import { BattleTreeSequenceState } from '../BattleTreeSequence';
+import Requirement from '../../requirements/Requirement';
+import { BattleTreeHighestStageRequirement } from '../requirements/BattleTreeRequirements';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -41,6 +43,7 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
     weight?: number;
     stack?: { max: number };
 
+    requirement?: Requirement;
     canOffer?: (ctx: BattleTreeModifierContext) => boolean;
 
     onAcquire?: (ctx: BattleTreeModifierContext) => void;
@@ -184,6 +187,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         description: 'While below stage 50, gain x3 game speed',
         weight: 1,
         stack: { max: 1 },
+        requirement: new BattleTreeHighestStageRequirement(50, 'daily'),
         effects: [{ target: { key: 'game_speed' }, value: 3, operation: 'multiplicative' }],
     },
     {

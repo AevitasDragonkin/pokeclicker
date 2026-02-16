@@ -236,6 +236,8 @@ import { BattleTree } from './battleTree/BattleTree';
 import { BattleTreeUtil } from './battleTree/util/BattleTreeUtil';
 import { BattleTreeSequenceState } from './battleTree/BattleTreeSequence';
 import { BattleTreeFightWinner } from './battleTree/BattleTreeFight';
+import { BattleTreeModifiers } from './battleTree/modifier/BattleTreeModifiers';
+import { BattleTreeHighestStageRequirement } from './battleTree/requirements/BattleTreeRequirements';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -487,4 +489,6 @@ Object.assign(<any>window, {
     BattleTreeUtil,
     BattleTreeSequenceState,
     BattleTreeFightWinner,
+    BattleTreeModifiers,
+    BattleTreeHighestStageRequirement,
 });
