@@ -22,15 +22,15 @@ export type PulseData = {
     pulseTimer: number;
 };
 
-export interface BattleTreeModifierDefinitionSaveData<Data = unknown> {
-    id: BattleTreeModifierNameType;
-    data: Data;
-}
-
 export interface TickData {
     sequenceDeltaTime: number;
     combatDeltaTime: number;
 }
+
+// export interface BattleTreeModifierDefinitionSaveData<Data = unknown> {
+//     id: BattleTreeModifierNameType;
+//     data: Data;
+// }
 
 export type BattleTreeModifierDescription<Data = unknown> = string | ((data: Data) => string);
 
@@ -52,8 +52,8 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
 
     createData?: (ctx: BattleTreeModifierContext) => Data;
 
-    toJSON?: (data: Data) => unknown | undefined;
-    fromJSON?: (raw: unknown) => Data;
+    // toJSON?: (data: Data) => unknown | undefined;
+    // fromJSON?: (raw: unknown) => Data;
 }
 
 const TickHeal: BattleTreeModifierDefinition<TimeData & PulseData> = {
@@ -79,12 +79,6 @@ const TickHeal: BattleTreeModifierDefinition<TimeData & PulseData> = {
         pulsesFired: 0,
         pulseTimer: 0,
     }),
-    fromJSON: (raw: TimeData & PulseData | undefined) => ({
-        pulsesFired: raw?.pulsesFired ?? 0,
-        pulseTimer: raw?.pulseTimer ?? 0,
-        acquiredSequenceTime: raw?.acquiredSequenceTime ?? 0,
-        acquiredCombatTime: raw?.acquiredCombatTime ?? 0,
-    }),
 };
 
 const TimesUp: BattleTreeModifierDefinition<TimeData> = {
@@ -102,10 +96,6 @@ const TimesUp: BattleTreeModifierDefinition<TimeData> = {
         acquiredSequenceTime: ctx.sequence.sequenceTime,
         acquiredCombatTime: ctx.sequence.combatTime,
     }),
-    fromJSON: (raw: TimeData | undefined) => ({
-        acquiredSequenceTime: raw?.acquiredSequenceTime ?? 0,
-        acquiredCombatTime: raw?.acquiredCombatTime ?? 0,
-    }),
 };
 
 const ChallengeAccepted: BattleTreeModifierDefinition<StageData> = {
@@ -120,9 +110,6 @@ const ChallengeAccepted: BattleTreeModifierDefinition<StageData> = {
     }],
     createData: ctx => ({
         acquiredStage: ctx.sequence.stage,
-    }),
-    fromJSON: (raw: StageData | undefined) => ({
-        acquiredStage: raw?.acquiredStage ?? 0,
     }),
 };
 

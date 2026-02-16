@@ -158,8 +158,7 @@ export class BattleTreeModifierManager {
     public toJSON(): BattleTreeModifierManagerSaveData {
         return {
             entries: this._history().map(entry => {
-                const payload = entry.definition.toJSON ? entry.definition.toJSON(entry.data) : entry.data;
-                return payload === undefined ? { id: entry.definition.id } : { id: entry.definition.id, data: payload };
+                return entry.data === undefined ? { id: entry.definition.id } : { id: entry.definition.id, data: entry.data };
             }),
         };
     }
@@ -172,7 +171,7 @@ export class BattleTreeModifierManager {
 
             if (!definition) return;
 
-            this._history.push({ definition, data: definition.fromJSON ? definition.fromJSON(entry.data) : undefined });
+            this._history.push({ definition, data: entry.data });
         });
     }
 }
