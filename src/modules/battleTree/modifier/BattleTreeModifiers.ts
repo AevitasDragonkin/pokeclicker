@@ -187,7 +187,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         description: 'While below stage 50, gain x3 game speed',
         weight: 1,
         stack: { max: 1 },
-        requirement: new BattleTreeHighestStageRequirement(50, 'daily'),
+        requirement: new BattleTreeHighestStageRequirement(50, 'per_seed'),
         effects: [{ target: { key: 'game_speed' }, value: 3, operation: 'multiplicative' }],
     },
     {

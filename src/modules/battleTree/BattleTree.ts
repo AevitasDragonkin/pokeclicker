@@ -6,6 +6,8 @@ import NotificationConstants from '../notifications/NotificationConstants';
 import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
 
+export type BattleTreeRecurrence = 'once' | 'per_seed' | 'per_sequence';
+
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
     saveKey: string = 'battleTree';

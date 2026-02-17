@@ -1,4 +1,4 @@
-import Item from '../../items/Item';
+import Item from '../../../items/Item';
 
 export class BattleTreeExperienceItem extends Item {
     constructor() {

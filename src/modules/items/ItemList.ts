@@ -43,7 +43,7 @@ import UndergroundItemValueType from '../enums/UndergroundItemValueType';
 import TreasureItem from './TreasureItem';
 import { pokemonMap } from '../pokemons/PokemonList';
 import AttackGainConsumable from './AttackGainConsumable';
-import { BattleTreeExperienceItem } from '../battleTree/rewards/BattleTreeExperienceItem';
+import { BattleTreeExperienceItem } from '../battleTree/rewards/items/BattleTreeExperienceItem';
 // eslint-disable-next-line import/prefer-default-export
 export const ItemList: { [name: string]: Item } = {};
 

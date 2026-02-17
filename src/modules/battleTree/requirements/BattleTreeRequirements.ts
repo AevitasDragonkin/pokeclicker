@@ -1,6 +1,7 @@
 import Requirement from '../../requirements/Requirement';
 import { AchievementOption } from '../../GameConstants';
 import OneFromManyRequirement from '../../requirements/OneFromManyRequirement';
+import { BattleTreeRecurrence } from '../BattleTree';
 
 export class BattleTreeLevelRequirement extends Requirement {
     constructor(level: number) {
@@ -16,34 +17,33 @@ export class BattleTreeLevelRequirement extends Requirement {
     }
 }
 
-type BattleTreeHighestStageRequirementScope = 'ever' | 'daily' | 'current';
 export class BattleTreeHighestStageRequirement extends Requirement {
-    private _scope: BattleTreeHighestStageRequirementScope;
+    private _recurrence: BattleTreeRecurrence;
 
-    constructor(stage: number, scope: BattleTreeHighestStageRequirementScope = 'ever') {
+    constructor(stage: number, recurrence: BattleTreeRecurrence = 'once') {
         super(stage, AchievementOption.more);
-        this._scope = scope;
+        this._recurrence = recurrence;
     }
 
     getProgress(): number {
-        switch (this._scope) {
-            case 'current':
+        switch (this._recurrence) {
+            case 'per_sequence':
                 return Math.min(App.game.battleTree.sequence.stage, this.requiredValue);
-            case 'daily':
+            case 'per_seed':
                 return Math.min(0, this.requiredValue);
-            case 'ever':
+            case 'once':
             default:
                 return Math.min(0, this.requiredValue);
         }
     }
 
     hint(): string {
-        switch (this._scope) {
-            case 'current':
+        switch (this._recurrence) {
+            case 'per_sequence':
                 return `You need to have reached stage ${this.requiredValue} in your current Battle Tree run.`;
-            case 'daily':
+            case 'per_seed':
                 return `You need to have reached a highest stage ${this.requiredValue} in your Battle Tree today.`;
-            case 'ever':
+            case 'once':
             default:
                 return `You need to have reached a highest stage ${this.requiredValue} in your Battle Tree, ever.`;
         }
