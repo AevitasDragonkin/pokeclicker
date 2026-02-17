@@ -18,6 +18,8 @@ import {
 import { BattleTreeModifierContext } from './modifier/BattleTreeModifierContext';
 import GameHelper from '../GameHelper';
 import { BattleTreeModifierNameType } from './modifier/BattleTreeModifiers';
+import { BattleTreeRewardPoolNameType } from './rewards/pools/BattleTreeRewardPool';
+import { BattleTreeRewardPools } from './rewards/pools/BattleTreeRewardPools';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -163,6 +165,11 @@ export class BattleTreeSequence {
                 pokemonB: this.teams.Team_B.getPokemonAvailableToFight(this.fight.pokemonB.name),
             }));
         } else if (this.fight.winner === BattleTreeFightWinner.POKEMON_A) {
+            // Every 10th stage defeat, roll on the generic table
+            if (this.stage % 10 === 0 && this.stage > 0) {
+                this.rollPool('generic', undefined, 1);
+            }
+
             // TODO : Handle finishing the stage
             if (this.stage % 5 === 0 && this.stage > 0) {
                 this._state(BattleTreeSequenceState.MODIFIER);
@@ -186,7 +193,14 @@ export class BattleTreeSequence {
         this.nextStage();
     }
 
-    public addReward(item: ItemNameType, amount: number): void {
+    private rollPool(id: BattleTreeRewardPoolNameType, seed?: number, amount: number = 1) {
+        for (let i = 0; i < amount; ++i) {
+            const pickedReward = BattleTreeRewardPools[id].roll(seed);
+            this.addReward(pickedReward.item, pickedReward.amount);
+        }
+    }
+
+    private addReward(item: ItemNameType, amount: number): void {
         const existing = this._rewards().find(i => i.item === item);
 
         if (existing) {

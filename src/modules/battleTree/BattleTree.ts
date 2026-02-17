@@ -5,6 +5,7 @@ import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
 import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
+import { BattleTreeRewardManager } from './rewards/BattleTreeRewardManager';
 
 export type BattleTreeRecurrence = 'once' | 'per_seed' | 'per_sequence';
 
@@ -24,6 +25,7 @@ export class BattleTree implements Feature {
             (BattleTree.convertLevelToExperience(this._level() + 1) - BattleTree.convertLevelToExperience(this._level()));
     });
 
+    private _rewardManager = new BattleTreeRewardManager();
     private _sequence: Observable<BattleTreeSequence> = ko.observable(new BattleTreeSequence());
 
     canAccess(): boolean {
@@ -88,15 +90,21 @@ export class BattleTree implements Feature {
         return this._sequence();
     }
 
+    get rewardManager(): BattleTreeRewardManager {
+        return this._rewardManager;
+    }
+
     toJSON(): Record<string, any> {
         return {
             exp: this._experience(),
             sequence: this._sequence()?.toJSON(),
+            rewardManager: this._rewardManager.toJSON(),
         };
     }
 
     fromJSON(json: Record<string, any>): void {
         this._experience(json.exp ?? 0);
+        this._rewardManager.fromJSON(json.rewardManager);
 
         if (json.sequence) {
             this._sequence(BattleTreeSequence.fromJSON(json.sequence));

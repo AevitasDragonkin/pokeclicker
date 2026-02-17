@@ -238,6 +238,7 @@ import { BattleTreeSequenceState } from './battleTree/BattleTreeSequence';
 import { BattleTreeFightWinner } from './battleTree/BattleTreeFight';
 import { BattleTreeModifiers } from './battleTree/modifier/BattleTreeModifiers';
 import { BattleTreeHighestStageRequirement } from './battleTree/requirements/BattleTreeRequirements';
+import { BattleTreeProgressionRewards } from './battleTree/rewards/progression/BattleTreeProgressionRewards';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -491,4 +492,5 @@ Object.assign(<any>window, {
     BattleTreeFightWinner,
     BattleTreeModifiers,
     BattleTreeHighestStageRequirement,
+    BattleTreeProgressionRewards,
 });

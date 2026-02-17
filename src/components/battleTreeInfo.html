@@ -194,6 +194,7 @@
                 <ul class="nav nav-tabs nav-fill w-100">
                     <li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#battle-tree-help__info">Info</a></li>
                     <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#battle-tree-help__modifiers">Modifiers</a></li>
+                    <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#battle-tree-help__rewards">Rewards</a></li>
                     <li class="d-block"><button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 18px; font-weight: 700;">×</button></li>
                 </ul>
             </div>
@@ -241,6 +242,70 @@
                                     </td>
                                     <td>
                                         <div class="small" data-bind="text: $data.requirement?.hint() || '-'"></div>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="battle-tree-help__rewards" class="tab-pane fade p-2 text-left">
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Rewards</span>
+                        </div>
+
+                        <div class="card-body">
+                            <table class="table table-sm table-striped text-left">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>Reward</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- ko foreach: BattleTreeProgressionRewards -->
+                                <tr>
+                                    <td>
+                                        <img height="24px" data-bind="attr: {src: ItemList[$data.item].image }"/>
+                                    </td>
+
+                                    <td>
+                                        <div data-bind="text: ItemList[$data.item].displayName"></div>
+                                    </td>
+
+                                    <td class="text-center vertical-middle">
+                                        <code data-bind="text: $data.amount.toLocaleString('en-US')"></code>
+                                    </td>
+
+                                    <td>
+                                        <div data-bind="text: $data.recurrence"></div>
+                                    </td>
+
+                                    <td class="text-center vertical-middle">
+                                        <!-- ko if: App.game.battleTree.rewardManager.hasClaimedReward($data) -->
+                                        <span>Claimed</span>
+                                        <!-- /ko -->
+
+                                        <!-- ko if: App.game.battleTree.rewardManager.canClaimReward($data) -->
+                                        <button class="btn btn-success" data-bind="click: () => { App.game.battleTree.rewardManager.claimReward($data); }">Claim</button>
+                                        <!-- /ko -->
+
+                                        <!-- ko if: App.game.battleTree.rewardManager.hasRequirement($data) -->
+                                        <div>
+                                            <img width="24px" class="lock" src="assets/images/breeding/lock.svg" data-bind="
+                                                tooltip: {
+                                                    title: $data.requirement?.hint() || '',
+                                                    placement: 'bottom',
+                                                    trigger: 'hover'
+                                                }" />
+                                        </div>
+                                        <!-- /ko -->
                                     </td>
                                 </tr>
                                 <!-- /ko -->
