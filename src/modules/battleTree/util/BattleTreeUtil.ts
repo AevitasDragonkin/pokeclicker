@@ -65,9 +65,13 @@ export class BattleTreeUtil {
         return App.game.battleTree.sequence.modifierManager.getValue({ key: 'rewards', base: 1 });
     }
 
-    public static clickCandidate(name: PokemonNameType): void {
+    private static tryAddPokemonToTeamA(name: PokemonNameType): void {
         if (!App.game.party.alreadyCaughtPokemonByName(name))
             return;
+
+        if (!App.game.battleTree.sequence.candidates().includes(name)) {
+            return;
+        }
 
         if (App.game.battleTree.sequence.teams.Team_A.hasPokemon(name)) {
             App.game.battleTree.sequence.teams.Team_A.removePokemon(name);
@@ -76,10 +80,19 @@ export class BattleTreeUtil {
         }
     }
 
+    public static clickCandidate(name: PokemonNameType): void {
+        this.tryAddPokemonToTeamA(name);
+    }
+
     public static clickRandomTeam(): void {
         App.game.battleTree.sequence.teams.Team_A.removeAllPokemon();
         Rand.shuffleArray(App.game.battleTree.sequence.candidates().filter(name => App.game.party.alreadyCaughtPokemonByName(name)))
             .slice(0, App.game.battleTree.sequence.teams.Team_A.maxTeamSize)
             .forEach(name => App.game.battleTree.sequence.teams.Team_A.addPokemon(name, BattleTreeUtil.calculatePokemonLevelForPlayer(name)));
+    }
+
+    public static clickLoadPreviousTeam(): void {
+        App.game.battleTree.sequence.teams.Team_A.removeAllPokemon();
+        App.game.battleTree.previousTeam.forEach(p => this.tryAddPokemonToTeamA(p));
     }
 }

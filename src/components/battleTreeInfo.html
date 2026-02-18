@@ -81,13 +81,13 @@
                     Start
                 </button>
 
-                <button class="btn btn-info" data-bind="
-                        click: () => { },
-                        enable: false,
+                <button class="btn btn-info" onclick="BattleTreeUtil.clickLoadPreviousTeam()" data-bind="
+                        enable: App.game.battleTree.previousTeam.length > 0 && App.game.battleTree.previousTeam.every(name => App.game.battleTree.sequence.candidates().includes(name)),
                         tooltip: {
                             trigger: 'hover',
-                            title: 'Load previous team',
+                            title: App.game.battleTree.previousTeam.every(name => App.game.battleTree.sequence.candidates().includes(name)) ? `Load previous team<br/>${App.game.battleTree.previousTeam.join(', ')}` : 'Previous team not compatible with the current selection.',
                             placement: 'bottom',
+                            html: true
                         }
                     ">
                     ⏎

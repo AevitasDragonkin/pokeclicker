@@ -1,11 +1,12 @@
 import { Feature } from '../DataStore/common/Feature';
 import { BATTLE_TREE_MAX_LEVEL, GameState } from '../GameConstants';
-import { Observable, PureComputed } from 'knockout';
+import { Observable, ObservableArray, PureComputed } from 'knockout';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
 import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
 import { BattleTreeRewardManager } from './rewards/BattleTreeRewardManager';
+import { PokemonNameType } from '../pokemons/PokemonNameType';
 
 export type BattleTreeRecurrence = 'once' | 'per_seed' | 'per_sequence';
 
@@ -27,6 +28,8 @@ export class BattleTree implements Feature {
 
     private _rewardManager = new BattleTreeRewardManager();
     private _sequence: Observable<BattleTreeSequence> = ko.observable(new BattleTreeSequence());
+
+    private _previousTeam: ObservableArray<PokemonNameType> = ko.observableArray();
 
     canAccess(): boolean {
         return true;
@@ -50,6 +53,8 @@ export class BattleTree implements Feature {
     }
 
     public startNewSequence(): void {
+        this._previousTeam.removeAll();
+        this._previousTeam.push(...this.sequence.teams.Team_A.list.map(p => p.name));
         this._sequence(new BattleTreeSequence());
     }
 
@@ -84,6 +89,10 @@ export class BattleTree implements Feature {
 
     get progressToNextLevel(): number {
         return this._progressToNextLevel();
+    }
+
+    get previousTeam(): PokemonNameType[] {
+        return this._previousTeam();
     }
 
     get sequence(): BattleTreeSequence {
