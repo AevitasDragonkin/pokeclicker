@@ -94,17 +94,27 @@
                 </button>
             </div>
 
-            <!-- ko if: AutoPickModifiers.requirement?.isCompleted() ?? true -->
-            <div>
-                <label for="battle-tree-help__auto_pick_modifiers">Auto-pick modifiers</label>
-                <label class="form-check-label toggler-wrapper style-1 float-right">
+            <div class="d-flex align-items-center p-4" style="width: max-content; margin: 0 auto; gap: 1rem;">
+                <label class="m-0" for="battle-tree-help__auto_pick_modifiers">Auto-pick modifiers</label>
+
+                <label class="position-relative form-check-label toggler-wrapper style-1 float-right">
                     <input class="form-check-input" type="checkbox" id="battle-tree-help__auto_pick_modifiers" data-bind="checked: BattleTree.autoPickModifiers, enable: AutoPickModifiers.requirement?.isCompleted() ?? true">
                     <div class="toggler-slider">
                         <div class="toggler-knob"></div>
                     </div>
+
+                    <!-- ko if: AutoPickModifiers.requirement && !AutoPickModifiers.requirement.isCompleted() -->
+                    <div class="position-absolute" style="inset: 0;">
+                        <img width="24px" class="lock" src="assets/images/breeding/lock.svg" data-bind="
+                            tooltip: {
+                                title: AutoPickModifiers.requirement?.hint() || '',
+                                placement: 'bottom',
+                                trigger: 'hover'
+                            }" />
+                    </div>
+                    <!-- /ko -->
                 </label>
             </div>
-            <!-- /ko -->
         </section>
         <!-- /ko -->
 
@@ -168,20 +178,27 @@
                 </tbody>
             </table>
 
-            <!-- ko if: App.game.battleTree.sequence.state !== BattleTreeSequenceState.FINISHED -->
             <div class="d-flex flex-wrap justify-content-center mt-2" style="gap: 1rem;">
-                <button class="btn btn-success text-light" onclick="App.game.battleTree.sequence.claimRewards()" data-bind="
-                    enable: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD
-                ">
+                <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD -->
+                <button class="btn btn-success text-light" onclick="App.game.battleTree.sequence.claimRewards()">
                     Claim rewards
                 </button>
+                <!-- /ko -->
+
 <!--                <button class="btn btn-danger text-light" onclick="App.game.battleTree.sequence.discardRewards()" data-bind="-->
 <!--                    enable: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD-->
 <!--                ">-->
 <!--                    Discard rewards-->
 <!--                </button>-->
+
+                <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.FINISHED -->
+                <button class="btn btn-success text-light" onclick="App.game.battleTree.startNewSequence()">
+                    Start new
+                </button>
+                <!-- /ko -->
+
+                <!-- ko if: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER].includes(App.game.battleTree.sequence.state) -->
                 <button class="btn btn-danger text-light" onclick="App.game.battleTree.sequence.forfeit()" data-bind="
-                    enable: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER].includes(App.game.battleTree.sequence.state),
                     tooltip: {
                         trigger: 'hover',
                         title: `Forfeiting will end the current run, and you will only receive ${GameConstants.BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER.toLocaleString('en-US', { style: 'percent' })} of your rewards.`,
@@ -190,12 +207,12 @@
                 ">
                     Forfeit
                 </button>
+                <!-- /ko -->
             </div>
-            <!-- /ko -->
         </div>
         <!-- /ko -->
 
-        <button class="btn btn-danger text-light" onclick="App.game.battleTree.leave()">Return to town</button>
+        <button class="btn btn-danger text-light mt-4" onclick="App.game.battleTree.leave()">Return to town</button>
     </div>
 </div>
 
