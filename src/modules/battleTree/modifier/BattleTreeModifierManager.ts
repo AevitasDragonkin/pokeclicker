@@ -120,7 +120,7 @@ export class BattleTreeModifierManager {
 
             for (const effect of definition.effects) {
                 if (effect.target.key !== query.key) continue;
-                if (query.scope && effect.target.scope.includes(query.scope)) continue;
+                if (query.scope && !effect.target.scope.includes(query.scope)) continue;
 
                 yield { active: historyEntry, effect };
             }

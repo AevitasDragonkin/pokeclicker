@@ -50,7 +50,7 @@
                             src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
                         }
                         ">
-                        <div class="small" data-bind="text: PokemonHelper.displayName($data.name)" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="small" data-bind="text: `Lvl. ${$data.level} ${PokemonHelper.displayName($data.name)}`" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
                         <div class="progress">
                             <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                 css: {

@@ -50,13 +50,14 @@ export class BattleTree implements Feature {
 
     public checkNewSequenceAvailable(): void {
         if (this.sequence.state === BattleTreeSequenceState.PREPARATION && this.sequence.seed !== BattleTreeUtil.calculateSeed()) {
-            this.clearVariables('per_seed');
             this.startNewSequence();
         }
     }
 
     public startNewSequence(): void {
         this.clearVariables('per_sequence');
+        if (this.sequence.seed !== BattleTreeUtil.calculateSeed()) this.clearVariables('per_seed');
+
         this._previousTeam.removeAll();
         this._previousTeam.push(...this.sequence.teams.Team_A.list.map(p => p.name));
         this._sequence(new BattleTreeSequence());
