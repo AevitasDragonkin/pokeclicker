@@ -3,10 +3,11 @@ import { BATTLE_TREE_MAX_LEVEL, GameState } from '../GameConstants';
 import { Observable, ObservableArray, PureComputed } from 'knockout';
 import Notifier from '../notifications/Notifier';
 import NotificationConstants from '../notifications/NotificationConstants';
-import { BattleTreeSequence, BattleTreeSequenceState } from './BattleTreeSequence';
+import { BattleTreeSequence } from './BattleTreeSequence';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
 import { BattleTreeRewardManager } from './rewards/BattleTreeRewardManager';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
+import { BattleTreeSequenceState } from './types';
 
 export type BattleTreeRecurrence = 'once' | 'per_seed' | 'per_sequence';
 

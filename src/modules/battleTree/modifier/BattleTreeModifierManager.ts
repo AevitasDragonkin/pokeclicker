@@ -159,7 +159,7 @@ export class BattleTreeModifierManager {
 
         if (!modifier) return 'Modifier not found';
 
-        const resolve = <D>(des: BattleTreeModifierDescription<D>, data: D) => typeof des === 'function' ? (des as ((data: D) => string))(data) : des;
+        const resolve = <D>(des: BattleTreeModifierDescription<D>, data: D) => typeof des === 'function' ? (des as ((ctx: BattleTreeModifierContext, data: D) => string))(this._ctx, data) : des;
         return resolve(modifier.description, d ?? modifier.createData?.(this._ctx));
     }
 

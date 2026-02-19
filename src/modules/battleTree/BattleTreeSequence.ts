@@ -22,6 +22,7 @@ import { BattleTreeRewardPoolNameType } from './rewards/pools/BattleTreeRewardPo
 import { BattleTreeRewardPools } from './rewards/pools/BattleTreeRewardPools';
 import Rand from '../utilities/Rand';
 import { BattleTree } from './BattleTree';
+import { BattleTreeSequenceState } from './types';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -36,14 +37,6 @@ interface BattleTreeSequenceSaveData {
     teams: Record<TeamType, BattleTreeTeamSaveData>;
     rewards: Record<ItemNameType, number>;
     modifierManager: BattleTreeModifierManagerSaveData;
-}
-
-export enum BattleTreeSequenceState {
-    PREPARATION = 'PREPARATION',
-    BATTLE = 'BATTLE',
-    REWARD = 'REWARD',
-    MODIFIER = 'MODIFIER',
-    FINISHED = 'FINISHED',
 }
 
 export class BattleTreeSequence {

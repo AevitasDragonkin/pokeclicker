@@ -234,11 +234,11 @@ import TranslationHelper from './translation/TranslationHelper';
 import * as DownloadUtil from './utilities/DownloadUtil';
 import { BattleTree } from './battleTree/BattleTree';
 import { BattleTreeUtil } from './battleTree/util/BattleTreeUtil';
-import { BattleTreeSequenceState } from './battleTree/BattleTreeSequence';
 import { BattleTreeFightWinner } from './battleTree/BattleTreeFight';
 import { AutoPickModifiers, BattleTreeModifiers } from './battleTree/modifier/BattleTreeModifiers';
 import { BattleTreeHighestStageRequirement } from './battleTree/requirements/BattleTreeRequirements';
 import { BattleTreeProgressionRewards } from './battleTree/rewards/progression/BattleTreeProgressionRewards';
+import { BattleTreeSequenceState } from './battleTree/types';
 
 Object.assign(<any>window, {
     SaveSelector,

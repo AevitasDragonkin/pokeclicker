@@ -1,8 +1,9 @@
 import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import { BattleTreeEffect } from './BattleTreeEffect';
-import { BattleTreeSequenceState } from '../BattleTreeSequence';
 import Requirement from '../../requirements/Requirement';
 import { BattleTreeAutoPickRequirement, BattleTreeHighestStageRequirement } from '../requirements/BattleTreeRequirements';
+import { formatTime } from '../../GameConstants';
+import { BattleTreeSequenceState } from '../types';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -34,7 +35,7 @@ export interface TickData {
 //     data: Data;
 // }
 
-export type BattleTreeModifierDescription<Data = unknown> = string | ((data: Data) => string);
+export type BattleTreeModifierDescription<Data = unknown> = string | ((ctx: BattleTreeModifierContext, data: Data) => string);
 
 export interface BattleTreeModifierDefinition<Data = unknown> {
     id: BattleTreeModifierNameType;
@@ -64,14 +65,14 @@ const TickHeal: BattleTreeModifierDefinition<TimeData & PulseData> = {
     name: 'Tick Heal',
     description: 'Heal all your pokemon 5 HP every 2 seconds of combat, up to 10 times.',
     weight: 1,
-    // stateScope: [BattleTreeSequenceState.BATTLE],
+    stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData, tickData }) => {
         definitionData.pulseTimer += tickData.combatDeltaTime;
 
-        const PULSE_DELAY = 0.5;
+        const PULSE_DELAY = 2;
 
-        if (definitionData.pulseTimer >= PULSE_DELAY && definitionData.pulsesFired < 100) {
-            ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ flat: 1 }));
+        if (definitionData.pulseTimer >= PULSE_DELAY && definitionData.pulsesFired < 10) {
+            ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ flat: 5 }));
             definitionData.pulseTimer -= PULSE_DELAY;
             definitionData.pulsesFired += 1;
         }
@@ -87,11 +88,11 @@ const TickHeal: BattleTreeModifierDefinition<TimeData & PulseData> = {
 const TimesUp: BattleTreeModifierDefinition<TimeData> = {
     id: 'times_up',
     name: 'Time\'s up',
-    description: 'You get 5 more minutes of combat time. After that the run ends.',
+    description: (ctx, data: TimeData) => `${formatTime(data.acquiredCombatTime + 300 - ctx.sequence.combatTime)} combat time left. Then the run ends.`,
     weight: 1,
-    // stateScope: [BattleTreeSequenceState.BATTLE],
+    stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData }) => {
-        if (ctx.sequence.combatTime > definitionData.acquiredCombatTime + 30) {
+        if (ctx.sequence.combatTime > definitionData.acquiredCombatTime + 300) {
             ctx.endSequence('Time\'s up');
         }
     },
@@ -104,7 +105,7 @@ const TimesUp: BattleTreeModifierDefinition<TimeData> = {
 const ChallengeAccepted: BattleTreeModifierDefinition<StageData> = {
     id: 'challenge_accepted',
     name: 'Challenge Accepted',
-    description: (data: StageData) => `Rewards are reduced by 90%. Reach stage ${data.acquiredStage + 20}.`,
+    description: (ctx, data: StageData) => `Rewards are reduced by 90%. Reach stage ${data.acquiredStage + 20}.`,
     weight: 1,
     effects: [{
         target: { key: 'rewards' },
