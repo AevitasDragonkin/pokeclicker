@@ -30,10 +30,10 @@ export class BattleTreeHighestStageRequirement extends Requirement {
             case 'per_sequence':
                 return Math.min(App.game.battleTree.sequence.stage, this.requiredValue);
             case 'per_seed':
-                return Math.min(0, this.requiredValue);
+                return Math.min(App.game.statistics.battleTreeHighestStageCompletedPerSeed(), this.requiredValue);
             case 'once':
             default:
-                return Math.min(0, this.requiredValue);
+                return Math.min(App.game.statistics.battleTreeHighestStageCompleted(), this.requiredValue);
         }
     }
 

@@ -41,23 +41,39 @@ export class BattleTree implements Feature {
     }
 
     update(delta: number) {
-        this.checkNewSequenceAvailable();
-
         if (App.game.gameState === GameState.battleTree) {
+            this.checkNewSequenceAvailable();
+
             this.sequence?.update(delta);
         }
     }
 
     public checkNewSequenceAvailable(): void {
         if (this.sequence.state === BattleTreeSequenceState.PREPARATION && this.sequence.seed !== BattleTreeUtil.calculateSeed()) {
+            this.clearVariables('per_seed');
             this.startNewSequence();
         }
     }
 
     public startNewSequence(): void {
+        this.clearVariables('per_sequence');
         this._previousTeam.removeAll();
         this._previousTeam.push(...this.sequence.teams.Team_A.list.map(p => p.name));
         this._sequence(new BattleTreeSequence());
+    }
+
+    private clearVariables(recurrence: BattleTreeRecurrence): void {
+        switch (recurrence) {
+            case 'once': break;
+            case 'per_seed':
+                this.rewardManager.clearClaimedRewards('per_seed');
+                App.game.statistics.battleTreeHighestStageCompletedPerSeed(0);
+                App.game.statistics.battleTreeTotalStagesCompletedPerSeed(0);
+                break;
+            case 'per_sequence':
+                this.rewardManager.clearClaimedRewards('per_sequence');
+                break;
+        }
     }
 
     public enter(): void {

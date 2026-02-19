@@ -158,6 +158,12 @@ export class BattleTreeSequence {
                 pokemonB: this.teams.Team_B.getPokemonAvailableToFight(this.fight.pokemonB.name),
             }));
         } else if (this.fight.winner === BattleTreeFightWinner.POKEMON_A) {
+            App.game.statistics.battleTreeHighestStageCompleted(Math.max(App.game.statistics.battleTreeHighestStageCompleted(), this.stage));
+            App.game.statistics.battleTreeHighestStageCompletedPerSeed(Math.max(App.game.statistics.battleTreeHighestStageCompletedPerSeed(), this.stage));
+
+            GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompleted);
+            GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompletedPerSeed);
+
             // Every 10th stage defeat, roll on the generic table
             if (this.stage % 10 === 0 && this.stage > 0) {
                 this.rollPool('generic', undefined, 1);
