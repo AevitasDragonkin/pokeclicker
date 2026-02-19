@@ -2,7 +2,7 @@ import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import { BattleTreeEffect } from './BattleTreeEffect';
 import { BattleTreeSequenceState } from '../BattleTreeSequence';
 import Requirement from '../../requirements/Requirement';
-import { BattleTreeHighestStageRequirement } from '../requirements/BattleTreeRequirements';
+import { BattleTreeAutoPickRequirement, BattleTreeHighestStageRequirement } from '../requirements/BattleTreeRequirements';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -126,6 +126,7 @@ export const AutoPickModifiers: BattleTreeModifierDefinition = {
         value: 1,
         operation: 'final',
     }],
+    requirement: BattleTreeAutoPickRequirement,
 };
 
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [

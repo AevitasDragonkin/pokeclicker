@@ -236,7 +236,7 @@ import { BattleTree } from './battleTree/BattleTree';
 import { BattleTreeUtil } from './battleTree/util/BattleTreeUtil';
 import { BattleTreeSequenceState } from './battleTree/BattleTreeSequence';
 import { BattleTreeFightWinner } from './battleTree/BattleTreeFight';
-import { BattleTreeModifiers } from './battleTree/modifier/BattleTreeModifiers';
+import { AutoPickModifiers, BattleTreeModifiers } from './battleTree/modifier/BattleTreeModifiers';
 import { BattleTreeHighestStageRequirement } from './battleTree/requirements/BattleTreeRequirements';
 import { BattleTreeProgressionRewards } from './battleTree/rewards/progression/BattleTreeProgressionRewards';
 
@@ -493,4 +493,5 @@ Object.assign(<any>window, {
     BattleTreeModifiers,
     BattleTreeHighestStageRequirement,
     BattleTreeProgressionRewards,
+    AutoPickModifiers,
 });

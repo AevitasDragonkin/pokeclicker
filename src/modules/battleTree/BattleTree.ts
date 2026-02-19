@@ -29,6 +29,7 @@ export class BattleTree implements Feature {
     private _rewardManager = new BattleTreeRewardManager();
     private _sequence: Observable<BattleTreeSequence> = ko.observable(new BattleTreeSequence());
 
+    public static autoPickModifiers: Observable<boolean> = ko.observable(false);
     private _previousTeam: ObservableArray<PokemonNameType> = ko.observableArray();
 
     canAccess(): boolean {

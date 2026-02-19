@@ -21,6 +21,7 @@ import { BattleTreeModifierNameType } from './modifier/BattleTreeModifiers';
 import { BattleTreeRewardPoolNameType } from './rewards/pools/BattleTreeRewardPool';
 import { BattleTreeRewardPools } from './rewards/pools/BattleTreeRewardPools';
 import Rand from '../utilities/Rand';
+import { BattleTree } from './BattleTree';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -31,8 +32,6 @@ interface BattleTreeSequenceSaveData {
 
     fight: BattleTreeFightSaveData | null;
     timers: Record<BattleTreeSequenceState, number>;
-
-    autoPickModifiers: boolean;
 
     teams: Record<TeamType, BattleTreeTeamSaveData>;
     rewards: Record<ItemNameType, number>;
@@ -60,8 +59,6 @@ export class BattleTreeSequence {
 
     private _modifierManager: BattleTreeModifierManager;
 
-    private _autoPickModifiers: Observable<boolean>;
-
     public sequenceSubset: PureComputed<BattleTreePokemonSubset> = ko.pureComputed(() => {
         return BattleTreeUtil.getRandomSubset({ seed: this.seed });
     });
@@ -80,7 +77,6 @@ export class BattleTreeSequence {
         this._fight = ko.observable(null);
 
         this._timers = GameHelper.objectFromEnumStrings(BattleTreeSequenceState, () => ko.observable(0));
-        this._autoPickModifiers = ko.observable(false);
 
         this._teams = {
             Team_A: new BattleTreeTeam({ team: 'Team_A' }),
@@ -94,7 +90,6 @@ export class BattleTreeSequence {
     private createContext(): BattleTreeModifierContext {
         return {
             sequence: this,
-            setAutoPickModifiers: enabled => this._autoPickModifiers(enabled),
             endSequence: reason => {
                 console.log(`[BATTLE TREE] Context ending run: ${reason}`);
                 this._state(BattleTreeSequenceState.REWARD);
@@ -104,6 +99,10 @@ export class BattleTreeSequence {
 
     public startFighting(): boolean {
         if (this._state() === BattleTreeSequenceState.PREPARATION) {
+            if (BattleTree.autoPickModifiers()) {
+                this.modifierManager.addSystemModifier('auto_pick_modifiers');
+            }
+
             this.nextStage();
             return true;
         }
@@ -291,7 +290,6 @@ export class BattleTreeSequence {
             stage: this._stage(),
             fight: this._fight()?.toJSON() ?? null,
             timers: ko.toJS(this._timers),
-            autoPickModifiers: this._autoPickModifiers(),
             teams: Object
                 .fromEntries(Object.entries(this.teams)
                     .map(([key, value]: [key: TeamType, value: BattleTreeTeam]) => [key as TeamType, value.toJSON()]),
@@ -309,7 +307,6 @@ export class BattleTreeSequence {
         sequence._stage(json.stage);
 
         Object.keys(sequence._timers).forEach(key => sequence._timers[key](json.timers[key] ?? 0));
-        sequence._autoPickModifiers(json.autoPickModifiers);
 
         sequence._teams = Object
             .fromEntries(Object.entries(json.teams)

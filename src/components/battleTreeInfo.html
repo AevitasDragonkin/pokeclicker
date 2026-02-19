@@ -93,6 +93,18 @@
                     ⏎
                 </button>
             </div>
+
+            <!-- ko if: AutoPickModifiers.requirement?.isCompleted() ?? true -->
+            <div>
+                <label for="battle-tree-help__auto_pick_modifiers">Auto-pick modifiers</label>
+                <label class="form-check-label toggler-wrapper style-1 float-right">
+                    <input class="form-check-input" type="checkbox" id="battle-tree-help__auto_pick_modifiers" data-bind="checked: BattleTree.autoPickModifiers, enable: AutoPickModifiers.requirement?.isCompleted() ?? true">
+                    <div class="toggler-slider">
+                        <div class="toggler-knob"></div>
+                    </div>
+                </label>
+            </div>
+            <!-- /ko -->
         </section>
         <!-- /ko -->
 
