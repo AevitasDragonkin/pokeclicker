@@ -20,6 +20,7 @@ import GameHelper from '../GameHelper';
 import { BattleTreeModifierNameType } from './modifier/BattleTreeModifiers';
 import { BattleTreeRewardPoolNameType } from './rewards/pools/BattleTreeRewardPool';
 import { BattleTreeRewardPools } from './rewards/pools/BattleTreeRewardPools';
+import Rand from '../utilities/Rand';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -172,7 +173,11 @@ export class BattleTreeSequence {
 
             // TODO : Handle finishing the stage
             if (this.stage % 5 === 0 && this.stage > 0) {
-                this._state(BattleTreeSequenceState.MODIFIER);
+                if (Math.random() < this._modifierManager.getValue({ key: 'auto_pick_modifier', base: 0 })) {
+                    this.pickModifier(Rand.fromArray(App.game.battleTree.sequence.modifierManager.candidates()));
+                } else {
+                    this._state(BattleTreeSequenceState.MODIFIER);
+                }
             } else {
                 this.nextStage();
             }

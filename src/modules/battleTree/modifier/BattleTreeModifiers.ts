@@ -8,7 +8,7 @@ export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
 export type BattleTreeModifierSource = 'player' | 'system';
 export type BattleTreeModifierOperation = 'additive' | 'multiplicative';
-export type BattleTreeModifierNameType = 'forfeit' | 'first_aid' | 'attack_10' | 'defense_10' | 'speed_10' | 'max_hitpoints_10' | 'level_5' | 'fast_start' | 'tick_heal' | 'challenge_accepted' | 'times_up' | 'modifier_1';
+export type BattleTreeModifierNameType = 'forfeit' | 'first_aid' | 'attack_10' | 'defense_10' | 'speed_10' | 'max_hitpoints_10' | 'level_5' | 'fast_start' | 'tick_heal' | 'challenge_accepted' | 'times_up' | 'modifier_1' | 'auto_pick_modifiers';
 
 export type StageData = {
     acquiredStage: number;
@@ -116,10 +116,23 @@ const ChallengeAccepted: BattleTreeModifierDefinition<StageData> = {
     }),
 };
 
+export const AutoPickModifiers: BattleTreeModifierDefinition = {
+    id: 'auto_pick_modifiers',
+    name: 'Auto pick modifiers',
+    description: 'The system will select 1 modifier at random each time a modifier can be selected.',
+    weight: 0,
+    effects: [{
+        target: { key: 'auto_pick_modifier' },
+        value: 1,
+        operation: 'final',
+    }],
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     TickHeal,
     ChallengeAccepted,
     TimesUp,
+    AutoPickModifiers,
     {
         id: 'forfeit',
         name: 'Forfeit',

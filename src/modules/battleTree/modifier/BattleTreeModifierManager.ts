@@ -2,13 +2,13 @@ import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import {
     BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT,
     BattleTreeModifierDefinition,
-    BattleTreeModifierDescription, BattleTreeModifierNameType, BattleTreeModifiers, TickData,
+    BattleTreeModifierDescription, BattleTreeModifierNameType, BattleTreeModifiers, BattleTreeModifierSource, TickData,
 } from './BattleTreeModifiers';
 import { ObservableArray, PureComputed } from 'knockout';
 import SeededRand from '../../utilities/SeededRand';
 import { TeamType } from '../BattleTreeSequence';
 import { BattleTreeEffect, BattleTreeEffectKey, BattleTreeEffectValue } from './BattleTreeEffect';
-
+import GameHelper from '../../GameHelper';
 
 type Active<Data> = {
     definition: BattleTreeModifierDefinition<Data>;
@@ -16,7 +16,6 @@ type Active<Data> = {
 };
 
 type IndexStamp<Data> = { active: Active<Data>; effect: BattleTreeEffect<Data>; };
-
 
 export interface ValueQuery {
     key: BattleTreeEffectKey;
@@ -28,12 +27,14 @@ export interface BattleTreeModifierManagerSaveData {
     entries: {
         id: BattleTreeModifierNameType,
         data?: unknown,
+        source?: BattleTreeModifierSource,
     }[]
 }
 
 export interface BattleTreeModifierHistoryEntry<Data> {
     definition: BattleTreeModifierDefinition,
     data: Data,
+    source: BattleTreeModifierSource,
 }
 
 export class BattleTreeModifierManager {
@@ -63,7 +64,10 @@ export class BattleTreeModifierManager {
                 return true;
             });
 
-        SeededRand.seed(this._ctx.sequence.seed + this._ctx.sequence.stage);
+        const playerAddedModifiers = this.history.filter(v => v.source === 'player');
+        const lastPlayerAddedModifier = playerAddedModifiers.length > 0 ? GameHelper.hash(playerAddedModifiers.at(-1).source) : 0;
+
+        SeededRand.seed(this._ctx.sequence.seed + this._ctx.sequence.stage + lastPlayerAddedModifier);
         return SeededRand
             .shuffleWeightedArray(allOffers, allOffers.map(value => value.weight ?? BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT))
             .slice(0, this.getValue({ key: 'modifier_count', base: 3 }))
@@ -86,20 +90,20 @@ export class BattleTreeModifierManager {
     public addPlayerModifier(id: BattleTreeModifierNameType) {
         if (!this.candidates().includes(id)) return;
 
-        this.addModifier(id);
+        this.addModifier(id, 'player');
     }
 
     public addSystemModifier(id: BattleTreeModifierNameType) {
-        this.addModifier(id);
+        this.addModifier(id, 'system');
     }
 
-    private addModifier(id: BattleTreeModifierNameType) {
+    private addModifier(id: BattleTreeModifierNameType, source: BattleTreeModifierSource) {
         const definition = BattleTreeModifiers.find(mod => mod.id === id);
 
         if (!definition) return;
 
         const data = definition.createData ? definition.createData(this._ctx) : (undefined as unknown);
-        this._history.push({ definition, data });
+        this._history.push({ definition, data, source });
 
         definition.onAcquire?.(this._ctx);
     }
@@ -162,7 +166,7 @@ export class BattleTreeModifierManager {
     public toJSON(): BattleTreeModifierManagerSaveData {
         return {
             entries: this._history().map(entry => {
-                return entry.data === undefined ? { id: entry.definition.id } : { id: entry.definition.id, data: entry.data };
+                return entry.data === undefined ? { id: entry.definition.id, ...(entry.source !== 'player' ? { source: entry.source } : { }) } : { id: entry.definition.id, data: entry.data, ...(entry.source !== 'player' ? { source: entry.source } : { }) };
             }),
         };
     }
@@ -175,7 +179,7 @@ export class BattleTreeModifierManager {
 
             if (!definition) return;
 
-            this._history.push({ definition, data: entry.data });
+            this._history.push({ definition, data: entry.data, source: entry.source ?? 'player' });
         });
     }
 }
