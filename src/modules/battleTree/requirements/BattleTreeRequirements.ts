@@ -50,6 +50,39 @@ export class BattleTreeHighestStageRequirement extends Requirement {
     }
 }
 
+export class BattleTreeTotalStagesRequirement extends Requirement {
+    private _recurrence: BattleTreeRecurrence;
+
+    constructor(stage: number, recurrence: BattleTreeRecurrence = 'once') {
+        super(stage, AchievementOption.more);
+        this._recurrence = recurrence;
+    }
+
+    getProgress(): number {
+        switch (this._recurrence) {
+            case 'per_sequence':
+                return Math.min(App.game.battleTree.sequence.stage, this.requiredValue);
+            case 'per_seed':
+                return Math.min(App.game.statistics.battleTreeTotalStagesCompletedPerSeed(), this.requiredValue);
+            case 'once':
+            default:
+                return Math.min(App.game.statistics.battleTreeTotalStagesCompleted(), this.requiredValue);
+        }
+    }
+
+    hint(): string {
+        switch (this._recurrence) {
+            case 'per_sequence':
+                return `You need to have completed ${this.requiredValue} stages in your current Battle Tree run.`;
+            case 'per_seed':
+                return `You need to have completed ${this.requiredValue} stages in your Battle Tree today.`;
+            case 'once':
+            default:
+                return `You need to have completed ${this.requiredValue} stages in your Battle Tree.`;
+        }
+    }
+}
+
 export const BattleTreeAutoPickRequirement = new OneFromManyRequirement([
     new BattleTreeLevelRequirement(50),
     new BattleTreeHighestStageRequirement(50)],

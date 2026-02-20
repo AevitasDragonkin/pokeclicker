@@ -23,6 +23,7 @@ import { BattleTreeRewardPools } from './rewards/pools/BattleTreeRewardPools';
 import Rand from '../utilities/Rand';
 import { BattleTree } from './BattleTree';
 import { BattleTreeSequenceState } from './types';
+import { SHINY_CHANCE_BATTLE } from '../GameConstants';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -111,6 +112,10 @@ export class BattleTreeSequence {
         const opponentTeam = BattleTreeUtil.getRandomTeamFromSubset({ subset: opponentSubset.name, seed: this.seed, stage: this.stage, amount: 3 });
 
         opponentTeam.forEach(name => this.teams.Team_B.addPokemon(name, this.stage));
+        this.teams.Team_B.list.forEach(p => {
+            p.shiny = PokemonFactory.generateShiny(SHINY_CHANCE_BATTLE);
+            p.gender = PokemonFactory.generateGenderById(pokemonMap[p.name].id);
+        });
 
         this._fight(new BattleTreeFight({
             pokemonA: this.teams.Team_A.getPokemonAvailableToFight(this.fight?.pokemonA.name),

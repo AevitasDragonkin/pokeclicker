@@ -5,6 +5,7 @@ import PokemonType from '../enums/PokemonType';
 import TypeHelper from '../types/TypeHelper';
 import Rand from '../utilities/Rand';
 import { TeamType } from './BattleTreeSequence';
+import { BattlePokemonGender } from '../GameConstants';
 
 interface BattleTreePokemonProperties {
     name: PokemonNameType;
@@ -16,6 +17,8 @@ export interface BattleTreePokemonSaveData {
     name: PokemonNameType;
     level: number;
     hp: number;
+    shiny?: boolean;
+    gender?: BattlePokemonGender;
 }
 
 interface TypedDamage {
@@ -92,6 +95,8 @@ export class BattleTreePokemon {
     private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_hitpoints', scope: this._teamId, base: hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level) }));
 
     private _hp: Observable<number> = ko.observable(0).extend({ numeric: 0 });
+    private _shiny: Observable<boolean | undefined> = ko.observable(undefined);
+    private _gender: Observable<BattlePokemonGender | undefined> = ko.observable(undefined);
 
     constructor(properties: BattleTreePokemonProperties) {
         this.uuid = crypto.randomUUID();
@@ -173,11 +178,29 @@ export class BattleTreePokemon {
         return this._hp();
     }
 
+    get shiny(): boolean | undefined {
+        return this._shiny();
+    }
+
+    set shiny(value: boolean | undefined) {
+        this._shiny(value);
+    }
+
+    get gender(): BattlePokemonGender | undefined {
+        return this._gender();
+    }
+
+    set gender(value: BattlePokemonGender | undefined) {
+        this._gender(value);
+    }
+
     public toJSON(): BattleTreePokemonSaveData {
         return {
             name: this._name,
             level: this._baseLevel,
             hp: this._hp(),
+            ...(this.shiny !== undefined ? { shiny: this.shiny } : { }),
+            ...(this.gender !== undefined ? { gender: this.gender } : { }),
         };
     }
 
@@ -189,6 +212,8 @@ export class BattleTreePokemon {
         });
 
         pokemon._hp(json.hp ?? pokemon.maxHitpoints);
+        pokemon._shiny(json.shiny);
+        pokemon._gender(json.gender);
 
         return pokemon;
     }
