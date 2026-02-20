@@ -5,24 +5,25 @@ import {
 } from './progression/BattleTreeProgressionRewards';
 import { ItemList } from '../../items/ItemList';
 import { BattleTreeRecurrence } from '../BattleTree';
+import { ObservableArray } from 'knockout';
 
 interface BattleTreeRewardManagerSaveData {
     data: Record<BattleTreeRecurrence, BattleTreeProgressionRewardNameType[]>;
 }
 
 export class BattleTreeRewardManager {
-    private _claimedRewards: Record<BattleTreeRecurrence, BattleTreeProgressionRewardNameType[]>;
+    private _claimedRewards: Record<BattleTreeRecurrence, ObservableArray<BattleTreeProgressionRewardNameType>>;
 
     constructor() {
         this._claimedRewards = {
-            once: [],
-            per_seed: [],
-            per_sequence: [],
+            once: ko.observableArray(),
+            per_seed: ko.observableArray(),
+            per_sequence: ko.observableArray(),
         };
     }
 
     public clearClaimedRewards(recurrence: BattleTreeRecurrence) {
-        this._claimedRewards[recurrence].length = 0;
+        this._claimedRewards[recurrence]().length = 0;
     }
 
     public claimRewardById(id: BattleTreeProgressionRewardNameType) {
@@ -45,7 +46,7 @@ export class BattleTreeRewardManager {
     }
 
     public hasClaimedReward(definition: BattleTreeProgressionRewardDefinition): boolean {
-        return this._claimedRewards[definition.recurrence].includes(definition.id);
+        return this._claimedRewards[definition.recurrence]().includes(definition.id);
     }
 
     public canClaimReward(definition: BattleTreeProgressionRewardDefinition) {
@@ -58,13 +59,15 @@ export class BattleTreeRewardManager {
 
     public toJSON(): BattleTreeRewardManagerSaveData {
         return {
-            data: this._claimedRewards,
+            data: Object.fromEntries(
+                Object.entries(this._claimedRewards).map(([key, value]) => [key as BattleTreeRecurrence, value()]),
+            ) as Record<BattleTreeRecurrence, BattleTreeProgressionRewardNameType[]>,
         };
     }
 
     public fromJSON(json: BattleTreeRewardManagerSaveData): void {
         Object.keys(this._claimedRewards).forEach(key => {
-            this._claimedRewards[key] = json.data[key] ?? [];
+            this._claimedRewards[key](json.data[key] ?? []);
         });
     }
 }
