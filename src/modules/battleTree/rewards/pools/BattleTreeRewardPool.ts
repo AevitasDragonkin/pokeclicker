@@ -2,7 +2,7 @@ import { ItemNameType } from '../../../items/ItemNameType';
 import SeededRand from '../../../utilities/SeededRand';
 import Rand from '../../../utilities/Rand';
 
-export type BattleTreeRewardPoolNameType = 'generic' | 'mega_rare';
+export type BattleTreeRewardPoolNameType = 'generic' | 'mega_rare' | 'special_ball';
 
 interface BattleTreeRewardPoolEntry {
     item: ItemNameType | BattleTreeRewardPool;

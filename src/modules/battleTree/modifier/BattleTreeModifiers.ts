@@ -9,7 +9,7 @@ export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
 export type BattleTreeModifierSource = 'player' | 'system';
 export type BattleTreeModifierOperation = 'additive' | 'multiplicative';
-export type BattleTreeModifierNameType = 'forfeit' | 'first_aid' | 'attack_10' | 'defense_10' | 'speed_10' | 'max_hitpoints_10' | 'level_5' | 'fast_start' | 'tick_heal' | 'challenge_accepted' | 'times_up' | 'modifier_1' | 'auto_pick_modifiers';
+export type BattleTreeModifierNameType = 'forfeit' | 'first_aid' | 'attack_10' | 'defense_10' | 'speed_10' | 'max_hitpoints_10' | 'level_5' | 'fast_start' | 'tick_heal' | 'challenge_accepted' | 'times_up' | 'modifier_1' | 'auto_pick_modifiers' | 'ball_basket';
 
 export type StageData = {
     acquiredStage: number;
@@ -212,5 +212,15 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         weight: 1,
         stack: { max: 1 },
         effects: [{ target: { key: 'modifier_count' }, value: 1, operation: 'additive' }],
+    },
+    {
+        id: 'ball_basket',
+        name: 'Ball Basket',
+        description: 'Get 5 random pokeballs',
+        weight: 1,
+        stack: { max: 1 },
+        onAcquire: ctx => {
+            ctx.sequence.rollPool('special_ball', undefined, 5);
+        },
     },
 ];
