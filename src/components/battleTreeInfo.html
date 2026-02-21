@@ -284,10 +284,10 @@
                     <div class="card mb-2">
                         <div class="card-body">
                             <table class="table table-sm table-striped text-left">
-                                <!-- ko foreach: ['once', 'per_seed'] -->
+                                <!-- ko foreach: ['once', 'per_seed', 'per_sequence'] -->
                                 <thead class="thead-dark">
                                 <tr>
-                                    <th colspan="4" class="text-center" data-bind="text: { once: 'All-time', per_seed: 'Today' }[$data]"></th>
+                                    <th colspan="4" class="text-center" data-bind="text: { once: 'All-time', per_seed: 'Today', per_sequence: 'Current' }[$data]"></th>
                                 </tr>
                                 <tr>
                                     <th colspan="2">Reward</th>

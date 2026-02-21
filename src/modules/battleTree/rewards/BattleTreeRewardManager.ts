@@ -5,23 +5,24 @@ import {
 } from './progression/BattleTreeProgressionRewards';
 import { ItemList } from '../../items/ItemList';
 import { ObservableArray } from 'knockout';
-import { BattleTreeProgressionRewardRecurrence } from '../types';
+import { BattleTreeRecurrence } from '../types';
 
 interface BattleTreeRewardManagerSaveData {
-    data: Record<BattleTreeProgressionRewardRecurrence, BattleTreeProgressionRewardNameType[]>;
+    data: Record<BattleTreeRecurrence, BattleTreeProgressionRewardNameType[]>;
 }
 
 export class BattleTreeRewardManager {
-    private _claimedRewards: Record<BattleTreeProgressionRewardRecurrence, ObservableArray<BattleTreeProgressionRewardNameType>>;
+    private _claimedRewards: Record<BattleTreeRecurrence, ObservableArray<BattleTreeProgressionRewardNameType>>;
 
     constructor() {
         this._claimedRewards = {
             once: ko.observableArray(),
             per_seed: ko.observableArray(),
+            per_sequence: ko.observableArray(),
         };
     }
 
-    public clearClaimedRewards(recurrence: BattleTreeProgressionRewardRecurrence) {
+    public clearClaimedRewards(recurrence: BattleTreeRecurrence) {
         this._claimedRewards[recurrence].removeAll();
     }
 
@@ -35,7 +36,11 @@ export class BattleTreeRewardManager {
     public claimReward(definition: BattleTreeProgressionRewardDefinition) {
         if (!this.canClaimReward(definition)) return;
 
-        ItemList[definition.item].gain(definition.amount);
+        if (definition.recurrence === 'per_sequence') {
+            App.game.battleTree.sequence.addReward(definition.item, definition.amount);
+        } else {
+            ItemList[definition.item].gain(definition.amount);
+        }
 
         this._claimedRewards[definition.recurrence].push(definition.id);
     }
@@ -59,8 +64,8 @@ export class BattleTreeRewardManager {
     public toJSON(): BattleTreeRewardManagerSaveData {
         return {
             data: Object.fromEntries(
-                Object.entries(this._claimedRewards).map(([key, value]) => [key as BattleTreeProgressionRewardRecurrence, value()]),
-            ) as Record<BattleTreeProgressionRewardRecurrence, BattleTreeProgressionRewardNameType[]>,
+                Object.entries(this._claimedRewards).map(([key, value]) => [key as BattleTreeRecurrence, value()]),
+            ) as Record<BattleTreeRecurrence, BattleTreeProgressionRewardNameType[]>,
         };
     }
 

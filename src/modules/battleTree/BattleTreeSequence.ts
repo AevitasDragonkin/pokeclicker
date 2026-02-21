@@ -24,6 +24,7 @@ import Rand from '../utilities/Rand';
 import { BattleTree } from './BattleTree';
 import { BattleTreeSequenceState } from './types';
 import { SHINY_CHANCE_BATTLE } from '../GameConstants';
+import { BattleTreeProgressionRewards } from './rewards/progression/BattleTreeProgressionRewards';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -152,6 +153,10 @@ export class BattleTreeSequence {
     private handleFightFinished(): void {
         if (!this.fight) return;
 
+        BattleTreeProgressionRewards
+            .filter(value => value.recurrence === 'per_sequence' && App.game.battleTree.rewardManager.canClaimReward(value))
+            .forEach(value => App.game.battleTree.rewardManager.claimReward(value));
+
         if (this.fight.winner === BattleTreeFightWinner.POKEMON_A || this.fight.winner === BattleTreeFightWinner.DRAW) {
             // TODO : handle player winning this fight
             this.handleSinglePokemonDefeat(this.fight.pokemonB);
@@ -203,14 +208,14 @@ export class BattleTreeSequence {
         this.nextStage();
     }
 
-    private rollPool(id: BattleTreeRewardPoolNameType, seed?: number, amount: number = 1) {
+    public rollPool(id: BattleTreeRewardPoolNameType, seed?: number, amount: number = 1) {
         for (let i = 0; i < amount; ++i) {
             const pickedReward = BattleTreeRewardPools[id].roll(seed);
             this.addReward(pickedReward.item, pickedReward.amount);
         }
     }
 
-    private addReward(item: ItemNameType, amount: number): void {
+    public addReward(item: ItemNameType, amount: number): void {
         const existing = this._rewards().find(i => i.item === item);
 
         if (existing) {

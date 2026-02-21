@@ -8,4 +8,3 @@ export enum BattleTreeSequenceState {
 }
 
 export type BattleTreeRecurrence = 'once' | 'per_seed' | 'per_sequence';
-export type BattleTreeProgressionRewardRecurrence = Exclude<BattleTreeRecurrence, 'per_sequence'>;
