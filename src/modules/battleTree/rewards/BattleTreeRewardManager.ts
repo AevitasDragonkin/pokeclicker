@@ -4,26 +4,25 @@ import {
     BattleTreeProgressionRewards,
 } from './progression/BattleTreeProgressionRewards';
 import { ItemList } from '../../items/ItemList';
-import { BattleTreeRecurrence } from '../BattleTree';
 import { ObservableArray } from 'knockout';
+import { BattleTreeProgressionRewardRecurrence } from '../types';
 
 interface BattleTreeRewardManagerSaveData {
-    data: Record<BattleTreeRecurrence, BattleTreeProgressionRewardNameType[]>;
+    data: Record<BattleTreeProgressionRewardRecurrence, BattleTreeProgressionRewardNameType[]>;
 }
 
 export class BattleTreeRewardManager {
-    private _claimedRewards: Record<BattleTreeRecurrence, ObservableArray<BattleTreeProgressionRewardNameType>>;
+    private _claimedRewards: Record<BattleTreeProgressionRewardRecurrence, ObservableArray<BattleTreeProgressionRewardNameType>>;
 
     constructor() {
         this._claimedRewards = {
             once: ko.observableArray(),
             per_seed: ko.observableArray(),
-            per_sequence: ko.observableArray(),
         };
     }
 
-    public clearClaimedRewards(recurrence: BattleTreeRecurrence) {
-        this._claimedRewards[recurrence]().length = 0;
+    public clearClaimedRewards(recurrence: BattleTreeProgressionRewardRecurrence) {
+        this._claimedRewards[recurrence].removeAll();
     }
 
     public claimRewardById(id: BattleTreeProgressionRewardNameType) {
@@ -60,8 +59,8 @@ export class BattleTreeRewardManager {
     public toJSON(): BattleTreeRewardManagerSaveData {
         return {
             data: Object.fromEntries(
-                Object.entries(this._claimedRewards).map(([key, value]) => [key as BattleTreeRecurrence, value()]),
-            ) as Record<BattleTreeRecurrence, BattleTreeProgressionRewardNameType[]>,
+                Object.entries(this._claimedRewards).map(([key, value]) => [key as BattleTreeProgressionRewardRecurrence, value()]),
+            ) as Record<BattleTreeProgressionRewardRecurrence, BattleTreeProgressionRewardNameType[]>,
         };
     }
 

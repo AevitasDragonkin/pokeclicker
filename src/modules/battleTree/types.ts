@@ -6,3 +6,6 @@ export enum BattleTreeSequenceState {
     MODIFIER = 'MODIFIER',
     FINISHED = 'FINISHED',
 }
+
+export type BattleTreeRecurrence = 'once' | 'per_seed' | 'per_sequence';
+export type BattleTreeProgressionRewardRecurrence = Exclude<BattleTreeRecurrence, 'per_sequence'>;

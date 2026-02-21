@@ -7,9 +7,7 @@ import { BattleTreeSequence } from './BattleTreeSequence';
 import { BattleTreeUtil } from './util/BattleTreeUtil';
 import { BattleTreeRewardManager } from './rewards/BattleTreeRewardManager';
 import { PokemonNameType } from '../pokemons/PokemonNameType';
-import { BattleTreeSequenceState } from './types';
-
-export type BattleTreeRecurrence = 'once' | 'per_seed' | 'per_sequence';
+import { BattleTreeRecurrence, BattleTreeSequenceState } from './types';
 
 export class BattleTree implements Feature {
     name: string = 'BattleTree';
@@ -72,7 +70,9 @@ export class BattleTree implements Feature {
                 App.game.statistics.battleTreeTotalStagesCompletedPerSeed(0);
                 break;
             case 'per_sequence':
-                this.rewardManager.clearClaimedRewards('per_sequence');
+                // this.rewardManager.clearClaimedRewards('per_sequence');
+                App.game.statistics.battleTreeHighestStageCompletedPerSequence(0);
+                App.game.statistics.battleTreeTotalStagesCompletedPerSequence(0);
                 break;
         }
     }

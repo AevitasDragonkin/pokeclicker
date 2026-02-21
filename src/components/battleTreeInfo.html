@@ -282,63 +282,55 @@
 
                 <div id="battle-tree-help__rewards" class="tab-pane fade p-2 text-left">
                     <div class="card mb-2">
-                        <div class="card-header d-flex align-items-center p-0">
-                            <span class="flex-grow-1 text-center font-weight-bold">Rewards</span>
-                        </div>
-
                         <div class="card-body">
                             <table class="table table-sm table-striped text-left">
+                                <!-- ko foreach: ['once', 'per_seed'] -->
                                 <thead class="thead-dark">
                                 <tr>
-                                    <th>Reward</th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <th colspan="4" class="text-center" data-bind="text: { once: 'All-time', per_seed: 'Today' }[$data]"></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Reward</th>
+                                    <th>Amount</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <!-- ko foreach: BattleTreeProgressionRewards -->
+                                <!-- ko foreach: BattleTreeProgressionRewards.filter(r => r.recurrence === $data) -->
                                 <tr>
-                                    <td>
+                                    <td class="vertical-middle">
                                         <img height="24px" data-bind="attr: {src: ItemList[$data.item].image }"/>
                                     </td>
 
-                                    <td>
+                                    <td class="vertical-middle">
                                         <div data-bind="text: ItemList[$data.item].displayName"></div>
                                     </td>
 
-                                    <td class="text-center vertical-middle">
+                                    <td class="vertical-middle">
                                         <code data-bind="text: $data.amount.toLocaleString('en-US')"></code>
                                     </td>
 
-                                    <td>
-                                        <div data-bind="text: $data.recurrence"></div>
-                                    </td>
-
-                                    <td class="text-center vertical-middle">
+                                    <td class="vertical-middle">
                                         <!-- ko if: App.game.battleTree.rewardManager.hasClaimedReward($data) -->
-                                        <span>Claimed</span>
+                                        <div class="text-right text-success">Claimed</div>
                                         <!-- /ko -->
 
                                         <!-- ko if: App.game.battleTree.rewardManager.canClaimReward($data) -->
-                                        <button class="btn btn-success" data-bind="click: () => { App.game.battleTree.rewardManager.claimReward($data); }">Claim</button>
+                                        <div class="text-right">
+                                            <button class="btn btn-success btn-sm" data-bind="click: () => { App.game.battleTree.rewardManager.claimReward($data); }">Claim</button>
+                                        </div>
                                         <!-- /ko -->
 
                                         <!-- ko if: App.game.battleTree.rewardManager.hasRequirement($data) -->
                                         <div>
-                                            <img width="24px" class="lock" src="assets/images/breeding/lock.svg" data-bind="
-                                                tooltip: {
-                                                    title: $data.requirement?.hint() || '',
-                                                    placement: 'bottom',
-                                                    trigger: 'hover'
-                                                }" />
+                                            <div class="small font-italic" data-bind="text: $data.requirement?.hint() || ''"></div>
                                         </div>
                                         <!-- /ko -->
                                     </td>
                                 </tr>
                                 <!-- /ko -->
                                 </tbody>
+                                <!-- /ko -->
                             </table>
                         </div>
                     </div>

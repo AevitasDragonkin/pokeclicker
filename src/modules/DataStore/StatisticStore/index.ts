@@ -117,6 +117,8 @@ export default class Statistics implements Saveable {
     battleTreeTotalStagesCompleted: KnockoutObservable<number>;
     battleTreeHighestStageCompletedPerSeed: KnockoutObservable<number>;
     battleTreeTotalStagesCompletedPerSeed: KnockoutObservable<number>;
+    battleTreeHighestStageCompletedPerSequence: KnockoutObservable<number>;
+    battleTreeTotalStagesCompletedPerSequence: KnockoutObservable<number>;
 
     /*
      * arrayObservables
@@ -200,6 +202,8 @@ export default class Statistics implements Saveable {
         'battleTreeTotalStagesCompleted',
         'battleTreeHighestStageCompletedPerSeed',
         'battleTreeTotalStagesCompletedPerSeed',
+        'battleTreeHighestStageCompletedPerSequence',
+        'battleTreeTotalStagesCompletedPerSequence',
     ];
 
     hiddenObservables = [
