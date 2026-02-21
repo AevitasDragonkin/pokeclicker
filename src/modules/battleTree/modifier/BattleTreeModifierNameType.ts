@@ -1,0 +1,17 @@
+export type BattleTreeModifierNameType
+    = 'forfeit'
+    | 'first_aid'
+    | 'attack_10'
+    | 'defense_10'
+    | 'speed_10'
+    | 'max_hitpoints_10'
+    | 'level_5'
+    | 'fast_start'
+    | 'tick_heal'
+    | 'challenge_accepted'
+    | 'times_up'
+    | 'modifier_1'
+    | 'auto_pick_modifiers'
+    | 'ball_basket'
+    | 'enraged_enemies'
+    | 'tank_enemies';

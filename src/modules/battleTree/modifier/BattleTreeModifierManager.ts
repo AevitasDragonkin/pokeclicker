@@ -2,13 +2,14 @@ import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import {
     BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT,
     BattleTreeModifierDefinition,
-    BattleTreeModifierDescription, BattleTreeModifierNameType, BattleTreeModifiers, BattleTreeModifierSource, TickData,
+    BattleTreeModifierDescription, BattleTreeModifiers, BattleTreeModifierSource, TickData,
 } from './BattleTreeModifiers';
 import { ObservableArray, PureComputed } from 'knockout';
 import SeededRand from '../../utilities/SeededRand';
 import { TeamType } from '../BattleTreeSequence';
 import { BattleTreeEffect, BattleTreeEffectKey, BattleTreeEffectValue } from './BattleTreeEffect';
 import GameHelper from '../../GameHelper';
+import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
 
 type Active<Data> = {
     definition: BattleTreeModifierDefinition<Data>;

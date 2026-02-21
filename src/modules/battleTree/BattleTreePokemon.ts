@@ -129,10 +129,10 @@ export class BattleTreePokemon {
         target.takeDamage([...attacker.type.map(type => ({
             damage: baseDamage / attacker.type.length,
             type,
-        }))]);
+        }))], this._teamId);
     }
 
-    public takeDamage(damages: TypedDamage[]): void {
+    public takeDamage(damages: TypedDamage[], fromTeam: TeamType): void {
         const defender = pokemonMap[this._name];
 
         const transformedDamages: TypedDamage[] = damages.map(({ type, damage }) => ({
@@ -140,7 +140,11 @@ export class BattleTreePokemon {
             damage: defender.type.reduce((prev, curr) => prev + damage / defender.type.length * TypeHelper.typeMatrix[type][curr], 0),
         }));
 
-        const totalDamage = Math.floor(transformedDamages.reduce((cumulative, typedDamage) => cumulative + typedDamage.damage, 0));
+        let totalDamage = 0;
+        totalDamage = transformedDamages.reduce((cumulative, typedDamage) => cumulative + typedDamage.damage, 0);
+        totalDamage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_dealt_after_types', scope: fromTeam, base: totalDamage });
+        totalDamage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_taken_after_types', scope: this._teamId, base: totalDamage });
+        totalDamage = Math.floor(totalDamage);
 
         this._hp(Math.max(this._hp() - totalDamage, 0));
         animateDamage(this.uuid, totalDamage);

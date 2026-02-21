@@ -17,7 +17,7 @@ import {
 } from './modifier/BattleTreeModifierManager';
 import { BattleTreeModifierContext } from './modifier/BattleTreeModifierContext';
 import GameHelper from '../GameHelper';
-import { BattleTreeModifierNameType } from './modifier/BattleTreeModifiers';
+import { BattleTreeModifierNameType } from './modifier/BattleTreeModifierNameType';
 import { BattleTreeRewardPoolNameType } from './rewards/pools/BattleTreeRewardPool';
 import { BattleTreeRewardPools } from './rewards/pools/BattleTreeRewardPools';
 import Rand from '../utilities/Rand';

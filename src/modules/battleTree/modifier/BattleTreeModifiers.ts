@@ -4,12 +4,12 @@ import Requirement from '../../requirements/Requirement';
 import { BattleTreeAutoPickRequirement, BattleTreeHighestStageRequirement } from '../requirements/BattleTreeRequirements';
 import { formatDuration } from '../../GameConstants';
 import { BattleTreeSequenceState } from '../types';
+import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
 export type BattleTreeModifierSource = 'player' | 'system';
 export type BattleTreeModifierOperation = 'additive' | 'multiplicative';
-export type BattleTreeModifierNameType = 'forfeit' | 'first_aid' | 'attack_10' | 'defense_10' | 'speed_10' | 'max_hitpoints_10' | 'level_5' | 'fast_start' | 'tick_heal' | 'challenge_accepted' | 'times_up' | 'modifier_1' | 'auto_pick_modifiers' | 'ball_basket';
 
 export type StageData = {
     acquiredStage: number;
@@ -222,5 +222,21 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
         onAcquire: ctx => {
             ctx.sequence.rollPool('special_ball', undefined, 5);
         },
+    },
+    {
+        id: 'enraged_enemies',
+        name: 'Enraged enemies',
+        description: 'Enemies deal x10 damage (after types)',
+        weight: 1,
+        stack: { max: 3 },
+        effects: [{ target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: 10, operation: 'multiplicative' }],
+    },
+    {
+        id: 'tank_enemies',
+        name: 'Tank enemies',
+        description: 'Enemies take 90% less damage (after types)',
+        weight: 1,
+        stack: { max: 3 },
+        effects: [{ target: { key: 'damage_taken_after_types', scope: ['Team_B'] }, value: 0.1, operation: 'multiplicative' }],
     },
 ];
