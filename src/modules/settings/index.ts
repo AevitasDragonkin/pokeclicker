@@ -587,3 +587,6 @@ ModalCollapseList.forEach((collapse) => {
 // Resizable modules
 Settings.add(new Setting<number>('moduleHeight.pokeballSelector', '', [], 265));
 Settings.add(new Setting<number>('moduleHeight.pokemonList', '', [], 365));
+
+// Battle Tree
+Settings.add(new BooleanSetting('battleTree.autoClaimSequenceRewards', 'Battle Tree: Automatically claim progression rewards (current)', true));

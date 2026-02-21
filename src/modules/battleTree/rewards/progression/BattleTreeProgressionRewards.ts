@@ -24,7 +24,7 @@ const PerSeedProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
 ];
 
 const PerSequenceProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
-    { id: 'per_sequence:magnets', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(1, 'per_sequence'), item: 'Magnet', amount: 10 },
+    { id: 'per_sequence:magnets', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(6, 'per_sequence'), item: 'Magnet', amount: 10 },
 ];
 
 export const BattleTreeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [

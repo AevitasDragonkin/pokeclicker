@@ -70,7 +70,7 @@ export class BattleTree implements Feature {
                 App.game.statistics.battleTreeTotalStagesCompletedPerSeed(0);
                 break;
             case 'per_sequence':
-                // this.rewardManager.clearClaimedRewards('per_sequence');
+                this.rewardManager.clearClaimedRewards('per_sequence');
                 App.game.statistics.battleTreeHighestStageCompletedPerSequence(0);
                 App.game.statistics.battleTreeTotalStagesCompletedPerSequence(0);
                 break;

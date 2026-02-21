@@ -287,12 +287,13 @@
                                 <!-- ko foreach: ['once', 'per_seed', 'per_sequence'] -->
                                 <thead class="thead-dark">
                                 <tr>
-                                    <th colspan="4" class="text-center" data-bind="text: { once: 'All-time', per_seed: 'Today', per_sequence: 'Current' }[$data]"></th>
+                                    <th colspan="5" class="text-center" data-bind="text: { once: 'All-time', per_seed: 'Daily', per_sequence: 'Current' }[$data]"></th>
                                 </tr>
                                 <tr>
                                     <th colspan="2">Reward</th>
-                                    <th>Amount</th>
-                                    <th></th>
+                                    <th class="text-center">Amount</th>
+                                    <th>Requirement</th>
+                                    <th class="text-center">Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -306,25 +307,26 @@
                                         <div data-bind="text: ItemList[$data.item].displayName"></div>
                                     </td>
 
-                                    <td class="vertical-middle">
+                                    <td class="vertical-middle text-center">
                                         <code data-bind="text: $data.amount.toLocaleString('en-US')"></code>
                                     </td>
 
                                     <td class="vertical-middle">
+                                        <div class="small font-italic" data-bind="text: $data.requirement?.hint() || ''"></div>
+                                    </td>
+
+                                    <td class="vertical-middle text-center">
                                         <!-- ko if: App.game.battleTree.rewardManager.hasClaimedReward($data) -->
-                                        <div class="text-right text-success">Claimed</div>
+                                        <div class="text-success">Claimed</div>
                                         <!-- /ko -->
 
-                                        <!-- ko if: App.game.battleTree.rewardManager.canClaimReward($data) -->
-                                        <div class="text-right">
+                                        <!-- ko ifnot: App.game.battleTree.rewardManager.hasClaimedReward($data) -->
+                                            <!-- ko if: App.game.battleTree.rewardManager.canClaimReward($data) -->
                                             <button class="btn btn-success btn-sm" data-bind="click: () => { App.game.battleTree.rewardManager.claimReward($data); }">Claim</button>
-                                        </div>
-                                        <!-- /ko -->
-
-                                        <!-- ko if: App.game.battleTree.rewardManager.hasRequirement($data) -->
-                                        <div>
-                                            <div class="small font-italic" data-bind="text: $data.requirement?.hint() || ''"></div>
-                                        </div>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: App.game.battleTree.rewardManager.canClaimReward($data) -->
+                                            <div>-</div>
+                                            <!-- /ko -->
                                         <!-- /ko -->
                                     </td>
                                 </tr>
@@ -332,6 +334,11 @@
                                 </tbody>
                                 <!-- /ko -->
                             </table>
+
+                            <p class="small font-italic">
+                                Rewards claimed from your current Battle Tree progression rewards will be added to your current Battle Tree reward pool, and are subject to the rewards percentage modifiers.<br/>
+                                These rewards are claimed automatically after each fight. (Can be disabled in the Settings)
+                            </p>
                         </div>
                     </div>
                 </div>

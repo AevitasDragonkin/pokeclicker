@@ -40,12 +40,12 @@ export class BattleTreeHighestStageRequirement extends Requirement {
     hint(): string {
         switch (this._recurrence) {
             case 'per_sequence':
-                return `Reach stage ${this.requiredValue} in the Battle Tree (current).`;
+                return `Defeat stage ${this.requiredValue} in the Battle Tree (current).`;
             case 'per_seed':
-                return `Reach stage ${this.requiredValue} in the Battle Tree (today).`;
+                return `Defeat stage ${this.requiredValue} in the Battle Tree (daily).`;
             case 'once':
             default:
-                return `Reach stage ${this.requiredValue} in the Battle Tree (all-time).`;
+                return `Defeat stage ${this.requiredValue} in the Battle Tree (all-time).`;
         }
     }
 }
@@ -61,7 +61,7 @@ export class BattleTreeTotalStagesRequirement extends Requirement {
     getProgress(): number {
         switch (this._recurrence) {
             case 'per_sequence':
-                return Math.min(App.game.battleTree.sequence.stage, this.requiredValue);
+                return Math.min(App.game.statistics.battleTreeTotalStagesCompletedPerSequence(), this.requiredValue);
             case 'per_seed':
                 return Math.min(App.game.statistics.battleTreeTotalStagesCompletedPerSeed(), this.requiredValue);
             case 'once':
@@ -73,12 +73,12 @@ export class BattleTreeTotalStagesRequirement extends Requirement {
     hint(): string {
         switch (this._recurrence) {
             case 'per_sequence':
-                return `You need to have completed ${this.requiredValue} stages in your current Battle Tree run.`;
+                return `You need to have completed ${this.requiredValue} stages in the Battle Tree (current).`;
             case 'per_seed':
-                return `You need to have completed ${this.requiredValue} stages in your Battle Tree today.`;
+                return `You need to have completed ${this.requiredValue} stages in the Battle Tree (today).`;
             case 'once':
             default:
-                return `You need to have completed ${this.requiredValue} stages in your Battle Tree.`;
+                return `You need to have completed ${this.requiredValue} stages in the Battle Tree (all-time).`;
         }
     }
 }

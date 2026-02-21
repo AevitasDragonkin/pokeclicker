@@ -25,6 +25,7 @@ import { BattleTree } from './BattleTree';
 import { BattleTreeSequenceState } from './types';
 import { SHINY_CHANCE_BATTLE } from '../GameConstants';
 import { BattleTreeProgressionRewards } from './rewards/progression/BattleTreeProgressionRewards';
+import Settings from '../settings';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -153,9 +154,11 @@ export class BattleTreeSequence {
     private handleFightFinished(): void {
         if (!this.fight) return;
 
-        BattleTreeProgressionRewards
-            .filter(value => value.recurrence === 'per_sequence' && App.game.battleTree.rewardManager.canClaimReward(value))
-            .forEach(value => App.game.battleTree.rewardManager.claimReward(value));
+        if (Settings.getSetting('battleTree.autoClaimSequenceRewards').observableValue()) {
+            BattleTreeProgressionRewards
+                .filter(value => value.recurrence === 'per_sequence' && App.game.battleTree.rewardManager.canClaimReward(value))
+                .forEach(value => App.game.battleTree.rewardManager.claimReward(value));
+        }
 
         if (this.fight.winner === BattleTreeFightWinner.POKEMON_A || this.fight.winner === BattleTreeFightWinner.DRAW) {
             // TODO : handle player winning this fight
@@ -170,7 +173,7 @@ export class BattleTreeSequence {
         } else if (this.fight.winner === BattleTreeFightWinner.POKEMON_A) {
             App.game.statistics.battleTreeHighestStageCompleted(Math.max(App.game.statistics.battleTreeHighestStageCompleted(), this.stage));
             App.game.statistics.battleTreeHighestStageCompletedPerSeed(Math.max(App.game.statistics.battleTreeHighestStageCompletedPerSeed(), this.stage));
-            App.game.statistics.battleTreeHighestStageCompletedPerSequence(Math.max(App.game.statistics.battleTreeHighestStageCompletedPerSeed(), this.stage));
+            App.game.statistics.battleTreeHighestStageCompletedPerSequence(Math.max(App.game.statistics.battleTreeHighestStageCompletedPerSequence(), this.stage));
 
             GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompleted);
             GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompletedPerSeed);
