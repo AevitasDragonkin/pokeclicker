@@ -2,7 +2,7 @@ import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import { BattleTreeEffect } from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import { BattleTreeAutoPickRequirement, BattleTreeHighestStageRequirement } from '../requirements/BattleTreeRequirements';
-import { formatTime } from '../../GameConstants';
+import { formatDuration } from '../../GameConstants';
 import { BattleTreeSequenceState } from '../types';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
@@ -16,8 +16,8 @@ export type StageData = {
 };
 
 export type TimeData = {
-    acquiredSequenceTime: number;
-    acquiredCombatTime: number;
+    acquiredEngagementTime: number;
+    acquiredBattleTime: number;
 };
 
 export type PulseData = {
@@ -26,8 +26,8 @@ export type PulseData = {
 };
 
 export interface TickData {
-    sequenceDeltaTime: number;
-    combatDeltaTime: number;
+    engagementDeltaTime: number;
+    battleDeltaTime: number;
 }
 
 // export interface BattleTreeModifierDefinitionSaveData<Data = unknown> {
@@ -63,11 +63,11 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
 const TickHeal: BattleTreeModifierDefinition<TimeData & PulseData> = {
     id: 'tick_heal',
     name: 'Tick Heal',
-    description: 'Heal all your pokemon 5 HP every 2 seconds of combat, up to 10 times.',
+    description: 'Heal all your pokemon 5 HP every 2 seconds of battle time, up to 10 times.',
     weight: 1,
     stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData, tickData }) => {
-        definitionData.pulseTimer += tickData.combatDeltaTime;
+        definitionData.pulseTimer += tickData.battleDeltaTime;
 
         const PULSE_DELAY = 2;
 
@@ -78,8 +78,8 @@ const TickHeal: BattleTreeModifierDefinition<TimeData & PulseData> = {
         }
     },
     createData: ctx => ({
-        acquiredSequenceTime: ctx.sequence.sequenceTime,
-        acquiredCombatTime: ctx.sequence.combatTime,
+        acquiredEngagementTime: ctx.sequence.engagementTime,
+        acquiredBattleTime: ctx.sequence.battleTime,
         pulsesFired: 0,
         pulseTimer: 0,
     }),
@@ -88,17 +88,17 @@ const TickHeal: BattleTreeModifierDefinition<TimeData & PulseData> = {
 const TimesUp: BattleTreeModifierDefinition<TimeData> = {
     id: 'times_up',
     name: 'Time\'s up',
-    description: (ctx, data: TimeData) => `${formatTime(data.acquiredCombatTime + 300 - ctx.sequence.combatTime)} combat time left. Then the run ends.`,
+    description: (ctx, data: TimeData) => `${formatDuration(data.acquiredBattleTime + 300 - ctx.sequence.battleTime)} battle time left. Then the run ends.`,
     weight: 1,
     stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData }) => {
-        if (ctx.sequence.combatTime > definitionData.acquiredCombatTime + 300) {
+        if (ctx.sequence.battleTime > definitionData.acquiredBattleTime + 300) {
             ctx.endSequence('Time\'s up');
         }
     },
     createData: ctx => ({
-        acquiredSequenceTime: ctx.sequence.sequenceTime,
-        acquiredCombatTime: ctx.sequence.combatTime,
+        acquiredEngagementTime: ctx.sequence.engagementTime,
+        acquiredBattleTime: ctx.sequence.battleTime,
     }),
 };
 

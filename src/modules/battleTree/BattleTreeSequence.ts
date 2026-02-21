@@ -23,7 +23,7 @@ import { BattleTreeRewardPools } from './rewards/pools/BattleTreeRewardPools';
 import Rand from '../utilities/Rand';
 import { BattleTree } from './BattleTree';
 import { BattleTreeSequenceState } from './types';
-import { SHINY_CHANCE_BATTLE } from '../GameConstants';
+import { formatDuration, SHINY_CHANCE_BATTLE } from '../GameConstants';
 import { BattleTreeProgressionRewards } from './rewards/progression/BattleTreeProgressionRewards';
 import Settings from '../settings';
 
@@ -134,8 +134,8 @@ export class BattleTreeSequence {
         this.updateTimers(gameSpeedDelta);
 
         this._modifierManager.update({
-            sequenceDeltaTime: gameSpeedDelta,
-            combatDeltaTime: this.state === BattleTreeSequenceState.BATTLE && this.fight ? gameSpeedDelta * attackSpeed : 0,
+            engagementDeltaTime: gameSpeedDelta,
+            battleDeltaTime: this.state === BattleTreeSequenceState.BATTLE && this.fight ? gameSpeedDelta * attackSpeed : 0,
         });
 
         if (this.state === BattleTreeSequenceState.BATTLE && this.fight) {
@@ -285,12 +285,46 @@ export class BattleTreeSequence {
         return this._fight();
     }
 
-    get sequenceTime(): number {
-        return this._timers.MODIFIER() + this._timers.BATTLE();
+    get setupTime(): number {
+        return this._timers.PREPARATION() + this._timers.POWERUP();
     }
 
-    get combatTime(): number {
+    get engagementTime(): number {
+        return this._timers.MODIFIER() + this.battleTime;
+    }
+
+    get battleTime(): number {
         return this._timers.BATTLE();
+    }
+
+    get totalTime(): number {
+        return this.setupTime + this.engagementTime;
+    }
+
+    get timerTooltip() {
+        const title = `<div>
+            <ul class="text-left" style="margin: 0; padding: 0; list-style-type: none;">
+                <li>Setup: <code>${formatDuration(this._timers.PREPARATION() + this._timers.POWERUP())}</code>
+                    ${!!this._timers.POWERUP() ? `<ul style="margin: 0; padding-inline-start: 1rem; list-style-type: none;">
+                        <li>Team: <code>${formatDuration(this._timers.PREPARATION())}</code></li>
+                        <li>Power-up: <code>${formatDuration(this._timers.POWERUP())}</code></li>
+                    </ul>` : ''}
+                </li>
+                <li>Engagement: <code>${formatDuration(this._timers.MODIFIER() + this._timers.BATTLE())}</code>
+                    <ul style="margin: 0; padding-inline-start: 1rem; list-style-type: none;">
+                        <li>Modifier: <code>${formatDuration(this._timers.MODIFIER())}</code></li>
+                        <li>Battle: <code>${formatDuration(this._timers.BATTLE())}</code></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>`;
+
+        return {
+            title: title,
+            trigger: 'hover',
+            placement: 'bottom',
+            html: true,
+        };
     }
 
     get modifierManager(): BattleTreeModifierManager {

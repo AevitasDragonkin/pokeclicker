@@ -556,16 +556,20 @@ export function formatDate(date: Date): string {
     return date.toISOString().replace(/T/, ' ').replace(/.\d+Z/, '');
 }
 
-export function formatTime(input: number | Date): string {
-    if (input === 0) { return 'Ready'; }
-    if (input === Infinity) { return '∞'; }
-
+export function formatDuration(input: number | Date): string {
     const time = parseInt(`${input}`, 10); // don't forget the second param
     const hours: any = `${Math.floor(time / 3600)}`.padStart(2, '0');
     const minutes: any = `${Math.floor((time - (hours * 3600)) / 60)}`.padStart(2, '0');
     const seconds: any = `${time - (hours * 3600) - (minutes * 60)}`.padStart(2, '0');
 
     return `${hours}:${minutes}:${seconds}`;
+}
+
+export function formatTime(input: number | Date): string {
+    if (input === 0) { return 'Ready'; }
+    if (input === Infinity) { return '∞'; }
+
+    return formatDuration(input);
 }
 
 export function formatTimeFullLetters(input: number): string {
