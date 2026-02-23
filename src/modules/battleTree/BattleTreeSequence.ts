@@ -111,7 +111,7 @@ export class BattleTreeSequence {
 
         this.teams.Team_B.removeAllPokemon();
         const opponentSubset = BattleTreeUtil.getRandomSubset({ seed: this.seed + 1000, otherSubset: this.sequenceSubset().name });
-        const opponentTeam = BattleTreeUtil.getRandomTeamFromSubset({ subset: opponentSubset.name, seed: this.seed, stage: this.stage, amount: 3 });
+        const opponentTeam = BattleTreeUtil.getRandomTeamFromSubset({ subset: opponentSubset.name, seed: this.seed, stage: this.stage, amount: this.teams.Team_B.maxTeamSize });
 
         opponentTeam.forEach(name => this.teams.Team_B.addPokemon(name, this.stage));
         this.teams.Team_B.list.forEach(p => {
@@ -291,6 +291,10 @@ export class BattleTreeSequence {
 
     get engagementTime(): number {
         return this._timers.MODIFIER() + this.battleTime;
+    }
+
+    get modifierTime(): number {
+        return this._timers.MODIFIER();
     }
 
     get battleTime(): number {

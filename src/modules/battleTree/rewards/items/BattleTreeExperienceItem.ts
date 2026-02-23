@@ -10,6 +10,6 @@ export class BattleTreeExperienceItem extends Item {
     }
 
     get image() {
-        return '';
+        return 'assets/images/items/battleTree/experience.png';
     }
 }

@@ -13,7 +13,9 @@ export type BattleTreeEffectKey
     | 'damage_taken_after_types'
     | 'damage_dealt_after_types'
     | 'modifier_count'
-    | 'auto_pick_modifier';
+    | 'auto_pick_modifier'
+    | 'min_team_size'
+    | 'max_team_size';
 export type Operation = 'additive' | 'multiplicative' | 'reset' | 'override' | 'final';
 
 export type BattleTreeEffectValue<Data = unknown> = number | ((ctx: BattleTreeModifierContext, data: Data) => number);

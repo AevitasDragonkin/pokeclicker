@@ -125,7 +125,7 @@
 
             <div class="d-flex flex-wrap justify-content-center mt-3" style="gap: 0.25rem;">
                 <!-- ko foreach: App.game.battleTree.sequence.modifierManager.history -->
-                <div class="p-1 border" data-bind="
+                <div class="position-relative p-1 border" data-bind="
                     tooltip: {
                         trigger: 'hover',
                         title: `<strong><u>${$data.definition.name}</u></strong><br/>${App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.definition.id, $data.data)}`,
@@ -136,9 +136,13 @@
                 ">
                     <img width="32" height="32" src="" alt="" data-bind="
                         attr: {
-                            src: PokemonHelper.getImage(0),
+                            src: $data.definition.image,
                         }
                     ">
+
+                    <!-- ko ifnot: $data.definition.image -->
+                    <div class="position-absolute bg-dark text-light overflow-hidden" style="font-size: 0.5rem; inset: 0;" data-bind="text: $data.definition.name"></div>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
             </div>
@@ -261,7 +265,7 @@
                                     <td>
                                         <img width="32" height="32" src="" alt="" data-bind="
                                             attr: {
-                                                src: PokemonHelper.getImage(0),
+                                                src: $data.image,
                                             }
                                         ">
                                     </td>

@@ -64,11 +64,11 @@ export class BattleTreeTeam {
     }
 
     get minTeamSize(): number {
-        return this._minTeamSize;
+        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'min_team_size', scope: this._team, base: this._minTeamSize });
     }
 
     get maxTeamSize(): number {
-        return this._maxTeamSize;
+        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_team_size', scope: this._team, base: this._maxTeamSize });
     }
 
     get canStart(): boolean {
