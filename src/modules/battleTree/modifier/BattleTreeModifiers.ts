@@ -71,7 +71,7 @@ const forfeit: BattleTreeModifierDefinition = {
     effects: [{ target: { key: 'rewards' }, value: 0.25, operation: 'multiplicative' }],
 };
 
-const autoPickModifiers: BattleTreeModifierDefinition = {
+export const AutoPickModifiers: BattleTreeModifierDefinition = {
     id: 'auto_pick_modifiers',
     name: 'Auto pick modifiers',
     description: 'The system will select 1 modifier at random each time a modifier can be selected',
@@ -467,7 +467,7 @@ const enemyMaxHPGainModifierTime: BattleTreeModifierDefinition = {
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
-    autoPickModifiers,
+    AutoPickModifiers,
 
     // Player picked
     playerAttack10,
