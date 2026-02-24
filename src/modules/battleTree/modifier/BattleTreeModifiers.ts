@@ -445,10 +445,10 @@ const vengeance: BattleTreeModifierDefinition = {
 const degradation: BattleTreeModifierDefinition<TimeData> = {
     id: 'degradation',
     name: 'Degradation',
-    description: (ctx, { acquiredBattleTime }: TimeData) => `Your pokemon lose 1 Maximum Hitpoints for every 5 seconds of Battle time (${-1 * Math.floor(ctx.sequence.battleTime - acquiredBattleTime)})`,
+    description: (ctx, { acquiredBattleTime }: TimeData) => `Your pokemon lose 1 Maximum Hitpoints for every 5 seconds of Battle time (${-1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5)})`,
     weight: 1,
     stack: { max: 5 },
-    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: (ctx, { acquiredBattleTime }) => -1 * Math.floor(ctx.sequence.battleTime - acquiredBattleTime), operation: 'additive' }],
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: (ctx, { acquiredBattleTime }) => -1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5), operation: 'additive' }],
     createData: ctx => ({
         acquiredEngagementTime: ctx.sequence.engagementTime,
         acquiredBattleTime: ctx.sequence.battleTime,
@@ -462,6 +462,27 @@ const enemyMaxHPGainModifierTime: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: ctx => Math.floor(ctx.sequence.modifierTime / 3), operation: 'additive' }],
+};
+
+const RESET_STAGES: number = 25;
+const resetStages: BattleTreeModifierDefinition = {
+    id: 'reset_stages_25',
+    name: `Reset ${RESET_STAGES} stages`,
+    description: ctx => `Return back to stage ${ctx.sequence.stage - RESET_STAGES}`,
+    weight: 1,
+    stack: { max: 1 },
+    requirement: new BattleTreeHighestStageRequirement(30, 'per_sequence'),
+    effects: [{ target: { key: 'stage' }, value: -RESET_STAGES, operation: 'additive' }],
+};
+
+const SKIP_STAGES: number = 3;
+const skipStages: BattleTreeModifierDefinition = {
+    id: 'skip_stages_3',
+    name: `Skip ${SKIP_STAGES} stages`,
+    description: `Skip ${SKIP_STAGES} stages`,
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'stage' }, value: SKIP_STAGES, operation: 'additive' }],
 };
 
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
@@ -505,4 +526,6 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     vengeance,
     degradation,
     enemyMaxHPGainModifierTime,
+    resetStages,
+    skipStages,
 ];

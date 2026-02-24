@@ -270,7 +270,7 @@ export class BattleTreeSequence {
     }
 
     get stage(): number {
-        return this._stage();
+        return this._modifierManager.getValue({ key: 'stage', base: this._stage() });
     }
 
     get teams(): Record<TeamType, BattleTreeTeam> {
