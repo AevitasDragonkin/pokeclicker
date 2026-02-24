@@ -72,7 +72,7 @@ export class BattleTreeTeam {
     }
 
     get canStart(): boolean {
-        return this._list().length >= this._minTeamSize;
+        return this._list().length >= this.minTeamSize;
     }
 
     get canContinueToFight(): boolean {
@@ -80,13 +80,13 @@ export class BattleTreeTeam {
     }
 
     get isFull(): boolean {
-        return this._list().length === this._maxTeamSize;
+        return this._list().length === this.maxTeamSize;
     }
 
     public toJSON(): BattleTreeTeamSaveData {
         return {
-            minTeamSize: this.minTeamSize,
-            maxTeamSize: this.maxTeamSize,
+            minTeamSize: this._minTeamSize,
+            maxTeamSize: this._maxTeamSize,
             list: this.list.map(value => value.toJSON()),
         };
     }
