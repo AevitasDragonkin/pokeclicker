@@ -66,7 +66,7 @@ export class BattleTreeModifierManager {
             });
 
         const playerAddedModifiers = this.history.filter(v => v.source === 'player');
-        const lastPlayerAddedModifier = playerAddedModifiers.length > 0 ? GameHelper.hash(playerAddedModifiers.at(-1).source) : 0;
+        const lastPlayerAddedModifier = playerAddedModifiers.length > 0 ? GameHelper.hash(playerAddedModifiers.at(-1).definition.id) : 0;
 
         SeededRand.seed(this._ctx.sequence.seed + this._ctx.sequence.stage + lastPlayerAddedModifier);
         return SeededRand
