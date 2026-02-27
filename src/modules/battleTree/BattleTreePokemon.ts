@@ -88,11 +88,11 @@ export class BattleTreePokemon {
     private _baseLevel: number;
     private _teamId: TeamType;
 
-    private _level: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'level', scope: this._teamId, base: this._baseLevel }));
-    private _attack: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.attack, this.level) }));
-    private _defense: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'defense', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.defense, this.level) }));
-    private _speed: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'speed', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.speed, this.level) }));
-    private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_hitpoints', scope: this._teamId, base: hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level) }));
+    private _level: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'level', scope: this._teamId, base: this._baseLevel })));
+    private _attack: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.attack, this.level) })));
+    private _defense: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'defense', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.defense, this.level) })));
+    private _speed: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'speed', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.speed, this.level) })));
+    private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_hitpoints', scope: this._teamId, base: hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level) })));
 
     private _hp: Observable<number> = ko.observable(0).extend({ numeric: 0 });
     private _shiny: Observable<boolean | undefined> = ko.observable(undefined);
