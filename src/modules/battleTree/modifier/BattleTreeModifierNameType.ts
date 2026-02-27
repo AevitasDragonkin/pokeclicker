@@ -17,6 +17,8 @@ export type BattleTreeModifierNameType
     | 'heal_potion_super'
     | 'heal_potion_hyper'
     | 'heal_potion_max'
+    | 'full_heal'
+    | 'revive'
     | 'heal_over_time'
     | 'limited_time'
     | 'challenge_accepted'

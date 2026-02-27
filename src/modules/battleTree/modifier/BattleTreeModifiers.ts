@@ -65,6 +65,7 @@ const forfeit: BattleTreeModifierDefinition = {
     id: 'forfeit',
     name: 'Forfeit',
     description: 'Ends the current Battle Tree immediately. Forfeit 75% of your rewards',
+    image: 'assets/images/battleTree/modifiers/forfeit.png',
     weight: 0, // System triggered only
     stack: { max: 1 },
     onAcquire: ctx => ctx.endSequence('Forfeiting'),
@@ -85,6 +86,7 @@ const playerAttack10: BattleTreeModifierDefinition = {
     id: '10%_player_attack',
     name: '+10% Attack',
     description: 'All your pokemon gain 10% attack',
+    image: 'assets/images/battleTree/modifiers/10_player_attack.png',
     weight: 1,
     stack: { max: 5 },
     effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
@@ -94,6 +96,7 @@ const playerDefense10: BattleTreeModifierDefinition = {
     id: '10%_player_defense',
     name: '+10% Defense',
     description: 'All your pokemon gain 10% defense',
+    image: 'assets/images/battleTree/modifiers/10_player_defense.png',
     weight: 1,
     stack: { max: 5 },
     effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
@@ -103,6 +106,7 @@ const playerSpeed10: BattleTreeModifierDefinition = {
     id: '10%_player_speed',
     name: '+10% Speed',
     description: 'All your pokemon gain 10% speed',
+    image: 'assets/images/battleTree/modifiers/10_player_speed.png',
     weight: 1,
     stack: { max: 5 },
     effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
@@ -112,6 +116,7 @@ const playerMaxHP10: BattleTreeModifierDefinition = {
     id: '10%_player_max_hp',
     name: '+10% Maximum Hitpoints',
     description: 'All your pokemon gain 10% maximum hitpoints',
+    image: 'assets/images/battleTree/modifiers/10_player_max_hp.png',
     weight: 1,
     stack: { max: 5 },
     effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
@@ -190,36 +195,60 @@ const healPotion: BattleTreeModifierDefinition = {
     id: 'heal_potion',
     name: 'Potion',
     description: 'Restores 20 HP',
+    image: 'assets/images/battleTree/modifiers/potion.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ flat: 20 })),
+    onAcquire: ctx => ctx.sequence.fight.pokemonA.heal({ flat: 20 }),
 };
 
 const healPotionSuper: BattleTreeModifierDefinition = {
     id: 'heal_potion_super',
     name: 'Super Potion',
     description: 'Restores 50 HP',
+    image: 'assets/images/battleTree/modifiers/super_potion.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ flat: 50 })),
+    onAcquire: ctx => ctx.sequence.fight.pokemonA.heal({ flat: 50 }),
 };
 
 const healPotionHyper: BattleTreeModifierDefinition = {
     id: 'heal_potion_hyper',
     name: 'Hyper Potion',
     description: 'Restores 200 HP',
+    image: 'assets/images/battleTree/modifiers/hyper_potion.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ flat: 200 })),
+    onAcquire: ctx => ctx.sequence.fight.pokemonA.heal({ flat: 200 }),
 };
 
 const healPotionMax: BattleTreeModifierDefinition = {
     id: 'heal_potion_max',
     name: 'Max Potion',
     description: 'Restores 100% HP',
+    image: 'assets/images/battleTree/modifiers/max_potion.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 1 })),
+    onAcquire: ctx => ctx.sequence.fight.pokemonA.heal({ percentage: 1 }),
+};
+
+const fullHeal: BattleTreeModifierDefinition = {
+    id: 'full_heal',
+    name: 'Full Heal Potion',
+    description: 'Restores 30% HP on all your pokemon (not fainted)',
+    image: 'assets/images/battleTree/modifiers/full_heal.png',
+    weight: 1,
+    stack: { max: 1 },
+    onAcquire: ctx => ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints > 0).forEach(p => p.heal({ percentage: 0.3 })),
+};
+
+const revive: BattleTreeModifierDefinition = {
+    id: 'revive',
+    name: 'Revive',
+    description: 'Revives all your pokemon. Restores 15% HP for your entire team.',
+    image: 'assets/images/battleTree/modifiers/revive.png',
+    weight: 1,
+    stack: { max: 1 },
+    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.15 })),
 };
 
 const healOverTime: BattleTreeModifierDefinition<TimeData & PulseData> = {
@@ -345,6 +374,7 @@ const glassCannon: BattleTreeModifierDefinition = {
     id: 'glass_cannon',
     name: 'Glass cannon',
     description: 'Your pokemon deal x10 damage. They instantly faint when they take a hit.',
+    image: 'assets/images/battleTree/modifiers/glass_cannon.png',
     weight: 1,
     stack: { max: 1 },
     effects: [
@@ -395,6 +425,7 @@ const cashIn: BattleTreeModifierDefinition = {
     id: 'cash_in',
     name: 'Cash In',
     description: 'Double your rewards, end your current Battle Tree',
+    image: 'assets/images/battleTree/modifiers/cash_in.png',
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'rewards' }, value: 2, operation: 'multiplicative' }],
@@ -422,6 +453,7 @@ const fatigue: BattleTreeModifierDefinition<StageData> = {
     id: 'fatigue',
     name: 'Fatigue',
     description: (ctx, { acquiredStage }: StageData) => `All pokemon attack speed decreases by 1% for each stage after this. (x${0.99 ** (ctx.sequence.stage - acquiredStage)})`,
+    image: 'assets/images/battleTree/modifiers/fatigue.png',
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'attack_speed' }, value: (ctx, { acquiredStage }) => 0.99 ** (ctx.sequence.stage - acquiredStage), operation: 'multiplicative' }],
@@ -469,6 +501,7 @@ const resetStages: BattleTreeModifierDefinition = {
     id: 'reset_stages_25',
     name: `Reset ${RESET_STAGES} stages`,
     description: ctx => `Return back to stage ${ctx.sequence.stage - RESET_STAGES}`,
+    image: 'assets/images/battleTree/modifiers/reset_stages.png',
     weight: 1,
     stack: { max: 1 },
     requirement: new BattleTreeHighestStageRequirement(30, 'per_sequence'),
@@ -507,6 +540,8 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     healPotionSuper,
     healPotionHyper,
     healPotionMax,
+    fullHeal,
+    revive,
     healOverTime,
     limitedTime,
     challengeAccepted,
