@@ -1,7 +1,11 @@
+.typed-border-image {
+    border-image: linear-gradient(45deg, var(--type-0) 0%, transparent 30%, transparent 70%, var(--type-1) 100%) 1;
+}
+
 #battleTreeInformation {
     .select-pokemon {
-        border: 2px solid;
-        border-image: linear-gradient(45deg, var(--type-0) 0%, transparent 30%, transparent 70%, var(--type-1) 100%) 1;
+        border-width: 2px;
+        border-style: solid;
 
         &[data-caught="false"] {
             border-image: none;

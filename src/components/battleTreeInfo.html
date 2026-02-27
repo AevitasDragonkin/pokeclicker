@@ -23,7 +23,7 @@
             <div class="d-flex flex-wrap justify-content-center mt-3" style="gap: 0.25rem;">
                 <!-- ko foreach: App.game.battleTree.sequence.candidates -->
                 <!-- ko with: pokemonMap[$data] -->
-                <a class="select-pokemon p-1" style="" data-caught="App.game.party.alreadyCaughtPokemonByName($data.name)" data-bind="
+                <a class="select-pokemon typed-border-image p-1" style="" data-caught="App.game.party.alreadyCaughtPokemonByName($data.name)" data-bind="
                     enable: App.game.battleTree.sequence.teams['Team_A'].hasPokemon($data.name) || (!App.game.battleTree.sequence.teams['Team_A'].isFull && App.game.party.alreadyCaughtPokemonByName($data.name)),
                     click: () => { BattleTreeUtil.clickCandidate($data.name) },
                     css: {
@@ -124,9 +124,14 @@
             <div class="table-responsive">
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem">
                 <!-- ko foreach: App.game.battleTree.sequence.teams['Team_A'].list -->
-                <div style="min-width: 0">
+                <div style="min-width: 0" data-bind="
+                    style: {
+                        '--type-0': GameConstants.TypeColor[pokemonMap[$data.name].type[0]],
+                        '--type-1': GameConstants.TypeColor[pokemonMap[$data.name].type[1]] ?? GameConstants.TypeColor[pokemonMap[$data.name].type[0]],
+                    }
+                ">
                     <div class="d-flex pb-2 align-items-center" style="gap: 0.25rem;">
-                        <img width="32" height="32" src="" alt="" data-bind="
+                        <img class="typed-border-image" style="border-width: 2px; border-style: solid;" width="32" height="32" src="" alt="" data-bind="
                             css: { 'battle-tree-pokemon-fainted': $data.hitpoints === 0 },
                             attr: { src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id) }
                         ">
