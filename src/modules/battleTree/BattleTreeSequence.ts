@@ -11,10 +11,7 @@ import { BattleTreePokemon } from './BattleTreePokemon';
 import { ItemList } from '../items/ItemList';
 import Notifier from '../notifications/Notifier';
 import NotificationOption from '../notifications/NotificationOption';
-import {
-    BattleTreeModifierManager,
-    BattleTreeModifierManagerSaveData,
-} from './modifier/BattleTreeModifierManager';
+import { BattleTreeModifierManager, BattleTreeModifierManagerSaveData } from './modifier/BattleTreeModifierManager';
 import { BattleTreeModifierContext } from './modifier/BattleTreeModifierContext';
 import GameHelper from '../GameHelper';
 import { BattleTreeModifierNameType } from './modifier/BattleTreeModifierNameType';
@@ -107,6 +104,9 @@ export class BattleTreeSequence {
     }
 
     private nextStage(): void {
+        if (this.state === BattleTreeSequenceState.REWARD) return;
+        if (this.state === BattleTreeSequenceState.FINISHED) return;
+
         this._stage(this._stage() + 1);
 
         this.teams.Team_B.removeAllPokemon();
@@ -154,12 +154,6 @@ export class BattleTreeSequence {
     private handleFightFinished(): void {
         if (!this.fight) return;
 
-        if (Settings.getSetting('battleTree.autoClaimSequenceRewards').observableValue()) {
-            BattleTreeProgressionRewards
-                .filter(value => value.recurrence === 'per_sequence' && App.game.battleTree.rewardManager.canClaimReward(value))
-                .forEach(value => App.game.battleTree.rewardManager.claimReward(value));
-        }
-
         if (this.fight.winner === BattleTreeFightWinner.POKEMON_A || this.fight.winner === BattleTreeFightWinner.DRAW) {
             // TODO : handle player winning this fight
             this.handleSinglePokemonDefeat(this.fight.pokemonB);
@@ -179,10 +173,10 @@ export class BattleTreeSequence {
             GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompletedPerSeed);
             GameHelper.incrementObservable(App.game.statistics.battleTreeTotalStagesCompletedPerSequence);
 
-            // Every 10th stage defeat, roll on the generic table
-            if (this.stage % 10 === 0 && this.stage > 0) {
-                this.rollPool('generic', undefined, 1);
-            }
+            // // Every 10th stage defeat, roll on the generic table
+            // if (this.stage % 10 === 0 && this.stage > 0) {
+            //     this.rollPool('generic', undefined, 1);
+            // }
 
             // TODO : Handle finishing the stage
             if (this.stage % 5 === 0 && this.stage > 0) {
@@ -197,6 +191,12 @@ export class BattleTreeSequence {
         } else {
             // TODO : Handle defeat
             this._state(BattleTreeSequenceState.REWARD);
+        }
+
+        if (Settings.getSetting('battleTree.autoClaimSequenceRewards').observableValue()) {
+            BattleTreeProgressionRewards
+                .filter(value => value.recurrence === 'per_sequence' && App.game.battleTree.rewardManager.canClaimReward(value))
+                .forEach(value => App.game.battleTree.rewardManager.claimReward(value));
         }
     }
 

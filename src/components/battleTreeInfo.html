@@ -405,7 +405,7 @@
 
                             <p class="small font-italic">
                                 Rewards claimed from your current Battle Tree progression rewards will be added to your current Battle Tree reward pool, and are subject to the rewards percentage modifiers.<br/>
-                                These rewards are claimed automatically after each fight. (Can be disabled in the Settings)
+                                These rewards are claimed automatically after each fight. (Can be toggled in the Settings) (Currently: <knockout data-bind="text: Settings.getSetting('battleTree.autoClaimSequenceRewards').observableValue() ? 'Auto claim' : 'Manual claim'"></knockout>)
                             </p>
                         </div>
                     </div>

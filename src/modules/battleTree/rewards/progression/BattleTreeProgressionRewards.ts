@@ -3,7 +3,15 @@ import { BattleTreeHighestStageRequirement, BattleTreeLevelRequirement } from '.
 import { ItemNameType } from '../../../items/ItemNameType';
 import { BattleTreeRecurrence } from '../../types';
 
-export type BattleTreeProgressionRewardNameType = 'level:100:MB' | 'per_seed:beast_balls' | 'per_seed:stage:10:GB' | 'per_sequence:magnets';
+export type BattleTreeProgressionRewardNameType =
+    | 'level:100:MB'
+    | 'per_seed:power_bracer'
+    | 'per_seed:battle_points'
+    | 'per_seed:key_stone'
+    | 'per_seed:beast_balls'
+    | 'per_seed:stage:10:GB'
+    | 'per_sequence:magnets'
+    | 'per_sequence:evo';
 
 export interface BattleTreeProgressionRewardDefinition {
     id: BattleTreeProgressionRewardNameType;
@@ -12,6 +20,7 @@ export interface BattleTreeProgressionRewardDefinition {
     // reward: { kind: 'item', item: ItemNameType, amount: number } | { kind: 'loot', pool: BattleTreeRewardPoolNameType };
     item: ItemNameType;
     amount: number;
+    immediate?: boolean;
 }
 
 const AllTimeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
@@ -19,12 +28,14 @@ const AllTimeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
 ];
 
 const PerSeedProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
-    { id: 'per_seed:stage:10:GB', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(10, 'per_seed'), item: 'Greatball', amount: 10 },
+    { id: 'per_seed:power_bracer', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(25, 'per_seed'), item: 'Power_Bracer', amount: 3 },
+    { id: 'per_seed:battle_points', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(50, 'per_seed'), item: 'Battle Point', amount: 5000 },
+    { id: 'per_seed:key_stone', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(75, 'per_seed'), item: 'Key_stone', amount: 1 },
     { id: 'per_seed:beast_balls', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(100, 'per_seed'), item: 'Beastball', amount: 100 },
 ];
 
 const PerSequenceProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
-    { id: 'per_sequence:magnets', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(6, 'per_sequence'), item: 'Magnet', amount: 10 },
+    { id: 'per_sequence:evo', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(10, 'per_sequence'), item: 'Evolution Item Pool', amount: 3, immediate: true },
 ];
 
 export const BattleTreeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [

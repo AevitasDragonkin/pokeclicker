@@ -1,4 +1,6 @@
 import { BattleTreeRewardPool, BattleTreeRewardPoolNameType } from './BattleTreeRewardPool';
+import MaxRegionRequirement from '../../../requirements/MaxRegionRequirement';
+import { Region } from '../../../GameConstants';
 
 export const BattleTreeRewardPools: Partial<Record<BattleTreeRewardPoolNameType, BattleTreeRewardPool>> = {
     generic: new BattleTreeRewardPool({
@@ -31,6 +33,39 @@ export const BattleTreeRewardPools: Partial<Record<BattleTreeRewardPoolNameType,
             { item: 'Repeatball', weight: 1, amount: 1 },
             { item: 'Beastball', weight: 1, amount: 1 },
             { item: 'Moonball', weight: 1, amount: 1 },
+        ],
+    }),
+    evo_items: new BattleTreeRewardPool({
+        id: 'evo_items',
+        entries: [
+            { item: 'Linking_cord', weight: 1, amount: 1 },
+            { item: 'Kings_rock', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.johto) },
+            { item: 'Deepsea_scale', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.hoenn) },
+            { item: 'Upgrade', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.johto) },
+            { item: 'Protector', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.sinnoh) },
+            { item: 'Magmarizer', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.sinnoh) },
+            { item: 'Whipped_dream', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.kalos) },
+            { item: 'Deepsea_tooth', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.hoenn) },
+            { item: 'Dragon_scale', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.johto) },
+            { item: 'Dubious_disc', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.sinnoh) },
+            { item: 'Electirizer', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.sinnoh) },
+            { item: 'Reaper_cloth', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.sinnoh) },
+            { item: 'Sachet', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.kalos) },
+            { item: 'Metal_coat', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.johto) },
+            { item: 'Razor_claw', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.sinnoh) },
+            { item: 'Razor_fang', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.sinnoh) },
+            { item: 'Sweet_apple', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.galar) },
+            { item: 'Tart_apple', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.galar) },
+
+            { item: 'Black_augurite', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.hisui) },
+            { item: 'Cracked_pot', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.galar) },
+            { item: 'Galarica_cuff', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.galar) },
+            { item: 'Galarica_wreath', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.galar) },
+            { item: 'Leaders_crest', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.paldea) },
+            { item: 'Auspicious_armor', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.paldea) },
+            { item: 'Malicious_armor', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.paldea) },
+            { item: 'Peat_block', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.hisui) },
+            { item: 'Syrupy_apple', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.paldea) },
         ],
     }),
 };

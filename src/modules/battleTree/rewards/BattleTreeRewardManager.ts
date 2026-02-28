@@ -37,7 +37,11 @@ export class BattleTreeRewardManager {
         if (!this.canClaimReward(definition)) return;
 
         if (definition.recurrence === 'per_sequence') {
-            App.game.battleTree.sequence.addReward(definition.item, definition.amount);
+            if (definition.immediate) {
+                ItemList[definition.item].gain(definition.amount);
+            } else {
+                App.game.battleTree.sequence.addReward(definition.item, definition.amount);
+            }
         } else {
             ItemList[definition.item].gain(definition.amount);
         }

@@ -493,4 +493,12 @@ export type ItemNameType
     | 'Darkinium Z'
     | 'Steelium Z'
     | 'Fairium Z'
-    | 'Battle Tree Experience';
+    | 'Money'
+    | 'Quest Point'
+    | 'Dungeon Token'
+    | 'Diamond'
+    | 'Farm Point'
+    | 'Battle Point'
+    | 'Contest Token'
+    | 'Battle Tree Experience'
+    | 'Evolution Item Pool';

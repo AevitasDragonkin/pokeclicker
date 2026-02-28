@@ -1,8 +1,9 @@
 import { ItemNameType } from '../../../items/ItemNameType';
 import SeededRand from '../../../utilities/SeededRand';
 import Rand from '../../../utilities/Rand';
+import Requirement from '../../../requirements/Requirement';
 
-export type BattleTreeRewardPoolNameType = 'generic' | 'mega_rare' | 'special_ball';
+export type BattleTreeRewardPoolNameType = 'generic' | 'mega_rare' | 'special_ball' | 'evo_items';
 
 interface BattleTreeRewardPoolEntry {
     item: ItemNameType | BattleTreeRewardPool;
@@ -11,6 +12,7 @@ interface BattleTreeRewardPoolEntry {
         min?: number;
         max: number;
     } | (() => number) | number;
+    requirement?: Requirement;
 }
 
 interface BattleTreeRewardPoolProperties {
@@ -33,9 +35,11 @@ export class BattleTreeRewardPool {
     }
 
     public roll(seed?: number): BattleTreeRewardPoolRollResult {
+        const eligibleEntries = this._entries.filter(entry => entry.requirement?.isCompleted() ?? true);
+
         SeededRand.seed(seed);
         const r: typeof SeededRand = seed ? SeededRand : Rand;
-        const pickedEntry = r.fromWeightedArray(this._entries, this._entries.map(v => v.weight));
+        const pickedEntry = r.fromWeightedArray(eligibleEntries, eligibleEntries.map(v => v.weight));
 
         if (pickedEntry.item instanceof BattleTreeRewardPool) {
             return pickedEntry.item.roll(seed);

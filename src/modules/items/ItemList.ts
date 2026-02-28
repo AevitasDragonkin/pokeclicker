@@ -44,6 +44,8 @@ import TreasureItem from './TreasureItem';
 import { pokemonMap } from '../pokemons/PokemonList';
 import AttackGainConsumable from './AttackGainConsumable';
 import { BattleTreeExperienceItem } from '../battleTree/rewards/items/BattleTreeExperienceItem';
+import { BattleTreeRewardPoolItem } from '../battleTree/rewards/items/BattleTreeRewardPoolItem';
+import CurrencyItem from './CurrencyItem';
 // eslint-disable-next-line import/prefer-default-export
 export const ItemList: { [name: string]: Item } = {};
 
@@ -527,3 +529,13 @@ ItemList.Aurorus = new PokemonItem('Aurorus');
 
 // Battle Tree
 ItemList['Battle Tree Experience'] = new BattleTreeExperienceItem();
+ItemList['Evolution Item Pool'] = new BattleTreeRewardPoolItem('evo_items', 'Evolution Item Pool', 'Makes a roll in the Evolution Item Pool');
+
+// Currencies
+ItemList.Money = new CurrencyItem(Currency.money);
+ItemList['Quest Point'] = new CurrencyItem(Currency.questPoint);
+ItemList['Dungeon Token'] = new CurrencyItem(Currency.dungeonToken);
+ItemList.Diamond = new CurrencyItem(Currency.diamond);
+ItemList['Farm Point'] = new CurrencyItem(Currency.farmPoint);
+ItemList['Battle Point'] = new CurrencyItem(Currency.battlePoint);
+ItemList['Contest Token'] = new CurrencyItem(Currency.contestToken);
