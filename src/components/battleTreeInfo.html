@@ -119,6 +119,7 @@
         <!-- /ko -->
 
         <!-- Team info -->
+        <!-- ko if: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER, BattleTreeSequenceState.REWARD, BattleTreeSequenceState.FINISHED].includes(App.game.battleTree.sequence.state) -->
         <section>
             <h4>Team info</h4>
             <div class="table-responsive">
@@ -177,6 +178,7 @@
             </div>
             </div>
         </section>
+        <!-- /ko -->
 
         <!-- Modifiers -->
         <!-- ko if: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER, BattleTreeSequenceState.REWARD, BattleTreeSequenceState.FINISHED].includes(App.game.battleTree.sequence.state) -->
