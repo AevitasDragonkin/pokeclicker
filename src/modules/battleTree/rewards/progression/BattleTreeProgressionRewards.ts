@@ -1,10 +1,21 @@
 import Requirement from '../../../requirements/Requirement';
-import { BattleTreeHighestStageRequirement, BattleTreeLevelRequirement } from '../../requirements/BattleTreeRequirements';
+import {
+    BattleTreeHighestStageRequirement,
+    BattleTreeLevelRequirement,
+    BattleTreeTotalStagesRequirement
+} from '../../requirements/BattleTreeRequirements';
 import { ItemNameType } from '../../../items/ItemNameType';
 import { BattleTreeRecurrence } from '../../types';
+import MultiRequirement from '../../../requirements/MultiRequirement';
 
 export type BattleTreeProgressionRewardNameType =
-    | 'level:100:MB'
+    | 'L15:RC'
+    | 'L30:RC'
+    | 'L50:RC'
+    | 'L75:RC'
+    | 'L100:RC'
+    | 'S75:TS500:lansat'
+    | 'S75:TS500:starf'
     | 'per_seed:power_bracer'
     | 'per_seed:battle_points'
     | 'per_seed:key_stone'
@@ -17,14 +28,19 @@ export interface BattleTreeProgressionRewardDefinition {
     id: BattleTreeProgressionRewardNameType;
     recurrence: BattleTreeRecurrence,
     requirement?: Requirement;
-    // reward: { kind: 'item', item: ItemNameType, amount: number } | { kind: 'loot', pool: BattleTreeRewardPoolNameType };
     item: ItemNameType;
     amount: number;
     immediate?: boolean;
 }
 
 const AllTimeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
-    { id: 'level:100:MB', recurrence: 'once', requirement: new BattleTreeLevelRequirement(100), item: 'Masterball', amount: 1 },
+    { id: 'L15:RC', recurrence: 'once', requirement: new BattleTreeLevelRequirement(15), item: 'Rare_Candy', amount: 5 },
+    { id: 'L30:RC', recurrence: 'once', requirement: new BattleTreeLevelRequirement(30), item: 'Rare_Candy', amount: 10 },
+    { id: 'L50:RC', recurrence: 'once', requirement: new BattleTreeLevelRequirement(50), item: 'Rare_Candy', amount: 15 },
+    { id: 'L75:RC', recurrence: 'once', requirement: new BattleTreeLevelRequirement(75), item: 'Rare_Candy', amount: 20 },
+    { id: 'L100:RC', recurrence: 'once', requirement: new BattleTreeLevelRequirement(100), item: 'Rare_Candy', amount: 25 },
+    { id: 'S75:TS500:lansat', recurrence: 'once', requirement: new MultiRequirement([new BattleTreeHighestStageRequirement(75, 'once'), new BattleTreeTotalStagesRequirement(500)]), item: 'LansatBerry', amount: 10 },
+    { id: 'S75:TS500:starf', recurrence: 'once', requirement: new MultiRequirement([new BattleTreeHighestStageRequirement(75, 'once'), new BattleTreeTotalStagesRequirement(500)]), item: 'StarfBerry', amount: 10 },
 ];
 
 const PerSeedProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
@@ -42,8 +58,4 @@ export const BattleTreeProgressionRewards: BattleTreeProgressionRewardDefinition
     ...AllTimeProgressionRewards,
     ...PerSeedProgressionRewards,
     ...PerSequenceProgressionRewards,
-    // { id: 'level:100:MB', recurrence: 'once', requirement: new BattleTreeLevelRequirement(100), reward: { kind: 'item', item: 'Masterball', amount: 1 } },
-    // { id: 'per_seed:stage:10:GB', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(10, 'per_seed'), reward: { kind: 'item', item: 'Greatball', amount: 10 } },
-
-    // { id: 'per_sequence:stage:1:RPB', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(1, 'per_sequence'), item: 'Repeatball', amount: 1 },
 ];

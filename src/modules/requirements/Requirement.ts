@@ -35,4 +35,8 @@ export default abstract class Requirement {
 
     abstract getProgress(): number;
     abstract hint(): string;
+
+    public htmlHint(): string {
+        return this.hint();
+    }
 }

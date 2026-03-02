@@ -60,6 +60,8 @@ ItemList.ChopleBerry     = new BerryItem(BerryType.Chople, 10000, Currency.farmP
 ItemList.KebiaBerry      = new BerryItem(BerryType.Kebia, 10000, Currency.farmPoint, BerryType.Pamtre);
 ItemList.ShucaBerry      = new BerryItem(BerryType.Shuca, 10000, Currency.farmPoint, BerryType.Watmel);
 ItemList.ChartiBerry     = new BerryItem(BerryType.Charti, 10000, Currency.farmPoint, BerryType.Cornn);
+ItemList.LansatBerry     = new BerryItem(BerryType.Lansat, 10000, Currency.farmPoint, BerryType.Lansat);
+ItemList.StarfBerry     = new BerryItem(BerryType.Starf, 10000, Currency.farmPoint, BerryType.Starf);
 
 ItemList.SmallRestore    = new EnergyRestore(EnergyRestoreSize.SmallRestore, 30000, undefined, 'Small Restore');
 ItemList.MediumRestore   = new EnergyRestore(EnergyRestoreSize.MediumRestore, 75000, undefined, 'Medium Restore');

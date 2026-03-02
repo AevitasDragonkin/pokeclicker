@@ -20,6 +20,8 @@ export type ItemNameType
     | 'KebiaBerry'
     | 'ShucaBerry'
     | 'ChartiBerry'
+    | 'LansatBerry'
+    | 'StarfBerry'
     | 'SmallRestore'
     | 'MediumRestore'
     | 'LargeRestore'

@@ -24,6 +24,10 @@ export default class OneFromManyRequirement extends Requirement {
         return `${output.join(' or ')}.`;
     }
 
+    public htmlHint(): string {
+        return `Requires any of the following:<ul>${this.requirements.map(req => `<li class="${req.isCompleted() ? 'text-success' : ''}">${req.htmlHint()}</li>`)}</ul>`;
+    }
+
     public getProgress() {
         const completed = this.requirements.filter((requirement) => requirement.isCompleted()).length;
         return Math.min(completed, this.requiredValue);
