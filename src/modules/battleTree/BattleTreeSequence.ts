@@ -84,7 +84,7 @@ export class BattleTreeSequence {
         return {
             sequence: this,
             endSequence: reason => {
-                console.log(`[BATTLE TREE] Context ending run: ${reason}`);
+                console.log(`[BATTLE TREE] Context ending Battle Climb: ${reason}`);
                 this._state(BattleTreeSequenceState.REWARD);
             },
         };
@@ -253,7 +253,7 @@ export class BattleTreeSequence {
 
         Notifier.notify({
             title: '[Battle Tree]',
-            message: 'You have finished your Battle Tree run. Claim your rewards.',
+            message: 'You have finished your Battle Climb. Claim your rewards.',
             type: NotificationOption.success,
             timeout: 30e3,
         });

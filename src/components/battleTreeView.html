@@ -1,7 +1,7 @@
 <div id="battle-tree-view" data-bind="if: App.game.gameState === GameConstants.GameState.battleTree">
     <div class="d-flex flex-column justify-content-between flex-wrap" style="min-height: 310px;">
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
-            <div>Stage <knockout data-bind="text: App.game.battleTree.sequence.stage"></knockout></div>
+            <div>Platform <knockout data-bind="text: App.game.battleTree.sequence.stage"></knockout></div>
             <div data-bind="tooltip: App.game.battleTree.sequence.timerTooltip">
                 <!-- ko if: [BattleTreeSequenceState.PREPARATION, BattleTreeSequenceState.POWERUP].includes(App.game.battleTree.sequence.state) -->
                 <code data-bind="text: GameConstants.formatTime(App.game.battleTree.sequence.setupTime)"></code>

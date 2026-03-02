@@ -6,6 +6,11 @@ import {
 } from './subset/BattleTreePokemonSubset';
 import PokemonType from '../enums/PokemonType';
 import { Region } from '../GameConstants';
+import Requirement from '../requirements/Requirement';
+import {
+    BattleTreeAutoPickRequirement, BattleTreePowerUpLootRequirement,
+    BattleTreePowerUpRequirement,
+} from './requirements/BattleTreeRequirements';
 
 export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonSubset> = {
     'All': new CustomBattleTreePokemonSubset({ name: 'All' }),
@@ -54,3 +59,9 @@ export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonS
     'Pure Steel': new TypedBattleTreePokemonSubset({ name: 'Pure Steel', type: PokemonType.Steel, monotype: true }),
     'Pure Fairy': new TypedBattleTreePokemonSubset({ name: 'Pure Fairy', type: PokemonType.Fairy, monotype: true }),
 };
+
+export const ProgressionLevelTable: { description: string; requirement: Requirement }[] = [
+    { description: 'Auto-pick modifiers', requirement: BattleTreeAutoPickRequirement },
+    { description: 'Gain moves', requirement: BattleTreePowerUpLootRequirement },
+    { description: 'Equip moves', requirement: BattleTreePowerUpRequirement },
+];

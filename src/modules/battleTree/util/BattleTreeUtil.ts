@@ -5,7 +5,8 @@ import { PokemonNameType } from '../../pokemons/PokemonNameType';
 import Rand from '../../utilities/Rand';
 import { BattleTreePokemon } from '../BattleTreePokemon';
 import { pokemonMap } from '../../pokemons/PokemonList';
-import { BattleTreeModifierDefinition, BattleTreeModifierDescription } from '../modifier/BattleTreeModifiers';
+import Requirement from '../../requirements/Requirement';
+import { BattleTreeLevelRequirement } from '../requirements/BattleTreeRequirements';
 
 export class BattleTreeUtil {
     public static calculateSeed(): number {
@@ -94,5 +95,74 @@ export class BattleTreeUtil {
     public static clickLoadPreviousTeam(): void {
         App.game.battleTree.sequence.teams.Team_A.removeAllPokemon();
         App.game.battleTree.previousTeam.forEach(p => this.tryAddPokemonToTeamA(p));
+    }
+
+    public static isBTLevelRequirement(req: Requirement): req is BattleTreeLevelRequirement {
+        return req instanceof BattleTreeLevelRequirement;
+    }
+
+    public static isCompositeRequirement(req: Requirement): req is Requirement & { requirements: Requirement[] } {
+        return Array.isArray((req as any)?.requirements);
+    }
+
+
+    public static collectLevelRequirements(req: Requirement): BattleTreeLevelRequirement[] {
+        const result: BattleTreeLevelRequirement[] = [];
+        const stack: Requirement[] = [req];
+
+        while (stack.length) {
+            const current = stack.pop();
+            if (this.isBTLevelRequirement(current)) {
+                result.push(current);
+            }
+            if (this.isCompositeRequirement(current)) {
+                stack.push(...current.requirements);
+            }
+        }
+        return result;
+    }
+
+    public static getRequiredLevel(req: Requirement, strategy: 'min' | 'max' | 'first' = 'min'): number | undefined {
+        const levels = this.collectLevelRequirements(req).map(r => r.requiredValue);
+
+        if (!levels.length) return undefined;
+
+        switch (strategy) {
+            case 'first': return levels[0];
+            case 'max': return Math.max(...levels);
+            case 'min':
+            default:
+                return Math.min(...levels);
+        }
+    }
+
+    public static sortByRequiredLevel<T extends Requirement>(reqs: T[], strategy: 'min' | 'max' | 'first' = 'min'): T[] {
+        return [...reqs].sort((a, b) => {
+            const av = this.getRequiredLevel(a, strategy);
+            const bv = this.getRequiredLevel(b, strategy);
+
+            const aVal = av ?? Number.POSITIVE_INFINITY;
+            const bVal = bv ?? Number.POSITIVE_INFINITY;
+
+            return aVal - bVal;
+        });
+    }
+
+    public static sortProgressionLevelInfo(info: { description: string, requirement: Requirement }[]): {
+        description: string,
+        requirement: Requirement,
+        level: number,
+    }[] {
+        const result = [...info].sort((a, b) => {
+            const aVal = this.getRequiredLevel(a.requirement, 'min') ?? Number.POSITIVE_INFINITY;
+            const bVal = this.getRequiredLevel(b.requirement, 'min') ?? Number.POSITIVE_INFINITY;
+
+            return aVal - bVal;
+        });
+
+        return result.map(value => ({
+            ...value,
+            level: this.getRequiredLevel(value.requirement, 'min'),
+        }));
     }
 }

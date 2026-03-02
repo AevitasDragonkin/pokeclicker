@@ -40,12 +40,12 @@ export class BattleTreeHighestStageRequirement extends Requirement {
     hint(): string {
         switch (this._recurrence) {
             case 'per_sequence':
-                return `Defeat stage ${this.requiredValue} in the Battle Tree (current).`;
+                return `Defeat platform ${this.requiredValue} in a Battle Climb (current).`;
             case 'per_seed':
-                return `Defeat stage ${this.requiredValue} in the Battle Tree (daily).`;
+                return `Defeat platform ${this.requiredValue} in a Battle Climb (daily).`;
             case 'once':
             default:
-                return `Defeat stage ${this.requiredValue} in the Battle Tree (all-time).`;
+                return `Defeat platform ${this.requiredValue} in a Battle Climb (all-time).`;
         }
     }
 }
@@ -73,19 +73,16 @@ export class BattleTreeTotalStagesRequirement extends Requirement {
     hint(): string {
         switch (this._recurrence) {
             case 'per_sequence':
-                return `You need to have completed ${this.requiredValue} stages in the Battle Tree (current).`;
+                return `You need to have completed ${this.requiredValue} platforms in a Battle Climb (current).`;
             case 'per_seed':
-                return `You need to have completed ${this.requiredValue} stages in the Battle Tree (today).`;
+                return `You need to have completed ${this.requiredValue} platforms in a Battle Climb (today).`;
             case 'once':
             default:
-                return `You need to have completed ${this.requiredValue} stages in the Battle Tree (all-time).`;
+                return `You need to have completed ${this.requiredValue} platforms in a Battle Climb (all-time).`;
         }
     }
 }
 
-export const BattleTreeAutoPickRequirement = new OneFromManyRequirement([
-    new BattleTreeLevelRequirement(50),
-    new BattleTreeHighestStageRequirement(50)],
-);
-
+export const BattleTreeAutoPickRequirement = new BattleTreeLevelRequirement(50);
+export const BattleTreePowerUpLootRequirement = new BattleTreeLevelRequirement(80);
 export const BattleTreePowerUpRequirement = new BattleTreeLevelRequirement(100);

@@ -239,6 +239,7 @@ import { AutoPickModifiers, BattleTreeModifiers } from './battleTree/modifier/Ba
 import { BattleTreeHighestStageRequirement } from './battleTree/requirements/BattleTreeRequirements';
 import { BattleTreeProgressionRewards } from './battleTree/rewards/progression/BattleTreeProgressionRewards';
 import { BattleTreeSequenceState } from './battleTree/types';
+import { ProgressionLevelTable } from './battleTree/BattleTree.config';
 
 Object.assign(<any>window, {
     SaveSelector,
@@ -494,4 +495,5 @@ Object.assign(<any>window, {
     BattleTreeHighestStageRequirement,
     BattleTreeProgressionRewards,
     AutoPickModifiers,
+    ProgressionLevelTable,
 });

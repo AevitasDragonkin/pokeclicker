@@ -64,7 +64,7 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
 const forfeit: BattleTreeModifierDefinition = {
     id: 'forfeit',
     name: 'Forfeit',
-    description: 'Ends the current Battle Tree immediately. Forfeit 75% of your rewards',
+    description: 'Ends the Battle Climb immediately. Forfeit 75% of your rewards',
     image: 'assets/images/battleTree/modifiers/forfeit.png',
     weight: 0, // System triggered only
     stack: { max: 1 },
@@ -280,7 +280,7 @@ const LIMITED_TIME_DURATION_IN_SECONDS: number = 300;
 const limitedTime: BattleTreeModifierDefinition<TimeData> = {
     id: 'limited_time',
     name: 'Quickly now',
-    description: (ctx, data: TimeData) => `${formatDuration(data.acquiredBattleTime + LIMITED_TIME_DURATION_IN_SECONDS - ctx.sequence.battleTime)} Battle time left until your current Battle Tree ends`,
+    description: (ctx, data: TimeData) => `${formatDuration(data.acquiredBattleTime + LIMITED_TIME_DURATION_IN_SECONDS - ctx.sequence.battleTime)} Battle time left until your Battle Climb ends`,
     weight: 1,
     stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData }) => {
@@ -298,7 +298,7 @@ const CHALLENGE_ACCEPTED_ADDITIONAL_STAGES: number = 20;
 const challengeAccepted: BattleTreeModifierDefinition<StageData> = {
     id: 'challenge_accepted',
     name: 'Challenge Accepted',
-    description: (ctx, data: StageData) => `Your rewards are reduced by 90% until you defeat stage ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES}`,
+    description: (ctx, data: StageData) => `Your rewards are reduced by 90% until you defeat platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES}`,
     weight: 1,
     effects: [{
         target: { key: 'rewards' },
@@ -314,7 +314,7 @@ const FAST_START_STAGE_REQUIREMENT: number = 50;
 const fastStart: BattleTreeModifierDefinition = {
     id: 'fast_start',
     name: 'Triple Game Speed',
-    description: `While below stage ${FAST_START_STAGE_REQUIREMENT}, gain x3 game speed`,
+    description: `While below platform ${FAST_START_STAGE_REQUIREMENT}, gain x3 game speed`,
     weight: 1,
     stack: { max: 1 },
     requirement: new BattleTreeHighestStageRequirement(FAST_START_STAGE_REQUIREMENT, 'per_seed'),
@@ -364,7 +364,7 @@ const tankEnemies: BattleTreeModifierDefinition = {
 const increaseEnemyTeamSize: BattleTreeModifierDefinition = {
     id: 'inc_enemy_team_size',
     name: '+1 Enemies',
-    description: 'Your opponent now uses 1 additional pokemon per stage',
+    description: 'Your opponent now uses 1 additional pokemon per platform',
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'max_team_size', scope: ['Team_B'] }, value: 1, operation: 'additive' }],
@@ -395,7 +395,7 @@ const enemyPriority: BattleTreeModifierDefinition = {
 const rewardsVsSpeed: BattleTreeModifierDefinition = {
     id: 'rewards_vs_speed',
     name: 'Rewards vs Speed',
-    description: 'Gain 25% more rewards. Your current Battle Tree will be 15% slower.',
+    description: 'Gain 25% more rewards. Your Battle Climb will be 15% slower.',
     weight: 1,
     stack: { max: 1 },
     effects: [
@@ -424,7 +424,7 @@ const enemyAttackGrowth: BattleTreeModifierDefinition<TimeData> = {
 const cashIn: BattleTreeModifierDefinition = {
     id: 'cash_in',
     name: 'Cash In',
-    description: 'Double your rewards, end your current Battle Tree',
+    description: 'Double your rewards, end your Battle Climb',
     image: 'assets/images/battleTree/modifiers/cash_in.png',
     weight: 1,
     stack: { max: 1 },
@@ -435,7 +435,7 @@ const cashIn: BattleTreeModifierDefinition = {
 const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
     id: 'enemies_extra_stats_per_stage',
     name: 'Growing enemies',
-    description: (ctx, { acquiredStage }: StageData) => `Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each stage after this. (${5 * (ctx.sequence.stage - acquiredStage)})`,
+    description: (ctx, { acquiredStage }: StageData) => `Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this. (${5 * (ctx.sequence.stage - acquiredStage)})`,
     weight: 1,
     stack: { max: 1 },
     effects: [
@@ -452,7 +452,7 @@ const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
 const fatigue: BattleTreeModifierDefinition<StageData> = {
     id: 'fatigue',
     name: 'Fatigue',
-    description: (ctx, { acquiredStage }: StageData) => `All pokemon attack speed decreases by 1% for each stage after this. (x${0.99 ** (ctx.sequence.stage - acquiredStage)})`,
+    description: (ctx, { acquiredStage }: StageData) => `All pokemon attack speed decreases by 1% for each platform after this. (x${0.99 ** (ctx.sequence.stage - acquiredStage)})`,
     image: 'assets/images/battleTree/modifiers/fatigue.png',
     weight: 1,
     stack: { max: 1 },
@@ -500,7 +500,7 @@ const RESET_STAGES: number = 25;
 const resetStages: BattleTreeModifierDefinition = {
     id: 'reset_stages_25',
     name: `Reset ${RESET_STAGES} stages`,
-    description: ctx => `Return back to stage ${ctx.sequence.stage - RESET_STAGES}`,
+    description: ctx => `Return back to platform ${ctx.sequence.stage - RESET_STAGES}`,
     image: 'assets/images/battleTree/modifiers/reset_stages.png',
     weight: 1,
     stack: { max: 1 },

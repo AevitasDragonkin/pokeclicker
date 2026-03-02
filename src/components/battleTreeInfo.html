@@ -271,7 +271,7 @@
                 <button class="btn btn-danger text-light" onclick="App.game.battleTree.sequence.forfeit()" data-bind="
                     tooltip: {
                         trigger: 'hover',
-                        title: `Forfeiting will end the current run, and you will only receive ${GameConstants.BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER.toLocaleString('en-US', { style: 'percent' })} of your rewards.`,
+                        title: `Forfeiting will end the Battle Climb (current), and you will only receive ${GameConstants.BATTLE_TREE_FORFEIT_REWARD_MULTIPLIER.toLocaleString('en-US', { style: 'percent' })} of your rewards.`,
                         placement: 'bottom'
                     }
                 ">
@@ -292,6 +292,7 @@
             <div class="modal-header p-0">
                 <ul class="nav nav-tabs nav-fill w-100">
                     <li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#battle-tree-help__info">Info</a></li>
+                    <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#battle-tree-help__levels">Levels</a></li>
                     <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#battle-tree-help__modifiers">Modifiers</a></li>
                     <li class="nav-item"><a data-toggle="tab" class="nav-link" href="#battle-tree-help__rewards">Rewards</a></li>
                     <li class="d-block"><button type="button" class="btn btn-danger" data-dismiss="modal" style="font-size: 18px; font-weight: 700;">×</button></li>
@@ -301,12 +302,192 @@
             <div class="modal-body tab-content p-0">
                 <div id="battle-tree-help__info" class="tab-pane fade in p-2 text-left active show">
                     <div class="card mb-2">
+                        <div class="card-body">
+                            <p>
+                                The Battle Tree is an endurance-style challenge where you assemble a small team of Pokémon and challenge a progressively harder Battle Climb. Your goal is to reach the highest platform you can by making smart team choices, selecting powerful modifiers, and managing your lineup’s survivability.<br/>
+                                Every attempt through the Battle Tree is deterministic: if you make the same choices, you will see the same outcomes. However, even a single different decision can change the rest of your Battle Climb dramatically.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
                         <div class="card-header d-flex align-items-center p-0">
-                            <span class="flex-grow-1 text-center font-weight-bold">Info</span>
+                            <span class="flex-grow-1 text-center font-weight-bold">Team selection</span>
                         </div>
 
                         <div class="card-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi in unde voluptatibus? Atque est itaque, nesciunt nobis quos repudiandae rerum ullam? Alias aliquid culpa eos error eveniet exercitationem facilis hic illo incidunt ipsum labore laboriosam maiores minima, nam optio possimus provident quam, quas reiciendis repellat reprehenderit rerum vel voluptate voluptatum!</p>
+                            <p>
+                                At the start of each Battle Climb:
+                            </p>
+                            <ul>
+                                <li>You may choose 1 to 3 Pokémon.</li>
+                                <li>Your options come from a rotating daily pool of 20 Pokémon.</li>
+                                <li>
+                                    The daily pool is chosen from a set of themed categories<br/>
+                                    (e.g., Pure Fire, Kanto, Galar, Grass…).
+                                </li>
+                            </ul>
+
+                            <h4>Team Order Matters</h4>
+                            <p>Your Pokémon fight in the order you placed them:</p>
+                            <ul>
+                                <li>The first non-fainted Pokémon on your team is always sent into battle.</li>
+                                <li>It continues fighting until it faints.</li>
+                                <li>If a Pokémon has been revived while another is currently active, it will re-enter once the current battler faints.</li>
+                            </ul>
+                            <p>You cannot swap Pokémon or manually change the active battler during the climb.</p>
+
+                            <h4>Pokémon Levels</h4>
+                            <ul>
+                                <li>All your Pokémon use your Battle Tree Level (capped at 100).</li>
+                                <li>Some modifiers may increase their level past the level 100 cap during the Battle Climb.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Battles</span>
+                        </div>
+
+                        <div class="card-body">
+                            <p>Each platform contains an opposing team of 3 Pokémon.</p>
+                            <ul>
+                                <li>Enemy Pokémon levels are equal to the platform number.<br/>(Platform 46 = level 46 enemies.)</li>
+                                <li>Enemy levels are uncapped, and scale indefinitely.</li>
+                            </ul>
+                            <p>
+                                After you defeat all three enemy Pokémon, you advance one platform.
+                                Your Battle Climb continues until all your Pokémon have fainted.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Modifiers</span>
+                        </div>
+
+                        <div class="card-body">
+                            <ul>
+                                <li>Every 5 platforms, you will be offered 3 modifiers, and you must select one to continue</li>
+                                <li>Some modifiers only appear if certain requirements are met</li>
+                                <li>Modifiers apply for the rest of your Battle Climb once selected</li>
+                            </ul>
+                            <p class="font-italic">For a list of all the modifiers, see the 'Modifiers' tab.</p>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Rewards</span>
+                        </div>
+
+                        <div class="card-body">
+                            <p>There are three types of rewards:</p>
+                            <ul>
+                                <li>
+                                    <h5>One-Time</h5>
+                                    <p>Rewards that can only be earned once, claimable from the Rewards Tab.</p>
+                                </li>
+                                <li>
+                                    <h5>Daily</h5>
+                                    <p>Rewards that can be claimed once per day from the Rewards Tab.</p>
+                                </li>
+                                <li>
+                                    <h5>Battle Climb</h5>
+                                    <p>
+                                        These rewards are automatically collected during your Battle Climb once the requirements are met, but stored until you finish your Battle Climb.<br/>
+                                        You only receive them after your Battle Climb ends.
+                                    </p>
+                                    <ul>
+                                        <li>They are affected by your Reward Multiplier</li>
+                                        <li>
+                                            After multiplier adjustments, values are rounded down.<br/>
+                                            Example: 1 × 0.90 = 0.
+                                        </li>
+                                    </ul>
+                                    <p>You may optionally disable auto-claim in the settings.</p>
+                                </li>
+                            </ul>
+                            <p>Any reward type may have a requirement, such as:</p>
+                            <ul>
+                                <li>Reach a certain Battle Tree Level</li>
+                                <li>Defeat a specific daily platform</li>
+                                <li>Complete a number of Battle Climbs total or in a single day</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Ending a Battle Climb</span>
+                        </div>
+
+                        <div class="card-body">
+                            <p>Ending your Battle Climb happens in the following scenarios:</p>
+                            <ul>
+                                <li>All of your Pokémon have fainted</li>
+                                <li>You forfeited the Battle Climb</li>
+                                <li>You selected a modifier that has ended your Battle Climb</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card mb-2">
+                        <div class="card-header d-flex align-items-center p-0">
+                            <span class="flex-grow-1 text-center font-weight-bold">Deterministic</span>
+                        </div>
+
+                        <div class="card-body">
+                            <p>
+                                Every Battle Climb is built from a deterministic sequence of outcomes.<br/>
+                                If two players make the same choices, they will encounter the same battles, modifiers, and results.<br/>
+                                Changing any decision — choosing a different Pokémon, selecting a different modifier, etc. — will alter the rest of the Battle Climb.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="battle-tree-help__levels" class="tab-pane fade p-2 text-left">
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="small px-3 py-1" style="background-color: rgba(0,0,0,70%); margin: 0">
+                                <div data-bind="tooltip: {
+                                    title: App.game.battleTree.level >= GameConstants.BATTLE_TREE_MAX_LEVEL ? (App.game.battleTree.experience - BattleTree.convertLevelToExperience(App.game.battleTree.level)).toLocaleString('en-US') : `${(App.game.battleTree.experience - BattleTree.convertLevelToExperience(App.game.battleTree.level)).toLocaleString('en-US')} / ${(BattleTree.convertLevelToExperience(App.game.battleTree.level + 1) - BattleTree.convertLevelToExperience(App.game.battleTree.level)).toLocaleString('en-US')}`,
+                                    trigger: 'hover'
+                                }">
+                                    <div>Level <knockout data-bind="text: App.game.battleTree.level"></knockout></div>
+                                    <div class="progress" style="min-height: 10px; height: 10px;">
+                                        <div class="progress-bar bg-info"
+                                             role="progressbar"
+                                             data-bind="style: { width: App.game.battleTree.progressToNextLevel.toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 }) }"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100"
+                                        >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-sm table-striped text-left">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">Level</th>
+                                    <th>Unlocks</th>
+                                    <th>Requirement</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- ko foreach: BattleTreeUtil.sortProgressionLevelInfo(ProgressionLevelTable) -->
+                                <tr>
+                                    <td class="text-center" data-bind="text: $data.level"></td>
+                                    <td data-bind="text: $data.description"></td>
+                                    <td data-bind="text: $data.requirement.hint()"></td>
+                                </tr>
+                                <!-- /ko -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -406,7 +587,7 @@
                             </table>
 
                             <p class="small font-italic">
-                                Rewards claimed from your current Battle Tree progression rewards will be added to your current Battle Tree reward pool, and are subject to the rewards percentage modifiers.<br/>
+                                Rewards claimed from your Battle Tree (current) progression rewards will be added to your current Battle Tree reward pool, and are subject to the rewards percentage modifiers.<br/>
                                 These rewards are claimed automatically after each fight. (Can be toggled in the Settings) (Currently: <knockout data-bind="text: Settings.getSetting('battleTree.autoClaimSequenceRewards').observableValue() ? 'Auto claim' : 'Manual claim'"></knockout>)
                             </p>
                         </div>
