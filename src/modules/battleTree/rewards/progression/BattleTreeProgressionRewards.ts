@@ -7,6 +7,7 @@ import {
 import { ItemNameType } from '../../../items/ItemNameType';
 import { BattleTreeRecurrence } from '../../types';
 import MultiRequirement from '../../../requirements/MultiRequirement';
+import ObtainedPokemonRequirement from '../../../requirements/ObtainedPokemonRequirement';
 
 export type BattleTreeProgressionRewardNameType =
     | 'L15:RC'
@@ -21,6 +22,7 @@ export type BattleTreeProgressionRewardNameType =
     | 'per_seed:key_stone'
     | 'per_seed:beast_balls'
     | 'per_seed:stage:10:GB'
+    | 'per_seed:mismagius_illusion'
     | 'per_sequence:magnets'
     | 'per_sequence:evo';
 
@@ -48,6 +50,7 @@ const PerSeedProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
     { id: 'per_seed:battle_points', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(50, 'per_seed'), item: 'Battle Point', amount: 5000 },
     { id: 'per_seed:key_stone', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(75, 'per_seed'), item: 'Key_stone', amount: 1 },
     { id: 'per_seed:beast_balls', recurrence: 'per_seed', requirement: new BattleTreeHighestStageRequirement(100, 'per_seed'), item: 'Beastball', amount: 100 },
+    { id: 'per_seed:mismagius_illusion', recurrence: 'per_seed', requirement: new MultiRequirement([new BattleTreeLevelRequirement(100), new BattleTreeHighestStageRequirement(75, 'per_seed'), new ObtainedPokemonRequirement('Mismagius (Illusion)')]), item: 'Mismagius (Illusion)', amount: 1 },
 ];
 
 const PerSequenceProgressionRewards: BattleTreeProgressionRewardDefinition[] = [

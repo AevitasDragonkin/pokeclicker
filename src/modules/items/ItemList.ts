@@ -532,6 +532,7 @@ ItemList.Aurorus = new PokemonItem('Aurorus');
 // Battle Tree
 ItemList['Battle Tree Experience'] = new BattleTreeExperienceItem();
 ItemList['Evolution Item Pool'] = new BattleTreeRewardPoolItem('evo_items', 'Evolution Item Pool', 'Makes a roll in the Evolution Item Pool');
+ItemList['Mismagius (Illusion)'] = new PokemonItem('Mismagius (Illusion)');
 
 // Currencies
 ItemList.Money = new CurrencyItem(Currency.money);

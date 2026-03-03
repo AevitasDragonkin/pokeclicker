@@ -503,4 +503,5 @@ export type ItemNameType
     | 'Battle Point'
     | 'Contest Token'
     | 'Battle Tree Experience'
-    | 'Evolution Item Pool';
+    | 'Evolution Item Pool'
+    | 'Mismagius (Illusion)';
