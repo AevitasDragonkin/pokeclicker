@@ -62,6 +62,6 @@ export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonS
 
 export const ProgressionLevelTable: { description: string; requirement: Requirement }[] = [
     { description: 'Auto-pick modifiers', requirement: BattleTreeAutoPickRequirement },
-    { description: 'Gain moves', requirement: BattleTreePowerUpLootRequirement },
-    { description: 'Equip moves', requirement: BattleTreePowerUpRequirement },
+    // { description: 'Gain moves', requirement: BattleTreePowerUpLootRequirement },
+    // { description: 'Equip moves', requirement: BattleTreePowerUpRequirement },
 ];
