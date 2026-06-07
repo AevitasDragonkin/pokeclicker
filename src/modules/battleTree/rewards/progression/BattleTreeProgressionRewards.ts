@@ -60,7 +60,7 @@ const PerSequenceProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
 ];
 
 export const BattleTreeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
-    ...AllTimeProgressionRewards,
-    ...PerSeedProgressionRewards,
-    ...PerSequenceProgressionRewards,
+    // ...AllTimeProgressionRewards,
+    // ...PerSeedProgressionRewards,
+    // ...PerSequenceProgressionRewards,
 ];
