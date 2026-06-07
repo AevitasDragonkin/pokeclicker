@@ -119,6 +119,7 @@ export type ItemNameType
     | 'Salamencite'
     | 'Sceptilite'
     | 'Scizorite'
+    | 'Shadow_Synergy_Stone'
     | 'Sharpedonite'
     | 'Slowbronite'
     | 'Steelixite'
@@ -504,4 +505,6 @@ export type ItemNameType
     | 'Contest Token'
     | 'Battle Tree Experience'
     | 'Evolution Item Pool'
-    | 'Mismagius (Illusion)';
+    | 'Mismagius (Illusion)'
+    | 'Shadow Mewtwo Pool'
+    | 'Shadow Mewtwo';

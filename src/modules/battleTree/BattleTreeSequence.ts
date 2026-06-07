@@ -83,8 +83,8 @@ export class BattleTreeSequence {
     private createContext(): BattleTreeModifierContext {
         return {
             sequence: this,
-            endSequence: reason => {
-                console.log(`[BATTLE TREE] Context ending Battle Climb: ${reason}`);
+            endSequence: () => {
+                // console.log(`[BATTLE TREE] Context ending Battle Climb: ${reason}`);
                 this._state(BattleTreeSequenceState.REWARD);
             },
         };

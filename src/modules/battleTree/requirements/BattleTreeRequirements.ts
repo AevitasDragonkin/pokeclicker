@@ -1,6 +1,5 @@
 import Requirement from '../../requirements/Requirement';
 import { AchievementOption } from '../../GameConstants';
-import OneFromManyRequirement from '../../requirements/OneFromManyRequirement';
 import { BattleTreeRecurrence } from '../types';
 
 export class BattleTreeLevelRequirement extends Requirement {

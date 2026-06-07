@@ -176,6 +176,7 @@ ItemList.Salamencite        = new MegaStoneItem(MegaStoneType.Salamencite, 'Sala
 ItemList.Sceptilite         = new MegaStoneItem(MegaStoneType.Sceptilite, 'Sceptile', 10000, Currency.questPoint,
     { visible: new ObtainedPokemonRequirement('Sceptile') }, 'Sceptilite', 'A Mega Stone for Sceptile.');
 ItemList.Scizorite          = new MegaStoneItem(MegaStoneType.Scizorite, 'Scizor', 10000);
+ItemList.Shadow_Synergy_Stone       = new MegaStoneItem(MegaStoneType.Shadow_Synergy_Stone, 'Shadow Mewtwo', 10000);
 ItemList.Sharpedonite       = new MegaStoneItem(MegaStoneType.Sharpedonite, 'Sharpedo', 10000);
 ItemList.Slowbronite        = new MegaStoneItem(MegaStoneType.Slowbronite, 'Slowbro', 10000);
 ItemList.Steelixite         = new MegaStoneItem(MegaStoneType.Steelixite, 'Steelix', 10000);
@@ -533,6 +534,8 @@ ItemList.Aurorus = new PokemonItem('Aurorus');
 ItemList['Battle Tree Experience'] = new BattleTreeExperienceItem();
 ItemList['Evolution Item Pool'] = new BattleTreeRewardPoolItem('evo_items', 'Evolution Item Pool', 'Makes a roll in the Evolution Item Pool');
 ItemList['Mismagius (Illusion)'] = new PokemonItem('Mismagius (Illusion)');
+ItemList['Shadow Mewtwo'] = new PokemonItem('Shadow Mewtwo');
+ItemList['Shadow Mewtwo Pool'] = new BattleTreeRewardPoolItem('shadow_mewtwo', 'Shadow Mewtwo Pool', 'Makes a roll in the Shadow Mewtwo Pool');
 
 // Currencies
 ItemList.Money = new CurrencyItem(Currency.money);

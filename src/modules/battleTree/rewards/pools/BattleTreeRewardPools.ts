@@ -68,4 +68,11 @@ export const BattleTreeRewardPools: Partial<Record<BattleTreeRewardPoolNameType,
             { item: 'Syrupy_apple', weight: 1, amount: 1, requirement: new MaxRegionRequirement(Region.paldea) },
         ],
     }),
+    shadow_mewtwo: new BattleTreeRewardPool({
+        id: 'shadow_mewtwo',
+        entries: [
+            { item: 'Shadow Mewtwo', weight: 99, amount: 1 },
+            { item: 'Shadow_Synergy_Stone', weight: 1, amount: 1 },
+        ],
+    }),
 };

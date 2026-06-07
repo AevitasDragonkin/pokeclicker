@@ -356,6 +356,8 @@ export type PokemonNameType
     | 'Mega Mewtwo X'
     | 'Mega Mewtwo Y'
     | 'Armored Mewtwo'
+    | 'Shadow Mewtwo'
+    | 'Mega Shadow Mewtwo'
     | 'Mew'
     | 'Chikorita'
     | 'Bayleef'

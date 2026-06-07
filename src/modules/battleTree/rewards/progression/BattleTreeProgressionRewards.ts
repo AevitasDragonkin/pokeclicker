@@ -2,7 +2,7 @@ import Requirement from '../../../requirements/Requirement';
 import {
     BattleTreeHighestStageRequirement,
     BattleTreeLevelRequirement,
-    BattleTreeTotalStagesRequirement
+    BattleTreeTotalStagesRequirement,
 } from '../../requirements/BattleTreeRequirements';
 import { ItemNameType } from '../../../items/ItemNameType';
 import { BattleTreeRecurrence } from '../../types';
@@ -24,7 +24,8 @@ export type BattleTreeProgressionRewardNameType =
     | 'per_seed:stage:10:GB'
     | 'per_seed:mismagius_illusion'
     | 'per_sequence:magnets'
-    | 'per_sequence:evo';
+    | 'per_sequence:evo'
+    | 'per_sequence:shadow_mewtwo';
 
 export interface BattleTreeProgressionRewardDefinition {
     id: BattleTreeProgressionRewardNameType;
@@ -55,6 +56,7 @@ const PerSeedProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
 
 const PerSequenceProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
     { id: 'per_sequence:evo', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(10, 'per_sequence'), item: 'Evolution Item Pool', amount: 3, immediate: true },
+    { id: 'per_sequence:shadow_mewtwo', recurrence: 'per_sequence', requirement: new BattleTreeLevelRequirement(100), item: 'Shadow Mewtwo Pool', amount: 1 },
 ];
 
 export const BattleTreeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
