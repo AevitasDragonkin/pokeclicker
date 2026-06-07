@@ -8,8 +8,9 @@ import PokemonType from '../enums/PokemonType';
 import { Region } from '../GameConstants';
 import Requirement from '../requirements/Requirement';
 import {
-    BattleTreeAutoPickRequirement, BattleTreePowerUpLootRequirement,
-    BattleTreePowerUpRequirement,
+    BattleTreeAutoPickRequirement,
+    // BattleTreePowerUpLootRequirement,
+    // BattleTreePowerUpRequirement,
 } from './requirements/BattleTreeRequirements';
 
 export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonSubset> = {
