@@ -8,10 +8,11 @@ import PokemonType from '../enums/PokemonType';
 import { Region } from '../GameConstants';
 import Requirement from '../requirements/Requirement';
 import {
-    BattleTreeAutoPickRequirement,
+    BattleTreeAutoPickRequirement, BattleTreeLevelRequirement,
     // BattleTreePowerUpLootRequirement,
     // BattleTreePowerUpRequirement,
 } from './requirements/BattleTreeRequirements';
+import { pokemonMap } from '../pokemons/PokemonList';
 
 export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonSubset> = {
     'All': new CustomBattleTreePokemonSubset({ name: 'All' }),
@@ -59,6 +60,26 @@ export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonS
     // 'Pure Dark': new TypedBattleTreePokemonSubset({ name: 'Pure Dark', type: PokemonType.Dark, monotype: true }),
     // 'Pure Steel': new TypedBattleTreePokemonSubset({ name: 'Pure Steel', type: PokemonType.Steel, monotype: true }),
     // 'Pure Fairy': new TypedBattleTreePokemonSubset({ name: 'Pure Fairy', type: PokemonType.Fairy, monotype: true }),
+    Legendary: new CustomBattleTreePokemonSubset({
+        name: 'Legendary',
+        customFilter: () => {
+            return pokemonMap.filter(p => {
+                const ids: number[] = [144, 145, 146, 150,
+                    243, 244, 245, 249, 250,
+                    377, 378, 379, 380, 381, 383, 383, 384,
+                    480, 481, 482, 483, 484, 487, 485, 486, 488,
+                    638, 639, 640, 641, 642, 645, 643, 644, 646,
+                    716, 717, 718, 772, 773, 785, 786, 787, 788, 789, 790, 791, 792, 800, 888, 889, 890,
+                    891, 892, 894, 895, 896, 897, 898, 905, 1001, 1002, 1003, 1004, 1007, 1008,
+                    1014, 1015, 1016, 1017, 1024];
+                if (!ids.includes(Math.floor(p.id))) {
+                    return false;
+                }
+                return PokemonLocations.isObtainable(p.name);
+            });
+        },
+        requirement: new BattleTreeLevelRequirement(100),
+    }),
 };
 
 export const ProgressionLevelTable: { description: string; requirement: Requirement }[] = [

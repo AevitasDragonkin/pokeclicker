@@ -1,6 +1,7 @@
 import { PokemonListData, pokemonMap } from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
 import { Region } from '../../GameConstants';
+import Requirement from '../../requirements/Requirement';
 
 export type BattleTreePokemonSubsetNameType = 'All'
 | 'Kanto'
@@ -30,7 +31,7 @@ export type BattleTreePokemonSubsetNameType = 'All'
 | 'Dragon'
 | 'Dark'
 | 'Steel'
-| 'Fairy';
+| 'Fairy'
 // | 'Pure Normal'
 // | 'Pure Fire'
 // | 'Pure Water'
@@ -49,11 +50,13 @@ export type BattleTreePokemonSubsetNameType = 'All'
 // | 'Pure Dark'
 // | 'Pure Steel'
 // | 'Pure Fairy';
+| 'Legendary';
 
 interface BattleTreePokemonSubsetProperties {
     name: BattleTreePokemonSubsetNameType;
     customOpponentWeight?: Partial<Record<BattleTreePokemonSubsetNameType, number>>;
     weight?: number;
+    requirement?: Requirement;
 }
 
 export abstract class BattleTreePokemonSubset {
@@ -61,11 +64,13 @@ export abstract class BattleTreePokemonSubset {
     protected _customOpponentWeight: Partial<Record<BattleTreePokemonSubsetNameType, number>>;
 
     protected _weight: number;
+    protected _requirement?: Requirement;
 
     constructor(properties: BattleTreePokemonSubsetProperties) {
         this._name = properties.name;
         this._customOpponentWeight = properties.customOpponentWeight || { };
         this._weight = properties.weight ?? 1;
+        this._requirement = properties.requirement;
     }
 
     getCustomSubsetWeight(name: BattleTreePokemonSubsetNameType): number | null {
@@ -80,6 +85,10 @@ export abstract class BattleTreePokemonSubset {
 
     get weight(): number {
         return this._weight;
+    }
+
+    get requirement(): Requirement | undefined {
+        return this._requirement;
     }
 }
 

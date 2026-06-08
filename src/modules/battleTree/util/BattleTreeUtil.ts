@@ -17,7 +17,11 @@ export class BattleTreeUtil {
 
     public static getRandomSubset({ seed, otherSubset = undefined } : { seed: number, otherSubset?: BattleTreePokemonSubsetNameType }): BattleTreePokemonSubset {
         SeededRand.seed(seed);
-        return SeededRand.fromWeightedArray(Object.values(subsets), Object.values(subsets).map(subset => otherSubset ? subset.getCustomSubsetWeight(otherSubset) : subset.weight));
+
+        return SeededRand
+            .shuffleWeightedArray(Object.values(subsets), Object.values(subsets).map(subset => otherSubset ? subset.getCustomSubsetWeight(otherSubset) : subset.weight))
+            .filter(subset => subset.requirement?.isCompleted() ?? true)
+            [0];
     }
 
     public static getRandomTeamFromSubset({ subset, seed, stage = 0, amount = 3 }: { subset: BattleTreePokemonSubsetNameType, seed: number, stage?: number, amount?: number }): PokemonNameType[] {
