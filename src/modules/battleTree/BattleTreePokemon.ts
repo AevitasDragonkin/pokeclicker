@@ -29,6 +29,9 @@ interface TypedDamage {
 const hitPointFormula = (base: number, level: number) => Math.floor(0.01 * (2 * base) * level) + level + 10;
 const statPointFormula = (base: number, level: number) => (Math.floor(0.01 * (2 * base) * level) + 5);
 
+const averageStat = (...values: number[])=> 7 / 8 * Math.max(...values) + 1 / 8 * Math.min(...values);
+
+
 const animateDamage = (uuid: string, damage: number) => {
     const target = $(`#animate-damage-${uuid}`);
 
@@ -89,8 +92,8 @@ export class BattleTreePokemon {
     private _teamId: TeamType;
 
     private _level: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'level', scope: this._teamId, base: this._baseLevel })));
-    private _attack: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.attack, this.level) })));
-    private _defense: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'defense', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.defense, this.level) })));
+    private _attack: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: statPointFormula(averageStat(pokemonMap[this._name].base.attack, pokemonMap[this._name].base.specialAttack), this.level) })));
+    private _defense: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'defense', scope: this._teamId, base: statPointFormula(averageStat(pokemonMap[this._name].base.defense, pokemonMap[this._name].base.specialDefense), this.level) })));
     private _speed: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'speed', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.speed, this.level) })));
     private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_hitpoints', scope: this._teamId, base: hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level) })));
 
