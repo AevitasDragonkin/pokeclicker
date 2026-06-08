@@ -2513,7 +2513,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
                     <!-- Battle Tree Battles -->
                     <!-- imported from src/components/battleTreeView.html -->
-<div id="battle-tree-view" data-bind="if: App.game.gameState === GameConstants.GameState.battleTree">
+<div id="battle-tree-view" data-bind="if: App.game.gameState === GameConstants.GameState.battleTree" style="color: whitesmoke;">
     <div class="d-flex flex-column justify-content-between flex-wrap" style="min-height: 310px;">
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
             <div>Platform <knockout data-bind="text: App.game.battleTree.sequence.stage"></knockout></div>
