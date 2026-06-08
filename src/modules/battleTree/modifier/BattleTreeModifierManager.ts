@@ -140,7 +140,13 @@ export class BattleTreeModifierManager {
             const v = resolve(entry.effect.value, entry.active.data);
 
             switch (entry.effect.operation) {
-                case 'multiplicative': returnValue *= v; return true;
+                case 'multiplicative': {
+                    if (v === 0)
+                        returnValue = 0;
+                    else
+                        returnValue *= v;
+                    return true;
+                }
                 case 'additive': returnValue += v; return true;
                 case 'reset': returnValue = base; return true;
                 case 'override': returnValue = v; return true;

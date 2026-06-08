@@ -137,7 +137,12 @@ export class BattleTreePokemon {
 
         const transformedDamages: TypedDamage[] = damages.map(({ type, damage }) => ({
             type,
-            damage: defender.type.reduce((prev, curr) => prev + damage / defender.type.length * TypeHelper.typeMatrix[type][curr], 0),
+            damage: defender.type.reduce((prev, curr) => {
+                const typeMult = TypeHelper.typeMatrix[type][curr];
+                if (typeMult === 0)
+                    return prev;
+                return prev + damage / defender.type.length * typeMult;
+            }, 0),
         }));
 
         let totalDamage = 0;
