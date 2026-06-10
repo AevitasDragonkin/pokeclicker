@@ -1,14 +1,15 @@
-import {BattleTreeModifierContext} from './BattleTreeModifierContext';
-import {BattleTreeEffect} from './BattleTreeEffect';
+import { BattleTreeModifierContext } from './BattleTreeModifierContext';
+import { BattleTreeEffect } from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
     BattleTreeHighestStageRequirement,
-    BattleTreeTeamSizeRequirement
+    BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
-import {BattleTreeSequenceState} from '../types';
-import {BattleTreeModifierNameType} from './BattleTreeModifierNameType';
-import {AchievementOption, formatDuration} from '../../GameConstants';
+import { BattleTreeSequenceState } from '../types';
+import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
+import { AchievementOption, formatDuration } from '../../GameConstants';
+import { pokemonMap } from '../../pokemons/PokemonList';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -563,6 +564,20 @@ const loneWolf: BattleTreeModifierDefinition = {
     ],
 };
 
+const purist: BattleTreeModifierDefinition = {
+    id: 'purist',
+    name: 'Purist',
+    description: 'If every Pokémon on the team has only one type, the Pokémon\'s type-effectiveness multipliers are increased by 0.5',
+    image: 'assets/images/battleTree/modifiers/purist.png',
+    weight: 99,
+    stack: { max: 1 },
+    effects: [
+        // Type effectiveness is calculated by the defender
+        { target: { key: 'type_effectiveness', scope: ['Team_B'] }, value: ctx => ctx.sequence.teams.Team_A.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
+        { target: { key: 'type_effectiveness', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_B.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
+    ],
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -609,4 +624,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     resetStages,
     skipStages,
     loneWolf,
+    purist,
 ];
