@@ -121,7 +121,7 @@ export class BattleTreeSequence {
 
         this._fight(new BattleTreeFight({
             pokemonA: this.teams.Team_A.getPokemonAvailableToFight(this.fight?.pokemonA.name),
-            pokemonB: this.teams.Team_B.getPokemonAvailableToFight(this.fight?.pokemonB.name),
+            pokemonB: this.teams.Team_B.getPokemonAvailableToFight(),
         }));
 
         this._state(BattleTreeSequenceState.BATTLE);

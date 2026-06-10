@@ -35,7 +35,7 @@ export class BattleTreeFight {
         this._pokemonB = properties.pokemonB;
 
         this._attackCounter = properties.attackCounter ?? 0;
-        this._attacker = properties.attacker ?? this._pokemonA.speed >= this._pokemonB.speed ? 0 : 1;
+        this._attacker = properties.attacker ?? (this._pokemonA.speed >= this._pokemonB.speed ? 0 : 1);
     }
 
     public update(delta: number): void {
