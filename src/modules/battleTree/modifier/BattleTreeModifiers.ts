@@ -1,10 +1,14 @@
-import { BattleTreeModifierContext } from './BattleTreeModifierContext';
-import { BattleTreeEffect } from './BattleTreeEffect';
+import {BattleTreeModifierContext} from './BattleTreeModifierContext';
+import {BattleTreeEffect} from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
-import { BattleTreeAutoPickRequirement, BattleTreeHighestStageRequirement } from '../requirements/BattleTreeRequirements';
-import { BattleTreeSequenceState } from '../types';
-import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
-import { formatDuration } from '../../GameConstants';
+import {
+    BattleTreeAutoPickRequirement,
+    BattleTreeHighestStageRequirement,
+    BattleTreeTeamSizeRequirement
+} from '../requirements/BattleTreeRequirements';
+import {BattleTreeSequenceState} from '../types';
+import {BattleTreeModifierNameType} from './BattleTreeModifierNameType';
+import {AchievementOption, formatDuration} from '../../GameConstants';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -544,6 +548,21 @@ const skipStages: BattleTreeModifierDefinition = {
     effects: [{ target: { key: 'stage' }, value: SKIP_STAGES, operation: 'additive' }],
 };
 
+const loneWolf: BattleTreeModifierDefinition = {
+    id: 'lone_wolf',
+    name: 'Lone wolf',
+    description: 'If you have only one Pokémon on your team, it gains 200% to all stats and 5% life steal',
+    image: 'assets/images/battleTree/modifiers/lone_wolf.png',
+    weight: 90,
+    stack: { max: 1 },
+    requirement: new BattleTreeTeamSizeRequirement(1, AchievementOption.equal, 'Team_A'),
+    effects: [
+        { target: { key: 'attack', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 3 : 1, operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 3 : 1, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 3 : 1, operation: 'multiplicative' },
+    ],
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -589,4 +608,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     enemyMaxHPGainModifierTime,
     resetStages,
     skipStages,
+    loneWolf,
 ];
