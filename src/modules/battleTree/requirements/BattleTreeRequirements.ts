@@ -1,7 +1,7 @@
 import Requirement from '../../requirements/Requirement';
-import {AchievementOption} from '../../GameConstants';
-import {BattleTreeRecurrence} from '../types';
-import {TeamType} from '../BattleTreeSequence';
+import { AchievementOption } from '../../GameConstants';
+import { BattleTreeRecurrence } from '../types';
+import { TeamType } from '../BattleTreeSequence';
 
 export class BattleTreeLevelRequirement extends Requirement {
     constructor(level: number) {

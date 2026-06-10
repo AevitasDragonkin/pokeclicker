@@ -1,15 +1,15 @@
-import {BattleTreeModifierContext} from './BattleTreeModifierContext';
-import {BattleTreeEffect} from './BattleTreeEffect';
+import { BattleTreeModifierContext } from './BattleTreeModifierContext';
+import { BattleTreeEffect } from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
     BattleTreeHighestStageRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
-import {BattleTreeSequenceState} from '../types';
-import {BattleTreeModifierNameType} from './BattleTreeModifierNameType';
-import {AchievementOption, formatDuration} from '../../GameConstants';
-import {pokemonMap} from '../../pokemons/PokemonList';
+import { BattleTreeSequenceState } from '../types';
+import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
+import { AchievementOption, formatDuration } from '../../GameConstants';
+import { pokemonMap } from '../../pokemons/PokemonList';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
