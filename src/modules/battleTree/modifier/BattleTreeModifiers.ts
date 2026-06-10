@@ -551,9 +551,9 @@ const skipStages: BattleTreeModifierDefinition = {
 const loneWolf: BattleTreeModifierDefinition = {
     id: 'lone_wolf',
     name: 'Lone wolf',
-    description: 'If you have only one Pokémon on your team, it gains 200% to all stats and 5% life steal',
+    description: 'If you have only one Pokémon on your team, it gains 200% to all stats',
     image: 'assets/images/battleTree/modifiers/lone_wolf.png',
-    weight: 90,
+    weight: 1,
     stack: { max: 1 },
     requirement: new BattleTreeTeamSizeRequirement(1, AchievementOption.equal, 'Team_A'),
     effects: [
