@@ -1,15 +1,15 @@
-import { BattleTreeModifierContext } from './BattleTreeModifierContext';
-import { BattleTreeEffect } from './BattleTreeEffect';
+import {BattleTreeModifierContext} from './BattleTreeModifierContext';
+import {BattleTreeEffect} from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
     BattleTreeHighestStageRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
-import { BattleTreeSequenceState } from '../types';
-import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
-import { AchievementOption, formatDuration } from '../../GameConstants';
-import { pokemonMap } from '../../pokemons/PokemonList';
+import {BattleTreeSequenceState} from '../types';
+import {BattleTreeModifierNameType} from './BattleTreeModifierNameType';
+import {AchievementOption, formatDuration} from '../../GameConstants';
+import {pokemonMap} from '../../pokemons/PokemonList';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -569,13 +569,40 @@ const purist: BattleTreeModifierDefinition = {
     name: 'Purist',
     description: 'If every Pokémon on the team has only one type, the Pokémon\'s type-effectiveness multipliers are increased by 0.5',
     image: 'assets/images/battleTree/modifiers/purist.png',
-    weight: 99,
+    weight: 1,
     stack: { max: 1 },
     effects: [
         // Type effectiveness is calculated by the defender
         { target: { key: 'type_effectiveness', scope: ['Team_B'] }, value: ctx => ctx.sequence.teams.Team_A.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
         { target: { key: 'type_effectiveness', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_B.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
     ],
+};
+
+const blackSludge: BattleTreeModifierDefinition<TimeData & PulseData> = {
+    id: 'black_sludge',
+    name: 'Black Sludge',
+    description: 'Opponent Pokémon heal 1% HP per second',
+    image: 'assets/images/battleTree/modifiers/black_sludge.png',
+    weight: 1,
+    stack: { max: 1 },
+    stateScope: [ BattleTreeSequenceState.BATTLE ],
+    onTick: (ctx, { definitionData, tickData }) => {
+        definitionData.pulseTimer += tickData.battleDeltaTime;
+
+        const PULSE_DELAY = 1;
+
+        if (definitionData.pulseTimer >= PULSE_DELAY) {
+            ctx.sequence.teams.Team_B.list.forEach(p => p.heal({ percentage: 0.01 }));
+            definitionData.pulseTimer -= PULSE_DELAY;
+            ++definitionData.pulsesFired;
+        }
+    },
+    createData: ctx => ({
+        acquiredEngagementTime: ctx.sequence.engagementTime,
+        acquiredBattleTime: ctx.sequence.battleTime,
+        pulsesFired: 0,
+        pulseTimer: 0,
+    }),
 };
 
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
@@ -625,4 +652,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     skipStages,
     loneWolf,
     purist,
+    blackSludge,
 ];

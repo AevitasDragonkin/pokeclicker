@@ -116,7 +116,7 @@ export class BattleTreePokemon {
     }
 
     public heal(opts: { percentage?: number, flat?: number }): void {
-        const p = this._maxHitpoints() * (opts.percentage ?? 0);
+        const p = Math.floor(this._maxHitpoints() * (opts.percentage ?? 0));
         const f = opts.flat ?? 0;
 
         const total = Math.min(this._maxHitpoints() - this._hp(), p + f);

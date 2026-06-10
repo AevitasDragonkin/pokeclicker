@@ -41,4 +41,5 @@ export type BattleTreeModifierNameType
     | 'reset_stages_25'
     | 'skip_stages_3'
     | 'lone_wolf'
-    | 'purist';
+    | 'purist'
+    | 'black_sludge';
