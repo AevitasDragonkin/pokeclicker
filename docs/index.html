@@ -2516,7 +2516,9 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 <div id="battle-tree-view" data-bind="if: App.game.gameState === GameConstants.GameState.battleTree" style="color: whitesmoke;">
     <div class="d-flex flex-column justify-content-between flex-wrap" style="min-height: 310px;">
         <div class="d-flex flex-wrap p-1" style="background-color: rgba(0,0,0,70%); justify-content: space-evenly; gap: 1rem;">
+            <!-- ko ifnot: [BattleTreeSequenceState.PREPARATION, BattleTreeSequenceState.POWERUP].includes(App.game.battleTree.sequence.state) -->
             <div>Platform <knockout data-bind="text: App.game.battleTree.sequence.stage"></knockout></div>
+            <!-- /ko -->
             <div data-bind="tooltip: App.game.battleTree.sequence.timerTooltip">
                 <!-- ko if: [BattleTreeSequenceState.PREPARATION, BattleTreeSequenceState.POWERUP].includes(App.game.battleTree.sequence.state) -->
                 <code data-bind="text: GameConstants.formatTime(App.game.battleTree.sequence.setupTime)"></code>
@@ -2575,7 +2577,9 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                             src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id)
                         }
                         ">
-                        <div class="small" data-bind="text: `Lvl. ${$data.level} ${PokemonHelper.displayName($data.name)}`" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="small" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;">
+                            Lv <knockout data-bind="text: `${$data.level} ${PokemonHelper.displayName($data.name)}`"></knockout>
+                        </div>
                         <div class="progress">
                             <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                 css: {
@@ -2603,7 +2607,9 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                             src: PokemonHelper.getImage(PokemonHelper.getPokemonByName($data.name).id, $data.shiny, $data.gender, false)
                         }
                         ">
-                        <div class="small" data-bind="text: `Lvl. ${$data.level} ${PokemonHelper.displayName($data.name)}`" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;"></div>
+                        <div class="small" style="background-color: rgba(0 0 0 / 0.35); margin-bottom: 0.25rem; border-radius: 0.25rem;">
+                            Lv <knockout data-bind="text: `${$data.level} ${PokemonHelper.displayName($data.name)}`"></knockout>
+                        </div>
                         <div class="progress">
                             <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
                                 css: {
@@ -3230,7 +3236,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                         <div class="flex-grow-1" style="min-width: 0">
                             <div class="text-left" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap" data-bind="text: PokemonHelper.displayName($data.name), tooltip: { title: PokemonHelper.displayName($data.name), trigger: 'hover', placement: 'bottom' }"></div>
 
-                            <div class="text-left" style="font-size: 0.6rem;">Lvl. <knockout data-bind="text: $data.level"></knockout></div>
+                            <div class="text-left" style="font-size: 0.6rem;"><knockout class="text-muted">Lv</knockout> <knockout data-bind="text: $data.level"></knockout></div>
 
                             <div class="progress" style="min-height: 3px; height: 3px;">
                                 <div class="progress-bar bg-danger" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-bind="
