@@ -479,7 +479,7 @@ const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
 const fatigue: BattleTreeModifierDefinition<StageData> = {
     id: 'fatigue',
     name: 'Fatigue',
-    description: (ctx, { acquiredStage }: StageData) => `All pokemon attack speed decreases by 1% for each platform after this. (x${0.99 ** (ctx.sequence.stage - acquiredStage)})`,
+    description: (ctx, { acquiredStage }: StageData) => `All pokemon attack speed decreases by 1% for each platform after this. (x${(0.99 ** (ctx.sequence.stage - acquiredStage)).toFixed(4)})`,
     image: 'assets/images/battleTree/modifiers/fatigue.png',
     weight: 1,
     stack: { max: 1 },
