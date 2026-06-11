@@ -115,7 +115,11 @@ export class BattleTreePokemon {
         }, this, 'spectate');
     }
 
-    public heal(opts: { percentage?: number, flat?: number }): void {
+    public heal(opts: { percentage?: number, flat?: number, allowRevive?: boolean }): void {
+        if (!opts.allowRevive && this._hp() === 0) {
+            return;
+        }
+
         const p = Math.floor(this._maxHitpoints() * (opts.percentage ?? 0));
         const f = opts.flat ?? 0;
 

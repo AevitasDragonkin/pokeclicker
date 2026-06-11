@@ -252,7 +252,7 @@ const fullHeal: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/full_heal.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints > 0).forEach(p => p.heal({ percentage: 0.3 })),
+    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.3 })),
 };
 
 const revive: BattleTreeModifierDefinition = {
@@ -262,7 +262,7 @@ const revive: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/revive.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.15 })),
+    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.15, allowRevive: true })),
 };
 
 const healOverTime: BattleTreeModifierDefinition<TimeData & PulseData> = {
