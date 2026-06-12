@@ -89,121 +89,304 @@ export const AutoPickModifiers: BattleTreeModifierDefinition = {
     requirement: BattleTreeAutoPickRequirement,
 };
 
-const playerAttack10: BattleTreeModifierDefinition = {
-    id: '10%_player_attack',
-    name: '+10% Attack',
-    description: 'All your pokemon gain 10% attack',
-    image: 'assets/images/battleTree/modifiers/10_player_attack.png',
+const playerAttack1: BattleTreeModifierDefinition = {
+    id: 'player_attack_1',
+    name: 'Attack+',
+    description: 'All your pokemon gain 12.5% attack',
+    image: 'assets/images/battleTree/modifiers/player_attack_1.png',
     weight: 1,
     stack: { max: 5 },
-    effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
+    effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 1.125, operation: 'multiplicative' }],
 };
 
-const playerDefense10: BattleTreeModifierDefinition = {
-    id: '10%_player_defense',
-    name: '+10% Defense',
-    description: 'All your pokemon gain 10% defense',
-    image: 'assets/images/battleTree/modifiers/10_player_defense.png',
+const playerAttack2: BattleTreeModifierDefinition = {
+    id: 'player_attack_2',
+    name: 'Attack++',
+    description: 'All your pokemon gain 18.75% attack',
+    image: 'assets/images/battleTree/modifiers/player_attack_2.png',
+    weight: 1,
+    stack: { max: 3 },
+    effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 1.1875, operation: 'multiplicative' }],
+};
+
+const playerAttack3: BattleTreeModifierDefinition = {
+    id: 'player_attack_3',
+    name: 'Attack+++',
+    description: 'All your pokemon gain 25% attack',
+    image: 'assets/images/battleTree/modifiers/player_attack_3.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 1.25, operation: 'multiplicative' }],
+};
+
+const playerDefense1: BattleTreeModifierDefinition = {
+    id: 'player_defense_1',
+    name: 'Defense+',
+    description: 'All your pokemon gain 12.5% defense',
+    image: 'assets/images/battleTree/modifiers/player_defense_1.png',
     weight: 1,
     stack: { max: 5 },
-    effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
+    effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: 1.125, operation: 'multiplicative' }],
 };
 
-const playerSpeed10: BattleTreeModifierDefinition = {
-    id: '10%_player_speed',
+const playerDefense2: BattleTreeModifierDefinition = {
+    id: 'player_defense_2',
+    name: 'Defense++',
+    description: 'All your pokemon gain 18.75% defense',
+    image: 'assets/images/battleTree/modifiers/player_defense_2.png',
+    weight: 1,
+    stack: { max: 3 },
+    effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: 1.1875, operation: 'multiplicative' }],
+};
+
+const playerDefense3: BattleTreeModifierDefinition = {
+    id: 'player_defense_3',
+    name: 'Defense+++',
+    description: 'All your pokemon gain 25% defense',
+    image: 'assets/images/battleTree/modifiers/player_defense_3.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: 1.25, operation: 'multiplicative' }],
+};
+
+const playerSpeed1: BattleTreeModifierDefinition = {
+    id: 'player_speed_1',
     name: '+10% Speed',
     description: 'All your pokemon gain 10% speed',
-    image: 'assets/images/battleTree/modifiers/10_player_speed.png',
+    image: 'assets/images/battleTree/modifiers/player_speed_1.png',
     weight: 1,
-    stack: { max: 5 },
+    stack: { max: 1 },
     effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
 };
 
-const playerMaxHP10: BattleTreeModifierDefinition = {
-    id: '10%_player_max_hp',
-    name: '+10% Maximum Hitpoints',
+const playerSpeed2: BattleTreeModifierDefinition = {
+    id: 'player_speed_2',
+    name: '+15% Speed',
+    description: 'All your pokemon gain 15% speed',
+    image: 'assets/images/battleTree/modifiers/player_speed_2.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: 1.15, operation: 'multiplicative' }],
+};
+
+const playerSpeed3: BattleTreeModifierDefinition = {
+    id: 'player_speed_3',
+    name: '+20% Speed',
+    description: 'All your pokemon gain 20% speed',
+    image: 'assets/images/battleTree/modifiers/player_speed_3.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: 1.2, operation: 'multiplicative' }],
+};
+
+const playerMaxHP1: BattleTreeModifierDefinition = {
+    id: 'player_max_hp_1',
+    name: 'Maximum HP+',
     description: 'All your pokemon gain 10% maximum hitpoints',
-    image: 'assets/images/battleTree/modifiers/10_player_max_hp.png',
+    image: 'assets/images/battleTree/modifiers/player_max_hp_1.png',
     weight: 1,
     stack: { max: 5 },
     effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: 1.1, operation: 'multiplicative' }],
 };
 
-const enemyAttack10: BattleTreeModifierDefinition = {
-    id: '10%_enemy_attack',
-    name: '+10% Enemy Attack',
-    description: 'All your opponents\' pokemon gain 10% attack',
-    image: 'assets/images/battleTree/modifiers/10_enemy_attack.png',
-    weight: 1,
-    effects: [{ target: { key: 'attack', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' }],
-};
-
-const enemyDefense10: BattleTreeModifierDefinition = {
-    id: '10%_enemy_defense',
-    name: '+10% Enemy Defense',
-    description: 'All your opponents\' pokemon gain 10% defense',
-    image: 'assets/images/battleTree/modifiers/10_enemy_defense.png',
-    weight: 1,
-    effects: [{ target: { key: 'defense', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' }],
-};
-
-const enemySpeed10: BattleTreeModifierDefinition = {
-    id: '10%_enemy_speed',
-    name: '+10% Enemy Speed',
-    description: 'All your opponents\' pokemon gain 10% speed',
-    image: 'assets/images/battleTree/modifiers/10_enemy_speed.png',
-    weight: 1,
-    effects: [{ target: { key: 'speed', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' }],
-};
-
-const enemyMaxHP10: BattleTreeModifierDefinition = {
-    id: '10%_enemy_max_hp',
-    name: '+10% Enemy Maximum Hitpoints',
-    description: 'All your opponents\' pokemon gain 10% maximum hitpoints',
-    image: 'assets/images/battleTree/modifiers/10_enemy_max_hp.png',
+const playerMaxHP2: BattleTreeModifierDefinition = {
+    id: 'player_max_hp_2',
+    name: 'Maximum HP++',
+    description: 'All your pokemon gain 15% maximum hitpoints',
+    image: 'assets/images/battleTree/modifiers/player_max_hp_2.png',
     weight: 1,
     stack: { max: 5 },
-    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' }],
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: 1.15, operation: 'multiplicative' }],
 };
 
-const playerLevels5: BattleTreeModifierDefinition = {
-    id: '5_player_levels',
-    name: '+5 Pokemon levels',
-    description: 'All your pokemon gain +5 levels',
-    image: 'assets/images/battleTree/modifiers/5_player_levels.png',
+const playerMaxHP3: BattleTreeModifierDefinition = {
+    id: 'player_max_hp_3',
+    name: 'Maximum HP+++',
+    description: 'All your pokemon gain 20% maximum hitpoints',
+    image: 'assets/images/battleTree/modifiers/player_max_hp_3.png',
     weight: 1,
-    stack: { max: 3 },
+    stack: { max: 5 },
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: 1.2, operation: 'multiplicative' }],
+};
+
+const playerLevel1: BattleTreeModifierDefinition = {
+    id: 'player_level_1',
+    name: 'Level+',
+    description: 'All your Pokémon gain 3 levels',
+    image: 'assets/images/battleTree/modifiers/player_level_1.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'level', scope: ['Team_A'] }, value: 3, operation: 'additive' }],
+};
+
+const playerLevel2: BattleTreeModifierDefinition = {
+    id: 'player_level_2',
+    name: 'Level++',
+    description: 'All your Pokémon gain 5 levels',
+    image: 'assets/images/battleTree/modifiers/player_level_2.png',
+    weight: 1,
+    stack: { max: 1 },
     effects: [{ target: { key: 'level', scope: ['Team_A'] }, value: 5, operation: 'additive' }],
 };
 
-const playerLevels10: BattleTreeModifierDefinition = {
-    id: '10_player_levels',
-    name: '+10 Pokemon levels',
-    description: 'All your pokemon gain +10 levels',
-    image: 'assets/images/battleTree/modifiers/10_player_levels.png',
+const playerLevel3: BattleTreeModifierDefinition = {
+    id: 'player_level_3',
+    name: 'Level+++',
+    description: 'All your Pokémon gain 10 levels',
+    image: 'assets/images/battleTree/modifiers/player_level_3.png',
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'level', scope: ['Team_A'] }, value: 10, operation: 'additive' }],
 };
 
-const enemyLevels15: BattleTreeModifierDefinition = {
-    id: '15_enemy_levels',
-    name: '+15 Enemy Pokemon levels',
-    description: 'All your opponents\' pokemon gain +15 levels',
-    image: 'assets/images/battleTree/modifiers/15_enemy_levels.png',
-    weight: 1,
-    stack: { max: 2 },
-    effects: [{ target: { key: 'level', scope: ['Team_B'] }, value: 15, operation: 'additive' }],
-};
-
-const enemyLevelsMinus3: BattleTreeModifierDefinition = {
-    id: '-3_enemy_levels',
-    name: '-3 Opponent Pokemon levels',
-    description: 'All your opponents\' pokemon gain -3 levels',
-    image: 'assets/images/battleTree/modifiers/-3_enemy_levels.png',
+const enemyAttack1: BattleTreeModifierDefinition = {
+    id: 'enemy_attack_1',
+    name: 'Opponent Attack+',
+    description: 'All your opponents pokemon gain 12.5% attack',
+    image: 'assets/images/battleTree/modifiers/enemy_attack_1.png',
     weight: 1,
     stack: { max: 5 },
-    effects: [{ target: { key: 'level', scope: ['Team_B'] }, value: -3, operation: 'additive' }],
+    effects: [{ target: { key: 'attack', scope: ['Team_B'] }, value: 1.125, operation: 'multiplicative' }],
+};
+
+const enemyAttack2: BattleTreeModifierDefinition = {
+    id: 'enemy_attack_2',
+    name: 'Opponent Attack++',
+    description: 'All your opponents pokemon gain 18.75% attack',
+    image: 'assets/images/battleTree/modifiers/enemy_attack_2.png',
+    weight: 1,
+    stack: { max: 3 },
+    effects: [{ target: { key: 'attack', scope: ['Team_B'] }, value: 1.1875, operation: 'multiplicative' }],
+};
+
+const enemyAttack3: BattleTreeModifierDefinition = {
+    id: 'enemy_attack_3',
+    name: 'Opponent Attack+++',
+    description: 'All your opponents pokemon gain 25% attack',
+    image: 'assets/images/battleTree/modifiers/enemy_attack_3.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'attack', scope: ['Team_B'] }, value: 1.25, operation: 'multiplicative' }],
+};
+
+const enemyDefense1: BattleTreeModifierDefinition = {
+    id: 'enemy_defense_1',
+    name: 'Opponent Defense+',
+    description: 'All your opponents pokemon gain 12.5% defense',
+    image: 'assets/images/battleTree/modifiers/enemy_defense_1.png',
+    weight: 1,
+    stack: { max: 5 },
+    effects: [{ target: { key: 'defense', scope: ['Team_B'] }, value: 1.125, operation: 'multiplicative' }],
+};
+
+const enemyDefense2: BattleTreeModifierDefinition = {
+    id: 'enemy_defense_2',
+    name: 'Opponent Defense++',
+    description: 'All your opponents pokemon gain 18.75% defense',
+    image: 'assets/images/battleTree/modifiers/enemy_defense_2.png',
+    weight: 1,
+    stack: { max: 3 },
+    effects: [{ target: { key: 'defense', scope: ['Team_B'] }, value: 1.1875, operation: 'multiplicative' }],
+};
+
+const enemyDefense3: BattleTreeModifierDefinition = {
+    id: 'enemy_defense_3',
+    name: 'Opponent Defense+++',
+    description: 'All your opponents pokemon gain 25% defense',
+    image: 'assets/images/battleTree/modifiers/enemy_defense_3.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'defense', scope: ['Team_B'] }, value: 1.25, operation: 'multiplicative' }],
+};
+
+const enemySpeed1: BattleTreeModifierDefinition = {
+    id: 'enemy_speed_1',
+    name: 'Opponent +10% Speed',
+    description: 'All your opponents pokemon gain 10% speed',
+    image: 'assets/images/battleTree/modifiers/enemy_speed_1.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'speed', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' }],
+};
+
+const enemySpeed2: BattleTreeModifierDefinition = {
+    id: 'enemy_speed_2',
+    name: 'Opponent +15% Speed',
+    description: 'All your opponents pokemon gain 15% speed',
+    image: 'assets/images/battleTree/modifiers/enemy_speed_2.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'speed', scope: ['Team_B'] }, value: 1.15, operation: 'multiplicative' }],
+};
+
+const enemySpeed3: BattleTreeModifierDefinition = {
+    id: 'enemy_speed_3',
+    name: 'Opponent +20% Speed',
+    description: 'All your opponents pokemon gain 20% speed',
+    image: 'assets/images/battleTree/modifiers/enemy_speed_3.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'speed', scope: ['Team_B'] }, value: 1.2, operation: 'multiplicative' }],
+};
+
+const enemyMaxHP1: BattleTreeModifierDefinition = {
+    id: 'enemy_max_hp_1',
+    name: 'Opponent Maximum HP+',
+    description: 'All your opponents pokemon gain 10% maximum hitpoints',
+    image: 'assets/images/battleTree/modifiers/enemy_max_hp_1.png',
+    weight: 1,
+    stack: { max: 5 },
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' }],
+};
+
+const enemyMaxHP2: BattleTreeModifierDefinition = {
+    id: 'enemy_max_hp_2',
+    name: 'Opponent Maximum HP++',
+    description: 'All your opponents pokemon gain 15% maximum hitpoints',
+    image: 'assets/images/battleTree/modifiers/enemy_max_hp_2.png',
+    weight: 1,
+    stack: { max: 5 },
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: 1.15, operation: 'multiplicative' }],
+};
+
+const enemyMaxHP3: BattleTreeModifierDefinition = {
+    id: 'enemy_max_hp_3',
+    name: 'Opponent Maximum HP+++',
+    description: 'All your opponents pokemon gain 20% maximum hitpoints',
+    image: 'assets/images/battleTree/modifiers/enemy_max_hp_3.png',
+    weight: 1,
+    stack: { max: 5 },
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: 1.2, operation: 'multiplicative' }],
+};
+
+const enemyLevel1: BattleTreeModifierDefinition = {
+    id: 'enemy_level_1',
+    name: 'Opponent Level+',
+    description: 'All your Pokémon gain 3 levels',
+    image: 'assets/images/battleTree/modifiers/enemy_level_1.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'level', scope: ['Team_B'] }, value: 3, operation: 'additive' }],
+};
+
+const enemyLevel2: BattleTreeModifierDefinition = {
+    id: 'enemy_level_2',
+    name: 'Opponent Level++',
+    description: 'All your Pokémon gain 5 levels',
+    image: 'assets/images/battleTree/modifiers/enemy_level_2.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'level', scope: ['Team_B'] }, value: 5, operation: 'additive' }],
+};
+
+const enemyLevel3: BattleTreeModifierDefinition = {
+    id: 'enemy_level_3',
+    name: 'Opponent Level+++',
+    description: 'All your Pokémon gain 10 levels',
+    image: 'assets/images/battleTree/modifiers/enemy_level_3.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'level', scope: ['Team_B'] }, value: 10, operation: 'additive' }],
 };
 
 const healPotion: BattleTreeModifierDefinition = {
@@ -646,18 +829,36 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     AutoPickModifiers,
 
     // Player picked
-    playerAttack10,
-    playerDefense10,
-    playerSpeed10,
-    playerMaxHP10,
-    enemyAttack10,
-    enemyDefense10,
-    enemySpeed10,
-    enemyMaxHP10,
-    playerLevels5,
-    playerLevels10,
-    enemyLevels15,
-    enemyLevelsMinus3,
+    playerAttack1,
+    playerAttack2,
+    playerAttack3,
+    playerDefense1,
+    playerDefense2,
+    playerDefense3,
+    playerSpeed1,
+    playerSpeed2,
+    playerSpeed3,
+    playerMaxHP1,
+    playerMaxHP2,
+    playerMaxHP3,
+    playerLevel1,
+    playerLevel2,
+    playerLevel3,
+    enemyAttack1,
+    enemyAttack2,
+    enemyAttack3,
+    enemyDefense1,
+    enemyDefense2,
+    enemyDefense3,
+    enemySpeed1,
+    enemySpeed2,
+    enemySpeed3,
+    enemyMaxHP1,
+    enemyMaxHP2,
+    enemyMaxHP3,
+    enemyLevel1,
+    enemyLevel2,
+    enemyLevel3,
     healPotion,
     healPotionSuper,
     healPotionHyper,
