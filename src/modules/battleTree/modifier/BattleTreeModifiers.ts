@@ -522,7 +522,7 @@ const fastStart: BattleTreeModifierDefinition = {
     requirement: new BattleTreeHighestStageRequirement(FAST_START_STAGE_REQUIREMENT, 'per_seed'),
     effects: [{
         target: { key: 'game_speed' },
-        value: 3,
+        value: ctx => ctx.sequence.stage <= FAST_START_STAGE_REQUIREMENT ? 3 : 1,
         operation: 'multiplicative',
     }],
 };
