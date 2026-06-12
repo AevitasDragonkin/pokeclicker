@@ -10,6 +10,7 @@ import { BattleTreeSequenceState } from '../types';
 import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
 import { AchievementOption, formatDuration } from '../../GameConstants';
 import { pokemonMap } from '../../pokemons/PokemonList';
+import PokemonType from '../../enums/PokemonType';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -605,6 +606,15 @@ const blackSludge: BattleTreeModifierDefinition<TimeData & PulseData> = {
     }),
 };
 
+const voltorb: BattleTreeModifierDefinition = {
+    id: 'voltorb',
+    name: 'Voltorb',
+    description: 'Your active Pokémon takes 50 typeless damage',
+    image: 'assets/images/battleTree/modifiers/voltorb.png',
+    weight: 99,
+    onAcquire: ctx => ctx.sequence.fight.pokemonA.takeDamage(undefined, undefined, { [PokemonType.None]: { [PokemonType.None]: 50 } }),
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -653,4 +663,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     loneWolf,
     purist,
     blackSludge,
+    voltorb,
 ];

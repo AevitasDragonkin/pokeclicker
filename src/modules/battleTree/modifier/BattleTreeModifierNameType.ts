@@ -42,4 +42,5 @@ export type BattleTreeModifierNameType
     | 'skip_stages_3'
     | 'lone_wolf'
     | 'purist'
-    | 'black_sludge';
+    | 'black_sludge'
+    | 'voltorb';
