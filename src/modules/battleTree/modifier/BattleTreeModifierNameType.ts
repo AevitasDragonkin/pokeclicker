@@ -71,4 +71,7 @@ export type BattleTreeModifierNameType
     | 'boss_rush'
     | 'underleveled'
     | 'war_of_attrition'
-    | 'heavy_armour';
+    | 'heavy_armour'
+    | 'vampire'
+    | 'absorb'
+    | 'mega_drain';

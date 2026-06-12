@@ -17,7 +17,8 @@ export type BattleTreeEffectKey
     | 'min_team_size'
     | 'max_team_size'
     | 'stage'
-    | 'type_effectiveness';
+    | 'type_effectiveness'
+    | 'life_steal_percertage';
 export type Operation = 'additive' | 'multiplicative' | 'reset' | 'override' | 'final';
 
 export type BattleTreeEffectValue<Data = unknown> = number | ((ctx: BattleTreeModifierContext, data: Data) => number);

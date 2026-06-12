@@ -739,15 +739,16 @@ const skipStages: BattleTreeModifierDefinition = {
 const loneWolf: BattleTreeModifierDefinition = {
     id: 'lone_wolf',
     name: 'Lone wolf',
-    description: 'If you have only one Pokémon on your team, it gains 200% to all stats',
+    description: 'If you have only one Pokémon on your team, it gains 100% to all stats and 5% life steal',
     image: 'assets/images/battleTree/modifiers/lone_wolf.png',
     weight: 1,
     stack: { max: 1 },
     requirement: new BattleTreeTeamSizeRequirement(1, AchievementOption.equal, 'Team_A'),
     effects: [
-        { target: { key: 'attack', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 3 : 1, operation: 'multiplicative' },
-        { target: { key: 'defense', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 3 : 1, operation: 'multiplicative' },
-        { target: { key: 'speed', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 3 : 1, operation: 'multiplicative' },
+        { target: { key: 'attack', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 2 : 1, operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 2 : 1, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 2 : 1, operation: 'multiplicative' },
+        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 0.05 : 0, operation: 'additive' },
     ],
 };
 
@@ -891,6 +892,45 @@ const heavyArmour: BattleTreeModifierDefinition = {
     ],
 };
 
+const vampire: BattleTreeModifierDefinition = {
+    id: 'vampire',
+    name: 'Vampire',
+    description: 'Your Pokémon gain 10% life steal, but all their stats are reduced by 10%',
+    image: 'assets/images/battleTree/modifiers/vampire.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: 0.1, operation: 'additive' },
+        { target: { key: 'attack', scope: ['Team_A'] }, value: 0.9, operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: 0.9, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: 0.9, operation: 'multiplicative' },
+    ],
+};
+
+const absorb: BattleTreeModifierDefinition = {
+    id: 'absorb',
+    name: 'Absorb',
+    description: 'Your Pokémon gain 1% life steal',
+    image: 'assets/images/battleTree/modifiers/absorb.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: 0.01, operation: 'additive' },
+    ],
+};
+
+const megaDrain: BattleTreeModifierDefinition = {
+    id: 'mega_drain',
+    name: 'Mega Drain',
+    description: 'Your Pokémon gain 2.5% life steal',
+    image: 'assets/images/battleTree/modifiers/mega_drain.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: 0.025, operation: 'additive' },
+    ],
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -965,4 +1005,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     underleveled,
     warOfAttrition,
     heavyArmour,
+    vampire,
+    absorb,
+    megaDrain,
 ];

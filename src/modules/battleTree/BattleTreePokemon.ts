@@ -145,10 +145,17 @@ export class BattleTreePokemon {
             }
         }
 
-        target.takeDamage(this, this._teamId, attackMap);
+        const actualHitDamage = target.takeDamage(this, this._teamId, attackMap);
+
+        const lifeStealPercentage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'life_steal_percertage', scope: this._teamId, base: 0 });
+        const lifeStealAmount = Math.floor(actualHitDamage * lifeStealPercentage);
+
+        if (lifeStealAmount > 0) {
+            this.heal({ flat: lifeStealAmount });
+        }
     }
 
-    public takeDamage(from: BattleTreePokemon, team: TeamType, damageMap: DamageMapType): void {
+    public takeDamage(from: BattleTreePokemon, team: TeamType, damageMap: DamageMapType): number {
         for (const attackType in damageMap) {
             for (const defenseType in damageMap[attackType]) {
                 damageMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_taken_after_types', scope: this._teamId, base: damageMap[attackType][defenseType] });
@@ -161,8 +168,12 @@ export class BattleTreePokemon {
 
         const flooredDamage = Math.floor(totalDamage);
 
-        this._hp(Math.max(this._hp() - flooredDamage, 0));
-        animateDamage(this.uuid, flooredDamage);
+        const actualHitDamage = Math.min(this._hp(), flooredDamage);
+
+        this._hp(Math.max(this._hp() - actualHitDamage, 0));
+        animateDamage(this.uuid, actualHitDamage);
+
+        return actualHitDamage;
     }
 
     get name(): PokemonNameType {
