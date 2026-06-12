@@ -611,8 +611,33 @@ const voltorb: BattleTreeModifierDefinition = {
     name: 'Voltorb',
     description: 'Your active Pokémon takes 50 typeless damage',
     image: 'assets/images/battleTree/modifiers/voltorb.png',
-    weight: 99,
+    weight: 1,
     onAcquire: ctx => ctx.sequence.fight.pokemonA.takeDamage(undefined, undefined, { [PokemonType.None]: { [PokemonType.None]: 50 } }),
+};
+
+const giantSlayer: BattleTreeModifierDefinition = {
+    id: 'giant_slayer',
+    name: 'Giant Slayer',
+    description: 'Your Pokémon deal 50% more damage to opposing Pokémon with higher maximum HP',
+    image: 'assets/images/battleTree/modifiers/giant_slayer.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'damage_dealt_after_types', scope: ['Team_A'] }, value: ctx => ctx.sequence.fight.pokemonB.maxHitpoints > ctx.sequence.fight.pokemonA.maxHitpoints ? 1.5 : 1, operation: 'multiplicative' },
+    ],
+};
+
+const davidGoliath: BattleTreeModifierDefinition = {
+    id: 'david_goliath',
+    name: 'David vs Goliath',
+    description: 'All pokemon deal 75% more damage damage to opposing Pokémon with higher maximum HP, and deal 75% less damage to opposing Pokémon with lower maximum HP',
+    image: 'assets/images/battleTree/modifiers/david_goliath.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'damage_dealt_after_types', scope: ['Team_A'] }, value: ctx => ({ '-1': 0.25, '0': 1, '1': 1.75 })[Math.sign(ctx.sequence.fight.pokemonB.maxHitpoints - ctx.sequence.fight.pokemonA.maxHitpoints)], operation: 'multiplicative' },
+        { target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: ctx => ({ '-1': 0.25, '0': 1, '1': 1.75 })[Math.sign(ctx.sequence.fight.pokemonA.maxHitpoints - ctx.sequence.fight.pokemonB.maxHitpoints)], operation: 'multiplicative' },
+    ],
 };
 
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
@@ -664,4 +689,6 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     purist,
     blackSludge,
     voltorb,
+    giantSlayer,
+    davidGoliath,
 ];

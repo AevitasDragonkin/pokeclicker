@@ -43,4 +43,6 @@ export type BattleTreeModifierNameType
     | 'lone_wolf'
     | 'purist'
     | 'black_sludge'
-    | 'voltorb';
+    | 'voltorb'
+    | 'giant_slayer'
+    | 'david_goliath';
