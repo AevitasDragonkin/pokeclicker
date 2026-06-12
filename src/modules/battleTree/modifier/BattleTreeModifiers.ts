@@ -92,7 +92,7 @@ export const AutoPickModifiers: BattleTreeModifierDefinition = {
 const playerAttack1: BattleTreeModifierDefinition = {
     id: 'player_attack_1',
     name: 'Attack+',
-    description: 'All your pokemon gain 12.5% attack',
+    description: 'All your Pokémon gain 12.5% attack',
     image: 'assets/images/battleTree/modifiers/player_attack_1.png',
     weight: 1,
     stack: { max: 5 },
@@ -102,7 +102,7 @@ const playerAttack1: BattleTreeModifierDefinition = {
 const playerAttack2: BattleTreeModifierDefinition = {
     id: 'player_attack_2',
     name: 'Attack++',
-    description: 'All your pokemon gain 18.75% attack',
+    description: 'All your Pokémon gain 18.75% attack',
     image: 'assets/images/battleTree/modifiers/player_attack_2.png',
     weight: 1,
     stack: { max: 3 },
@@ -112,7 +112,7 @@ const playerAttack2: BattleTreeModifierDefinition = {
 const playerAttack3: BattleTreeModifierDefinition = {
     id: 'player_attack_3',
     name: 'Attack+++',
-    description: 'All your pokemon gain 25% attack',
+    description: 'All your Pokémon gain 25% attack',
     image: 'assets/images/battleTree/modifiers/player_attack_3.png',
     weight: 1,
     stack: { max: 1 },
@@ -122,7 +122,7 @@ const playerAttack3: BattleTreeModifierDefinition = {
 const playerDefense1: BattleTreeModifierDefinition = {
     id: 'player_defense_1',
     name: 'Defense+',
-    description: 'All your pokemon gain 12.5% defense',
+    description: 'All your Pokémon gain 12.5% defense',
     image: 'assets/images/battleTree/modifiers/player_defense_1.png',
     weight: 1,
     stack: { max: 5 },
@@ -132,7 +132,7 @@ const playerDefense1: BattleTreeModifierDefinition = {
 const playerDefense2: BattleTreeModifierDefinition = {
     id: 'player_defense_2',
     name: 'Defense++',
-    description: 'All your pokemon gain 18.75% defense',
+    description: 'All your Pokémon gain 18.75% defense',
     image: 'assets/images/battleTree/modifiers/player_defense_2.png',
     weight: 1,
     stack: { max: 3 },
@@ -142,7 +142,7 @@ const playerDefense2: BattleTreeModifierDefinition = {
 const playerDefense3: BattleTreeModifierDefinition = {
     id: 'player_defense_3',
     name: 'Defense+++',
-    description: 'All your pokemon gain 25% defense',
+    description: 'All your Pokémon gain 25% defense',
     image: 'assets/images/battleTree/modifiers/player_defense_3.png',
     weight: 1,
     stack: { max: 1 },
@@ -152,7 +152,7 @@ const playerDefense3: BattleTreeModifierDefinition = {
 const playerSpeed1: BattleTreeModifierDefinition = {
     id: 'player_speed_1',
     name: 'Speed+',
-    description: 'All your pokemon gain 10% speed',
+    description: 'All your Pokémon gain 10% speed',
     image: 'assets/images/battleTree/modifiers/player_speed_1.png',
     weight: 1,
     stack: { max: 1 },
@@ -162,7 +162,7 @@ const playerSpeed1: BattleTreeModifierDefinition = {
 const playerSpeed2: BattleTreeModifierDefinition = {
     id: 'player_speed_2',
     name: 'Speed++',
-    description: 'All your pokemon gain 15% speed',
+    description: 'All your Pokémon gain 15% speed',
     image: 'assets/images/battleTree/modifiers/player_speed_2.png',
     weight: 1,
     stack: { max: 1 },
@@ -172,7 +172,7 @@ const playerSpeed2: BattleTreeModifierDefinition = {
 const playerSpeed3: BattleTreeModifierDefinition = {
     id: 'player_speed_3',
     name: 'Speed+++',
-    description: 'All your pokemon gain 20% speed',
+    description: 'All your Pokémon gain 20% speed',
     image: 'assets/images/battleTree/modifiers/player_speed_3.png',
     weight: 1,
     stack: { max: 1 },
@@ -182,7 +182,7 @@ const playerSpeed3: BattleTreeModifierDefinition = {
 const playerMaxHP1: BattleTreeModifierDefinition = {
     id: 'player_max_hp_1',
     name: 'Maximum HP+',
-    description: 'All your pokemon gain 10% maximum hitpoints',
+    description: 'All your Pokémon gain 10% maximum hitpoints',
     image: 'assets/images/battleTree/modifiers/player_max_hp_1.png',
     weight: 1,
     stack: { max: 5 },
@@ -192,7 +192,7 @@ const playerMaxHP1: BattleTreeModifierDefinition = {
 const playerMaxHP2: BattleTreeModifierDefinition = {
     id: 'player_max_hp_2',
     name: 'Maximum HP++',
-    description: 'All your pokemon gain 15% maximum hitpoints',
+    description: 'All your Pokémon gain 15% maximum hitpoints',
     image: 'assets/images/battleTree/modifiers/player_max_hp_2.png',
     weight: 1,
     stack: { max: 5 },
@@ -202,7 +202,7 @@ const playerMaxHP2: BattleTreeModifierDefinition = {
 const playerMaxHP3: BattleTreeModifierDefinition = {
     id: 'player_max_hp_3',
     name: 'Maximum HP+++',
-    description: 'All your pokemon gain 20% maximum hitpoints',
+    description: 'All your Pokémon gain 20% maximum hitpoints',
     image: 'assets/images/battleTree/modifiers/player_max_hp_3.png',
     weight: 1,
     stack: { max: 5 },
@@ -242,7 +242,7 @@ const playerLevel3: BattleTreeModifierDefinition = {
 const enemyAttack1: BattleTreeModifierDefinition = {
     id: 'enemy_attack_1',
     name: 'Opponent Attack+',
-    description: 'All your opponents pokemon gain 12.5% attack',
+    description: 'All your opponents\' Pokémon gain 12.5% attack',
     image: 'assets/images/battleTree/modifiers/enemy_attack_1.png',
     weight: 1,
     stack: { max: 5 },
@@ -252,7 +252,7 @@ const enemyAttack1: BattleTreeModifierDefinition = {
 const enemyAttack2: BattleTreeModifierDefinition = {
     id: 'enemy_attack_2',
     name: 'Opponent Attack++',
-    description: 'All your opponents pokemon gain 18.75% attack',
+    description: 'All your opponents\' Pokémon gain 18.75% attack',
     image: 'assets/images/battleTree/modifiers/enemy_attack_2.png',
     weight: 1,
     stack: { max: 3 },
@@ -262,7 +262,7 @@ const enemyAttack2: BattleTreeModifierDefinition = {
 const enemyAttack3: BattleTreeModifierDefinition = {
     id: 'enemy_attack_3',
     name: 'Opponent Attack+++',
-    description: 'All your opponents pokemon gain 25% attack',
+    description: 'All your opponents\' Pokémon gain 25% attack',
     image: 'assets/images/battleTree/modifiers/enemy_attack_3.png',
     weight: 1,
     stack: { max: 1 },
@@ -272,7 +272,7 @@ const enemyAttack3: BattleTreeModifierDefinition = {
 const enemyDefense1: BattleTreeModifierDefinition = {
     id: 'enemy_defense_1',
     name: 'Opponent Defense+',
-    description: 'All your opponents pokemon gain 12.5% defense',
+    description: 'All your opponents\' Pokémon gain 12.5% defense',
     image: 'assets/images/battleTree/modifiers/enemy_defense_1.png',
     weight: 1,
     stack: { max: 5 },
@@ -282,7 +282,7 @@ const enemyDefense1: BattleTreeModifierDefinition = {
 const enemyDefense2: BattleTreeModifierDefinition = {
     id: 'enemy_defense_2',
     name: 'Opponent Defense++',
-    description: 'All your opponents pokemon gain 18.75% defense',
+    description: 'All your opponents\' Pokémon gain 18.75% defense',
     image: 'assets/images/battleTree/modifiers/enemy_defense_2.png',
     weight: 1,
     stack: { max: 3 },
@@ -292,7 +292,7 @@ const enemyDefense2: BattleTreeModifierDefinition = {
 const enemyDefense3: BattleTreeModifierDefinition = {
     id: 'enemy_defense_3',
     name: 'Opponent Defense+++',
-    description: 'All your opponents pokemon gain 25% defense',
+    description: 'All your opponents\' Pokémon gain 25% defense',
     image: 'assets/images/battleTree/modifiers/enemy_defense_3.png',
     weight: 1,
     stack: { max: 1 },
@@ -302,7 +302,7 @@ const enemyDefense3: BattleTreeModifierDefinition = {
 const enemySpeed1: BattleTreeModifierDefinition = {
     id: 'enemy_speed_1',
     name: 'Opponent Speed+',
-    description: 'All your opponents pokemon gain 10% speed',
+    description: 'All your opponents\' Pokémon gain 10% speed',
     image: 'assets/images/battleTree/modifiers/enemy_speed_1.png',
     weight: 1,
     stack: { max: 1 },
@@ -312,7 +312,7 @@ const enemySpeed1: BattleTreeModifierDefinition = {
 const enemySpeed2: BattleTreeModifierDefinition = {
     id: 'enemy_speed_2',
     name: 'Opponent Speed++',
-    description: 'All your opponents pokemon gain 15% speed',
+    description: 'All your opponents\' Pokémon gain 15% speed',
     image: 'assets/images/battleTree/modifiers/enemy_speed_2.png',
     weight: 1,
     stack: { max: 1 },
@@ -322,7 +322,7 @@ const enemySpeed2: BattleTreeModifierDefinition = {
 const enemySpeed3: BattleTreeModifierDefinition = {
     id: 'enemy_speed_3',
     name: 'Opponent Speed+++',
-    description: 'All your opponents pokemon gain 20% speed',
+    description: 'All your opponents\' Pokémon gain 20% speed',
     image: 'assets/images/battleTree/modifiers/enemy_speed_3.png',
     weight: 1,
     stack: { max: 1 },
@@ -332,7 +332,7 @@ const enemySpeed3: BattleTreeModifierDefinition = {
 const enemyMaxHP1: BattleTreeModifierDefinition = {
     id: 'enemy_max_hp_1',
     name: 'Opponent Maximum HP+',
-    description: 'All your opponents pokemon gain 10% maximum hitpoints',
+    description: 'All your opponents\' Pokémon gain 10% maximum hitpoints',
     image: 'assets/images/battleTree/modifiers/enemy_max_hp_1.png',
     weight: 1,
     stack: { max: 5 },
@@ -342,7 +342,7 @@ const enemyMaxHP1: BattleTreeModifierDefinition = {
 const enemyMaxHP2: BattleTreeModifierDefinition = {
     id: 'enemy_max_hp_2',
     name: 'Opponent Maximum HP++',
-    description: 'All your opponents pokemon gain 15% maximum hitpoints',
+    description: 'All your opponents\' Pokémon gain 15% maximum hitpoints',
     image: 'assets/images/battleTree/modifiers/enemy_max_hp_2.png',
     weight: 1,
     stack: { max: 5 },
@@ -352,7 +352,7 @@ const enemyMaxHP2: BattleTreeModifierDefinition = {
 const enemyMaxHP3: BattleTreeModifierDefinition = {
     id: 'enemy_max_hp_3',
     name: 'Opponent Maximum HP+++',
-    description: 'All your opponents pokemon gain 20% maximum hitpoints',
+    description: 'All your opponents\' Pokémon gain 20% maximum hitpoints',
     image: 'assets/images/battleTree/modifiers/enemy_max_hp_3.png',
     weight: 1,
     stack: { max: 5 },
@@ -362,7 +362,7 @@ const enemyMaxHP3: BattleTreeModifierDefinition = {
 const enemyLevel1: BattleTreeModifierDefinition = {
     id: 'enemy_level_1',
     name: 'Opponent Level+',
-    description: 'All your Pokémon gain 3 levels',
+    description: 'All your opponents\' Pokémon gain 3 levels',
     image: 'assets/images/battleTree/modifiers/enemy_level_1.png',
     weight: 1,
     stack: { max: 1 },
@@ -372,7 +372,7 @@ const enemyLevel1: BattleTreeModifierDefinition = {
 const enemyLevel2: BattleTreeModifierDefinition = {
     id: 'enemy_level_2',
     name: 'Opponent Level++',
-    description: 'All your Pokémon gain 5 levels',
+    description: 'All your opponents\' Pokémon gain 5 levels',
     image: 'assets/images/battleTree/modifiers/enemy_level_2.png',
     weight: 1,
     stack: { max: 1 },
@@ -382,7 +382,7 @@ const enemyLevel2: BattleTreeModifierDefinition = {
 const enemyLevel3: BattleTreeModifierDefinition = {
     id: 'enemy_level_3',
     name: 'Opponent Level+++',
-    description: 'All your Pokémon gain 10 levels',
+    description: 'All your opponents\' Pokémon gain 10 levels',
     image: 'assets/images/battleTree/modifiers/enemy_level_3.png',
     weight: 1,
     stack: { max: 1 },
@@ -706,7 +706,7 @@ const degradation: BattleTreeModifierDefinition<TimeData> = {
 const enemyMaxHPGainModifierTime: BattleTreeModifierDefinition = {
     id: 'enemy_max_hp_modifier_time',
     name: 'No time to think',
-    description: ctx => ctx ? `All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers (+${10 * Math.floor(ctx.sequence.modifierTime / 30)})` : 'All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers',
+    description: ctx => ctx ? `All your opponents\' Pokémon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers (+${10 * Math.floor(ctx.sequence.modifierTime / 30)})` : 'All your opponents\' Pokémon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers',
     image: 'assets/images/battleTree/modifiers/no_time_to_think.png',
     weight: 1,
     stack: { max: 1 },
@@ -816,7 +816,7 @@ const giantSlayer: BattleTreeModifierDefinition = {
 const davidGoliath: BattleTreeModifierDefinition = {
     id: 'david_goliath',
     name: 'David vs Goliath',
-    description: 'All pokemon deal 75% more damage damage to opposing Pokémon with higher maximum HP, and deal 75% less damage to opposing Pokémon with lower maximum HP',
+    description: 'All Pokémon deal 75% more damage damage to opposing Pokémon with higher maximum HP, and deal 75% less damage to opposing Pokémon with lower maximum HP',
     image: 'assets/images/battleTree/modifiers/david_goliath.png',
     weight: 1,
     stack: { max: 1 },
