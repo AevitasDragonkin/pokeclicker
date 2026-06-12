@@ -21,16 +21,16 @@ export interface BattleTreePokemonSaveData {
     gender?: BattlePokemonGender;
 }
 
-interface TypedDamage {
-    type: PokemonType;
-    damage: number;
-}
+export type DamageMapType = {
+    [p: string]: {
+        [p: string]: number
+    }
+};
 
 const hitPointFormula = (base: number, level: number) => Math.floor(0.01 * (2 * base) * level) + level + 10;
 const statPointFormula = (base: number, level: number) => (Math.floor(0.01 * (2 * base) * level) + 5);
 
 const averageStat = (...values: number[])=> 7 / 8 * Math.max(...values) + 1 / 8 * Math.min(...values);
-
 
 const animateDamage = (uuid: string, damage: number) => {
     const target = $(`#animate-damage-${uuid}`);
@@ -82,12 +82,6 @@ const animateHeal = (uuid: string, health: number) => {
     () => {
         $(animatedElement).remove();
     });
-};
-
-export type DamageMapType = {
-    [p: string]: {
-        [p: string]: number
-    }
 };
 
 export class BattleTreePokemon {
