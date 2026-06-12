@@ -498,7 +498,7 @@ const CHALLENGE_ACCEPTED_ADDITIONAL_STAGES: number = 20;
 const challengeAccepted: BattleTreeModifierDefinition<StageData> = {
     id: 'challenge_accepted',
     name: 'Challenge Accepted',
-    description: (ctx, data: StageData) => `For the next 20 platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards. (${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})`,
+    description: (ctx, data: StageData) => ctx ? `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards. (Reach platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})` : `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards.`,
     image: 'assets/images/battleTree/modifiers/challenge.png',
     weight: 1,
     effects: [{
@@ -619,7 +619,7 @@ const rewardsVsSpeed: BattleTreeModifierDefinition = {
 const enemyAttackGrowth: BattleTreeModifierDefinition<TimeData> = {
     id: 'enemy_attack_growth',
     name: 'Enemy Attack Growth',
-    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? 'Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken' : `Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken (+${Math.floor(ctx.sequence.battleTime - acquiredBattleTime)})`,
+    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? `Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken (+${Math.floor(ctx.sequence.battleTime - acquiredBattleTime)})` : 'Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/enemy_attack_growth.png',
     weight: 1,
     stack: { max: 1 },
@@ -648,7 +648,7 @@ const cashIn: BattleTreeModifierDefinition = {
 const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
     id: 'enemies_extra_stats_per_stage',
     name: 'Growing enemies',
-    description: (ctx, { acquiredStage }: StageData) => `Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this. (${5 * (ctx.sequence.stage - acquiredStage)})`,
+    description: (ctx, { acquiredStage }: StageData) => ctx ? `Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken (${5 * (ctx.sequence.stage - acquiredStage)})` : 'Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/enemies_extra_stats_per_stage.png',
     weight: 1,
     stack: { max: 1 },
@@ -666,7 +666,7 @@ const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
 const fatigue: BattleTreeModifierDefinition<StageData> = {
     id: 'fatigue',
     name: 'Fatigue',
-    description: (ctx, { acquiredStage }: StageData) => ctx ? 'All Pokémon lose 1% attack speed for each platform after this modifier is taken' : `All Pokémon lose 1% attack speed for each platform after this modifier is taken (x${(0.99 ** (ctx.sequence.stage - acquiredStage)).toFixed(4)})`,
+    description: (ctx, { acquiredStage }: StageData) => ctx ? `All Pokémon lose 1% attack speed for each platform after this modifier is taken (x${(0.99 ** (ctx.sequence.stage - acquiredStage)).toFixed(4)})` : 'All Pokémon lose 1% attack speed for each platform after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/fatigue.png',
     weight: 1,
     stack: { max: 1 },
@@ -692,7 +692,7 @@ const vengeance: BattleTreeModifierDefinition = {
 const degradation: BattleTreeModifierDefinition<TimeData> = {
     id: 'degradation',
     name: 'Degradation',
-    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? 'Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken' : `Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken (${-1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5)})`,
+    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? `Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken (${-1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5)})` : 'Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/degradation.png',
     weight: 1,
     stack: { max: 5 },
@@ -706,18 +706,18 @@ const degradation: BattleTreeModifierDefinition<TimeData> = {
 const enemyMaxHPGainModifierTime: BattleTreeModifierDefinition = {
     id: 'enemy_max_hp_modifier_time',
     name: 'No time to think',
-    description: ctx => `All your opponents\' pokemon gain +1 Maximum Hitpoints for every 3 seconds you spend picking Modifiers (+${Math.floor(ctx.sequence.modifierTime / 3)})`,
+    description: ctx => ctx ? `All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers (+${Math.floor(ctx.sequence.modifierTime / 3)})` : 'All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers',
     image: 'assets/images/battleTree/modifiers/no_time_to_think.png',
     weight: 1,
     stack: { max: 1 },
-    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: ctx => Math.floor(ctx.sequence.modifierTime / 3), operation: 'additive' }],
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: ctx => 10 * Math.floor(ctx.sequence.modifierTime / 30), operation: 'additive' }],
 };
 
 const REWIND_STAGES: number = 15;
 const rewind: BattleTreeModifierDefinition = {
     id: 'rewind',
     name: 'Rewind',
-    description: ctx => ctx ? `Move back ${REWIND_STAGES} platforms` : `Move back ${REWIND_STAGES} platforms (platform ${ctx.sequence.stage - REWIND_STAGES})`,
+    description: ctx => ctx ? `Move back ${REWIND_STAGES} platforms (platform ${ctx.sequence.stage - REWIND_STAGES})` : `Move back ${REWIND_STAGES} platforms`,
     image: 'assets/images/battleTree/modifiers/reset_stages.png',
     weight: 1,
     stack: { max: 1 },
