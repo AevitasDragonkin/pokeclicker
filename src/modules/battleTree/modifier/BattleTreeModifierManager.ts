@@ -88,6 +88,12 @@ export class BattleTreeModifierManager {
         });
     }
 
+    public onStageStart(): void {
+        this._history().forEach(entry => {
+            entry.definition.onStageStart?.(this._ctx);
+        });
+    }
+
     public addPlayerModifier(id: BattleTreeModifierNameType) {
         if (!this.candidates().includes(id)) return;
 

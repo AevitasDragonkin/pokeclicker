@@ -108,6 +108,7 @@ export class BattleTreeSequence {
         if (this.state === BattleTreeSequenceState.FINISHED) return;
 
         this._stage(this._stage() + 1);
+        this._modifierManager.onStageStart();
 
         this.teams.Team_B.removeAllPokemon();
         const opponentSubset = BattleTreeUtil.getRandomSubset({ seed: this.seed + 1000, otherSubset: this.sequenceSubset().name });
