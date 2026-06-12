@@ -3,7 +3,7 @@ import { BattleTreeEffect } from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
-    BattleTreeHighestStageRequirement,
+    BattleTreeHighestStageRequirement, BattleTreeLevelRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
 import { BattleTreeSequenceState } from '../types';
@@ -422,7 +422,7 @@ const healPotionHyper: BattleTreeModifierDefinition = {
 const healPotionMax: BattleTreeModifierDefinition = {
     id: 'heal_potion_max',
     name: 'Max Potion',
-    description: 'Restore 100% HP to your active Pokémon',
+    description: 'Fully heal your active Pokémon',
     image: 'assets/images/battleTree/modifiers/max_potion.png',
     weight: 1,
     stack: { max: 1 },
@@ -826,6 +826,71 @@ const davidGoliath: BattleTreeModifierDefinition = {
     ],
 };
 
+const nothing: BattleTreeModifierDefinition = {
+    id: 'nothing',
+    name: 'Nothing',
+    description: 'This modifier has no effect',
+    image: 'assets/images/battleTree/modifiers/nothing.png',
+    weight: 1,
+};
+
+const bossRush: BattleTreeModifierDefinition = {
+    id: 'boss_rush',
+    name: 'Boss Rush',
+    description: 'Skip 5 platforms, but opponent Pokémon gain 10% Attack, Defense, Speed, and maximum HP',
+    image: 'assets/images/battleTree/modifiers/boss_rush.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'stage' }, value: 5, operation: 'additive' },
+        { target: { key: 'attack', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' },
+        { target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: 1.1, operation: 'multiplicative' },
+    ],
+};
+
+const underleveled: BattleTreeModifierDefinition = {
+    id: 'underleveled',
+    name: 'Underleveled',
+    description: 'Your Pokémon lose 5 levels. You gain 35% more rewards.',
+    image: 'assets/images/battleTree/modifiers/underleveled.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'level', scope: ['Team_A'] }, value: -5, operation: 'additive' },
+        { target: { key: 'rewards' }, value: 1.35, operation: 'multiplicative' },
+    ],
+    requirement: new BattleTreeLevelRequirement(10),
+};
+
+const warOfAttrition: BattleTreeModifierDefinition = {
+    id: 'war_of_attrition',
+    name: 'War of Attrition',
+    description: 'Both teams take 25% less post-type damage. You gain 30% more rewards.',
+    image: 'assets/images/battleTree/modifiers/war_of_attrition.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'damage_taken_after_types', scope: ['Team_A', 'Team_B'] }, value: 0.75, operation: 'multiplicative' },
+        { target: { key: 'rewards' }, value: 1.3, operation: 'multiplicative' },
+    ],
+};
+
+const heavyArmour: BattleTreeModifierDefinition = {
+    id: 'heavy_armour',
+    name: 'Heavy Armor',
+    description: 'Your Pokémon gain 50% Defense and maximum HP, but lose 30% Speed.',
+    image: 'assets/images/battleTree/modifiers/heavy_armour.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'defense', scope: ['Team_A'] }, value: 1.5, operation: 'multiplicative' },
+        { target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: 1.5, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: 0.7, operation: 'multiplicative' },
+    ],
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -895,4 +960,9 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     voltorb,
     giantSlayer,
     davidGoliath,
+    nothing,
+    bossRush,
+    underleveled,
+    warOfAttrition,
+    heavyArmour,
 ];

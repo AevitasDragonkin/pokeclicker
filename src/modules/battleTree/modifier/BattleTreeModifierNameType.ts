@@ -66,4 +66,9 @@ export type BattleTreeModifierNameType
     | 'black_sludge'
     | 'voltorb'
     | 'giant_slayer'
-    | 'david_goliath';
+    | 'david_goliath'
+    | 'nothing'
+    | 'boss_rush'
+    | 'underleveled'
+    | 'war_of_attrition'
+    | 'heavy_armour';
