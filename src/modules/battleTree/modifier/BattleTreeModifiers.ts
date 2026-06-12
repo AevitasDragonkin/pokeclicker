@@ -151,7 +151,7 @@ const playerDefense3: BattleTreeModifierDefinition = {
 
 const playerSpeed1: BattleTreeModifierDefinition = {
     id: 'player_speed_1',
-    name: '+10% Speed',
+    name: 'Speed+',
     description: 'All your pokemon gain 10% speed',
     image: 'assets/images/battleTree/modifiers/player_speed_1.png',
     weight: 1,
@@ -161,7 +161,7 @@ const playerSpeed1: BattleTreeModifierDefinition = {
 
 const playerSpeed2: BattleTreeModifierDefinition = {
     id: 'player_speed_2',
-    name: '+15% Speed',
+    name: 'Speed++',
     description: 'All your pokemon gain 15% speed',
     image: 'assets/images/battleTree/modifiers/player_speed_2.png',
     weight: 1,
@@ -171,7 +171,7 @@ const playerSpeed2: BattleTreeModifierDefinition = {
 
 const playerSpeed3: BattleTreeModifierDefinition = {
     id: 'player_speed_3',
-    name: '+20% Speed',
+    name: 'Speed+++',
     description: 'All your pokemon gain 20% speed',
     image: 'assets/images/battleTree/modifiers/player_speed_3.png',
     weight: 1,
@@ -301,7 +301,7 @@ const enemyDefense3: BattleTreeModifierDefinition = {
 
 const enemySpeed1: BattleTreeModifierDefinition = {
     id: 'enemy_speed_1',
-    name: 'Opponent +10% Speed',
+    name: 'Opponent Speed+',
     description: 'All your opponents pokemon gain 10% speed',
     image: 'assets/images/battleTree/modifiers/enemy_speed_1.png',
     weight: 1,
@@ -311,7 +311,7 @@ const enemySpeed1: BattleTreeModifierDefinition = {
 
 const enemySpeed2: BattleTreeModifierDefinition = {
     id: 'enemy_speed_2',
-    name: 'Opponent +15% Speed',
+    name: 'Opponent Speed++',
     description: 'All your opponents pokemon gain 15% speed',
     image: 'assets/images/battleTree/modifiers/enemy_speed_2.png',
     weight: 1,
@@ -321,7 +321,7 @@ const enemySpeed2: BattleTreeModifierDefinition = {
 
 const enemySpeed3: BattleTreeModifierDefinition = {
     id: 'enemy_speed_3',
-    name: 'Opponent +20% Speed',
+    name: 'Opponent Speed+++',
     description: 'All your opponents pokemon gain 20% speed',
     image: 'assets/images/battleTree/modifiers/enemy_speed_3.png',
     weight: 1,
@@ -392,7 +392,7 @@ const enemyLevel3: BattleTreeModifierDefinition = {
 const healPotion: BattleTreeModifierDefinition = {
     id: 'heal_potion',
     name: 'Potion',
-    description: 'Restores 20 HP',
+    description: 'Restore 20 HP to your active Pokémon',
     image: 'assets/images/battleTree/modifiers/potion.png',
     weight: 1,
     stack: { max: 1 },
@@ -402,7 +402,7 @@ const healPotion: BattleTreeModifierDefinition = {
 const healPotionSuper: BattleTreeModifierDefinition = {
     id: 'heal_potion_super',
     name: 'Super Potion',
-    description: 'Restores 50 HP',
+    description: 'Restore 60 HP to your active Pokémon',
     image: 'assets/images/battleTree/modifiers/super_potion.png',
     weight: 1,
     stack: { max: 1 },
@@ -412,7 +412,7 @@ const healPotionSuper: BattleTreeModifierDefinition = {
 const healPotionHyper: BattleTreeModifierDefinition = {
     id: 'heal_potion_hyper',
     name: 'Hyper Potion',
-    description: 'Restores 200 HP',
+    description: 'Restore 200 HP to your active Pokémon',
     image: 'assets/images/battleTree/modifiers/hyper_potion.png',
     weight: 1,
     stack: { max: 1 },
@@ -422,7 +422,7 @@ const healPotionHyper: BattleTreeModifierDefinition = {
 const healPotionMax: BattleTreeModifierDefinition = {
     id: 'heal_potion_max',
     name: 'Max Potion',
-    description: 'Restores 100% HP',
+    description: 'Restore 100% HP to your active Pokémon',
     image: 'assets/images/battleTree/modifiers/max_potion.png',
     weight: 1,
     stack: { max: 1 },
@@ -432,17 +432,17 @@ const healPotionMax: BattleTreeModifierDefinition = {
 const fullHeal: BattleTreeModifierDefinition = {
     id: 'full_heal',
     name: 'Full Heal Potion',
-    description: 'Restores 30% HP on all your pokemon (not fainted)',
+    description: 'Heal all your Pokémon for 33% HP',
     image: 'assets/images/battleTree/modifiers/full_heal.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.3 })),
+    onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.33 })),
 };
 
 const revive: BattleTreeModifierDefinition = {
     id: 'revive',
     name: 'Revive',
-    description: 'Revives all your pokemon. Restores 15% HP for your entire team.',
+    description: 'Revive all fainted Pokémon and heal your entire team for 15% HP',
     image: 'assets/images/battleTree/modifiers/revive.png',
     weight: 1,
     stack: { max: 1 },
@@ -452,7 +452,7 @@ const revive: BattleTreeModifierDefinition = {
 const healOverTime: BattleTreeModifierDefinition<TimeData & PulseData> = {
     id: 'heal_over_time',
     name: 'Heal over time',
-    description: 'Restores 5% HP every 5 seconds of Battle Time, up to 15 times.',
+    description: 'Your team heals 5% HP every 5 seconds of battle time, up to 15 times',
     image: 'assets/images/battleTree/modifiers/heal_over_time.png',
     weight: 1,
     stateScope: [BattleTreeSequenceState.BATTLE],
@@ -498,12 +498,12 @@ const CHALLENGE_ACCEPTED_ADDITIONAL_STAGES: number = 20;
 const challengeAccepted: BattleTreeModifierDefinition<StageData> = {
     id: 'challenge_accepted',
     name: 'Challenge Accepted',
-    description: (ctx, data: StageData) => `Your rewards are reduced by 90% until you defeat platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES}`,
+    description: (ctx, data: StageData) => `For the next 20 platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards. (${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})`,
     image: 'assets/images/battleTree/modifiers/challenge.png',
     weight: 1,
     effects: [{
         target: { key: 'rewards' },
-        value: (ctx, data) => ctx.sequence.stage > data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES ? 1 : 0.1,
+        value: (ctx, data) => ctx.sequence.stage > data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES ? 1.15 : 0.1,
         operation: 'multiplicative',
     }],
     createData: ctx => ({
@@ -529,8 +529,8 @@ const fastStart: BattleTreeModifierDefinition = {
 
 const additionalModifier: BattleTreeModifierDefinition = {
     id: 'additional_modifier',
-    name: '+1 Modifier',
-    description: 'Gain +1 extra modifier option when picking a modifier',
+    name: 'Options+',
+    description: 'Gain 1 additional modifier option whenever you choose a modifier',
     image: 'assets/images/battleTree/modifiers/additional_modifier.png',
     weight: 1,
     stack: { max: 1 },
@@ -539,8 +539,8 @@ const additionalModifier: BattleTreeModifierDefinition = {
 
 const basketOfBalls: BattleTreeModifierDefinition = {
     id: 'ball_basket',
-    name: 'Basket of balls',
-    description: 'Get 5 random pokeballs',
+    name: 'Basket of Balls',
+    description: 'Earn 5 random Poké Balls',
     image: 'assets/images/battleTree/modifiers/basket.png',
     weight: 1,
     stack: { max: 1 },
@@ -560,7 +560,7 @@ const enragedEnemies: BattleTreeModifierDefinition = {
 const tankEnemies: BattleTreeModifierDefinition = {
     id: 'tank_enemies',
     name: 'Tank enemies',
-    description: 'Enemies take 90% less damage (after types)',
+    description: 'Opponent Pokémon take 90% less post-type damage',
     image: 'assets/images/battleTree/modifiers/tank.png',
     weight: 1,
     stack: { max: 1 },
@@ -569,8 +569,8 @@ const tankEnemies: BattleTreeModifierDefinition = {
 
 const increaseEnemyTeamSize: BattleTreeModifierDefinition = {
     id: 'inc_enemy_team_size',
-    name: '+1 Enemies',
-    description: 'Your opponent now uses 1 additional pokemon per platform',
+    name: 'Horde Battle',
+    description: 'Your opponent brings 1 additional Pokémon',
     image: 'assets/images/battleTree/modifiers/inc_enemy_team_size.png',
     weight: 1,
     stack: { max: 1 },
@@ -580,7 +580,7 @@ const increaseEnemyTeamSize: BattleTreeModifierDefinition = {
 const glassCannon: BattleTreeModifierDefinition = {
     id: 'glass_cannon',
     name: 'Glass cannon',
-    description: 'Your pokemon deal x10 damage. They instantly faint when they take a hit.',
+    description: 'Your Pokémon deal 10x damage, but they faint when they take any damage',
     image: 'assets/images/battleTree/modifiers/glass_cannon.png',
     weight: 1,
     stack: { max: 1 },
@@ -593,17 +593,20 @@ const glassCannon: BattleTreeModifierDefinition = {
 const enemyPriority: BattleTreeModifierDefinition = {
     id: 'enemy_priority',
     name: 'Enemy priority',
-    description: 'Your opponents\' pokemon will always attack first',
+    description: 'Opponent Pokémon always attack first, but their Defense is reduced by 15%',
     image: 'assets/images/battleTree/modifiers/enemy_priority.png',
     weight: 1,
     stack: { max: 1 },
-    effects: [{ target: { key: 'speed', scope: ['Team_B'] }, value: Infinity, operation: 'final' }],
+    effects: [
+        { target: { key: 'speed', scope: ['Team_B'] }, value: Infinity, operation: 'final' },
+        { target: { key: 'defense', scope: ['Team_B'] }, value: 0.85, operation: 'multiplicative' },
+    ],
 };
 
 const rewardsVsSpeed: BattleTreeModifierDefinition = {
     id: 'rewards_vs_speed',
     name: 'Rewards vs Speed',
-    description: 'Gain 25% more rewards. Your Battle Climb will be 15% slower.',
+    description: 'Gain 25% more rewards, but the Battle Climb runs 15% slower',
     image: 'assets/images/battleTree/modifiers/rewards_vs_speed.png',
     weight: 1,
     stack: { max: 1 },
@@ -616,7 +619,7 @@ const rewardsVsSpeed: BattleTreeModifierDefinition = {
 const enemyAttackGrowth: BattleTreeModifierDefinition<TimeData> = {
     id: 'enemy_attack_growth',
     name: 'Enemy Attack Growth',
-    description: (ctx, { acquiredBattleTime }: TimeData) => `Your opponents' pokemon gain +1 attack every second of Battle time (${Math.floor(ctx.sequence.battleTime - acquiredBattleTime)})`,
+    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? 'Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken' : `Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken (+${Math.floor(ctx.sequence.battleTime - acquiredBattleTime)})`,
     image: 'assets/images/battleTree/modifiers/enemy_attack_growth.png',
     weight: 1,
     stack: { max: 1 },
@@ -634,7 +637,7 @@ const enemyAttackGrowth: BattleTreeModifierDefinition<TimeData> = {
 const cashIn: BattleTreeModifierDefinition = {
     id: 'cash_in',
     name: 'Cash In',
-    description: 'Double your rewards, end your Battle Climb',
+    description: 'Double your rewards, then immediately end the Battle Climb',
     image: 'assets/images/battleTree/modifiers/cash_in.png',
     weight: 1,
     stack: { max: 1 },
@@ -663,7 +666,7 @@ const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
 const fatigue: BattleTreeModifierDefinition<StageData> = {
     id: 'fatigue',
     name: 'Fatigue',
-    description: (ctx, { acquiredStage }: StageData) => `All pokemon attack speed decreases by 1% for each platform after this. (x${(0.99 ** (ctx.sequence.stage - acquiredStage)).toFixed(4)})`,
+    description: (ctx, { acquiredStage }: StageData) => ctx ? 'All Pokémon lose 1% attack speed for each platform after this modifier is taken' : `All Pokémon lose 1% attack speed for each platform after this modifier is taken (x${(0.99 ** (ctx.sequence.stage - acquiredStage)).toFixed(4)})`,
     image: 'assets/images/battleTree/modifiers/fatigue.png',
     weight: 1,
     stack: { max: 1 },
@@ -676,7 +679,7 @@ const fatigue: BattleTreeModifierDefinition<StageData> = {
 const vengeance: BattleTreeModifierDefinition = {
     id: 'vengeance',
     name: 'Vengeance',
-    description: 'All pokemon gain 100% extra damage (after types) for each fainted team member',
+    description: 'Pokémon deal 100% more damage for each fainted Pokémon on their team',
     image: 'assets/images/battleTree/modifiers/vengeance.png',
     weight: 1,
     stack: { max: 1 },
@@ -689,7 +692,7 @@ const vengeance: BattleTreeModifierDefinition = {
 const degradation: BattleTreeModifierDefinition<TimeData> = {
     id: 'degradation',
     name: 'Degradation',
-    description: (ctx, { acquiredBattleTime }: TimeData) => `Your pokemon lose 1 Maximum Hitpoints for every 5 seconds of Battle time (${-1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5)})`,
+    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? 'Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken' : `Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken (${-1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5)})`,
     image: 'assets/images/battleTree/modifiers/degradation.png',
     weight: 1,
     stack: { max: 5 },
@@ -710,16 +713,16 @@ const enemyMaxHPGainModifierTime: BattleTreeModifierDefinition = {
     effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: ctx => Math.floor(ctx.sequence.modifierTime / 3), operation: 'additive' }],
 };
 
-const RESET_STAGES: number = 25;
-const resetStages: BattleTreeModifierDefinition = {
-    id: 'reset_stages_25',
-    name: `Reset ${RESET_STAGES} stages`,
-    description: ctx => `Return back to platform ${ctx.sequence.stage - RESET_STAGES}`,
+const REWIND_STAGES: number = 15;
+const rewind: BattleTreeModifierDefinition = {
+    id: 'rewind',
+    name: 'Rewind',
+    description: ctx => ctx ? `Move back ${REWIND_STAGES} platforms` : `Move back ${REWIND_STAGES} platforms (platform ${ctx.sequence.stage - REWIND_STAGES})`,
     image: 'assets/images/battleTree/modifiers/reset_stages.png',
     weight: 1,
     stack: { max: 1 },
     requirement: new BattleTreeHighestStageRequirement(30, 'per_sequence'),
-    effects: [{ target: { key: 'stage' }, value: -RESET_STAGES, operation: 'additive' }],
+    effects: [{ target: { key: 'stage' }, value: -REWIND_STAGES, operation: 'additive' }],
 };
 
 const SKIP_STAGES: number = 3;
@@ -884,7 +887,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     vengeance,
     degradation,
     enemyMaxHPGainModifierTime,
-    resetStages,
+    rewind,
     skipStages,
     loneWolf,
     purist,

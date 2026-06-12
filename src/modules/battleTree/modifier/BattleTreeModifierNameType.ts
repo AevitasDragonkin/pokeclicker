@@ -59,7 +59,7 @@ export type BattleTreeModifierNameType
     | 'vengeance'
     | 'degradation'
     | 'enemy_max_hp_modifier_time'
-    | 'reset_stages_25'
+    | 'rewind'
     | 'skip_stages_3'
     | 'lone_wolf'
     | 'purist'
