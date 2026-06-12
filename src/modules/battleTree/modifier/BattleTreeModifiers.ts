@@ -573,8 +573,8 @@ const purist: BattleTreeModifierDefinition = {
     stack: { max: 1 },
     effects: [
         // Type effectiveness is calculated by the defender
-        { target: { key: 'type_effectiveness', scope: ['Team_B'] }, value: ctx => ctx.sequence.teams.Team_A.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
-        { target: { key: 'type_effectiveness', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_B.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
+        { target: { key: 'type_effectiveness', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
+        { target: { key: 'type_effectiveness', scope: ['Team_B'] }, value: ctx => ctx.sequence.teams.Team_B.list.every(p => pokemonMap[p.name].type.length === 1) ? 0.5 : 0, operation: 'additive' },
     ],
 };
 

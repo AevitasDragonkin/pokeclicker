@@ -84,6 +84,12 @@ const animateHeal = (uuid: string, health: number) => {
     });
 };
 
+export type DamageMapType = {
+    [p: string]: {
+        [p: string]: number
+    }
+};
+
 export class BattleTreePokemon {
     public readonly uuid: string;
 
@@ -132,34 +138,38 @@ export class BattleTreePokemon {
         const baseDamage = ((2 * this.level / 5 + 2) * this.power * this.attack / target.defense / 50 + 2);
 
         const attacker = pokemonMap[this._name];
+        const defender = pokemonMap[target.name];
 
-        target.takeDamage([...attacker.type.map(type => ({
-            damage: baseDamage / attacker.type.length,
-            type,
-        }))], this._teamId);
+        const attackMap: DamageMapType = Object.fromEntries(pokemonMap[attacker.name].type.map(at => [at, Object.fromEntries(pokemonMap[defender.name].type.map(dt => [dt, undefined]))]));
+        const damagesCount = attacker.type.length * defender.type.length;
+
+        for (const attackType in attackMap) {
+            for (const defenseType in attackMap[attackType]) {
+                const effectivenessMultiplier = App.game.battleTree.sequence.modifierManager.getValue({ key: 'type_effectiveness', scope: this._teamId, base: TypeHelper.typeMatrix[attackType][defenseType] });
+                const rawDamage = (baseDamage / damagesCount) * effectivenessMultiplier;
+
+                attackMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_dealt_after_types', scope: this._teamId, base: rawDamage });
+            }
+        }
+
+        target.takeDamage(this, this._teamId, attackMap);
     }
 
-    public takeDamage(damages: TypedDamage[], fromTeam: TeamType): void {
-        const defender = pokemonMap[this._name];
+    public takeDamage(from: BattleTreePokemon, team: TeamType, damageMap: DamageMapType): void {
+        for (const attackType in damageMap) {
+            for (const defenseType in damageMap[attackType]) {
+                damageMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_taken_after_types', scope: this._teamId, base: damageMap[attackType][defenseType] });
+            }
+        }
 
-        const transformedDamages: TypedDamage[] = damages.map(({ type, damage }) => ({
-            type,
-            damage: defender.type.reduce((prev, curr) => {
-                const typeMult = App.game.battleTree.sequence.modifierManager.getValue({ key: 'type_effectiveness', scope: this._teamId, base: TypeHelper.typeMatrix[type][curr] });
-                if (typeMult === 0)
-                    return prev;
-                return prev + damage / defender.type.length * typeMult;
-            }, 0),
-        }));
+        const totalDamage = Object.values(damageMap)
+            .flatMap(v => Object.values(v))
+            .reduce((cumulative, damage) => cumulative + damage, 0);
 
-        let totalDamage = 0;
-        totalDamage = transformedDamages.reduce((cumulative, typedDamage) => cumulative + typedDamage.damage, 0);
-        totalDamage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_dealt_after_types', scope: fromTeam, base: totalDamage });
-        totalDamage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_taken_after_types', scope: this._teamId, base: totalDamage });
-        totalDamage = Math.floor(totalDamage);
+        const flooredDamage = Math.floor(totalDamage);
 
-        this._hp(Math.max(this._hp() - totalDamage, 0));
-        animateDamage(this.uuid, totalDamage);
+        this._hp(Math.max(this._hp() - flooredDamage, 0));
+        animateDamage(this.uuid, flooredDamage);
     }
 
     get name(): PokemonNameType {
