@@ -706,7 +706,7 @@ const degradation: BattleTreeModifierDefinition<TimeData> = {
 const enemyMaxHPGainModifierTime: BattleTreeModifierDefinition = {
     id: 'enemy_max_hp_modifier_time',
     name: 'No time to think',
-    description: ctx => ctx ? `All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers (+${Math.floor(ctx.sequence.modifierTime / 3)})` : 'All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers',
+    description: ctx => ctx ? `All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers (+${10 * Math.floor(ctx.sequence.modifierTime / 30)})` : 'All your opponents\' pokemon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers',
     image: 'assets/images/battleTree/modifiers/no_time_to_think.png',
     weight: 1,
     stack: { max: 1 },
