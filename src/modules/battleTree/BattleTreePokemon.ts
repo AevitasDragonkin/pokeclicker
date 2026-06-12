@@ -1,7 +1,6 @@
 import { PokemonNameType } from '../pokemons/PokemonNameType';
 import { Observable, PureComputed } from 'knockout';
 import { pokemonMap } from '../pokemons/PokemonList';
-import PokemonType from '../enums/PokemonType';
 import TypeHelper from '../types/TypeHelper';
 import Rand from '../utilities/Rand';
 import { TeamType } from './BattleTreeSequence';
