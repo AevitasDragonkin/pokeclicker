@@ -17,6 +17,34 @@ export class BattleTreeLevelRequirement extends Requirement {
     }
 }
 
+export class BattleTreeStageRequirement extends Requirement {
+    constructor(stage: number, option: AchievementOption = AchievementOption.more) {
+        super(stage, option);
+    }
+
+    getProgress(): number {
+        switch (this.option) {
+            case AchievementOption.more:
+                return Math.min(App.game.battleTree.sequence.stage, this.requiredValue);
+            case AchievementOption.less:
+                return Math.max(App.game.battleTree.sequence.stage, this.requiredValue);
+            case AchievementOption.equal:
+                return App.game.battleTree.sequence.stage === this.requiredValue ? 1 : 0;
+        }
+    }
+
+    hint(): string {
+        switch (this.option) {
+            case AchievementOption.more:
+                return `Needs to reach stage ${this.requiredValue} in the Battle Tree.`;
+            case AchievementOption.less:
+                return `Needs to stay below stage ${this.requiredValue} in the Battle Tree.`;
+            case AchievementOption.equal:
+                return `Needs to be on stage ${this.requiredValue} in the Battle Tree.`;
+        }
+    }
+}
+
 export class BattleTreeHighestStageRequirement extends Requirement {
     private _recurrence: BattleTreeRecurrence;
 

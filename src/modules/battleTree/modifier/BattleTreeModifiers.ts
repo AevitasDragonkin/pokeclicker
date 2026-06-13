@@ -3,7 +3,7 @@ import { BattleTreeEffect } from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
-    BattleTreeHighestStageRequirement, BattleTreeLevelRequirement,
+    BattleTreeHighestStageRequirement, BattleTreeLevelRequirement, BattleTreeStageRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
 import { BattleTreeSequenceState } from '../types';
@@ -705,8 +705,8 @@ const vengeance: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'damage_dealt_after_types', scope: ['Team_A'] }, value: ctx => 1 + ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints === 0).length, operation: 'multiplicative' },
-        { target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: ctx => 1 + ctx.sequence.teams.Team_B.list.filter(p => p.hitpoints === 0).length, operation: 'multiplicative' },
+        { target: { key: 'damage_dealt_after_types', scope: ['Team_A'] }, value: ctx => Math.max(1, 1 + ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints === 0).length), operation: 'multiplicative' },
+        { target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: ctx => Math.max(1, 1 + ctx.sequence.teams.Team_B.list.filter(p => p.hitpoints === 0).length), operation: 'multiplicative' },
     ],
 };
 
@@ -742,7 +742,7 @@ const rewind: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/rewind.png',
     weight: 1,
     stack: { max: 1 },
-    requirement: new BattleTreeHighestStageRequirement(30, 'per_sequence'),
+    requirement: new BattleTreeStageRequirement(30),
     effects: [{ target: { key: 'stage' }, value: -REWIND_STAGES, operation: 'additive' }],
 };
 
@@ -1032,8 +1032,8 @@ const momentum: BattleTreeModifierDefinition<StageData> = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'rewards' }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
-        { target: { key: 'game_speed' }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'rewards' }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
+        { target: { key: 'game_speed' }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
     ],
     createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
 };
@@ -1090,9 +1090,9 @@ const slowButSteady: BattleTreeModifierDefinition<StageData> = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
-        { target: { key: 'defense', scope: ['Team_A'] }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
-        { target: { key: 'speed', scope: ['Team_A'] }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
     ],
     createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
 };
