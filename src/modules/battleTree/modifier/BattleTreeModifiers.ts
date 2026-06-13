@@ -729,11 +729,27 @@ const rewind: BattleTreeModifierDefinition = {
     id: 'rewind',
     name: 'Rewind',
     description: ctx => ctx ? `Move back ${REWIND_STAGES} platforms (platform ${ctx.sequence.stage - REWIND_STAGES})` : `Move back ${REWIND_STAGES} platforms`,
-    image: 'assets/images/battleTree/modifiers/reset_stages.png',
+    image: 'assets/images/battleTree/modifiers/rewind.png',
     weight: 1,
     stack: { max: 1 },
     requirement: new BattleTreeHighestStageRequirement(30, 'per_sequence'),
     effects: [{ target: { key: 'stage' }, value: -REWIND_STAGES, operation: 'additive' }],
+};
+
+const absoluteRewind: BattleTreeModifierDefinition<StageData> = {
+    id: 'absolute_rewind',
+    name: 'Absolute Rewind',
+    description: 'Move back to platform 1',
+    image: 'assets/images/battleTree/modifiers/absolute_rewind.png',
+    weight: 1,
+    stack: { max: 1 },
+    requirement: new BattleTreeHighestStageRequirement(100, 'per_seed'),
+    effects: [{ target: { key: 'stage' }, value: (ctx, data) => -data.acquiredStage, operation: 'additive' }],
+    createData: ctx => {
+        return {
+            acquiredStage: ctx.sequence.stage,
+        };
+    },
 };
 
 const SKIP_STAGES: number = 3;
@@ -951,12 +967,25 @@ const perfectBalance: BattleTreeModifierDefinition = {
     id: 'perfect_balance',
     name: 'Perfect Balance',
     description: 'Pokémon whose Attack, Defense, and Speed are within 10% of each other gain 50% to those stats',
+    image: 'assets/images/battleTree/modifiers/perfect_balance.png',
     weight: 1,
     stack: { max: 1 },
     effects: [
         { target: { key: 'attack', scope: ['Team_A', 'Team_B'] }, value: (_ctx, _data, { pokemon }) => balancedFn(pokemon) ? 1.5 : 1, operation: 'multiplicative' },
         { target: { key: 'defense', scope: ['Team_A', 'Team_B'] }, value: (_ctx, _data, { pokemon }) => balancedFn(pokemon) ? 1.5 : 1, operation: 'multiplicative' },
         { target: { key: 'speed', scope: ['Team_A', 'Team_B'] }, value: (_ctx, _data, { pokemon }) => balancedFn(pokemon) ? 1.5 : 1, operation: 'multiplicative' },
+    ],
+};
+
+const trickRoom: BattleTreeModifierDefinition = {
+    id: 'trick_room',
+    name: 'Trick Room',
+    description: 'Reverse the Speed stat (multiply by -1)',
+    image: 'assets/images/battleTree/modifiers/trick_room.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'speed', scope: ['Team_A', 'Team_B'] }, value: -1, operation: 'multiplicative' },
     ],
 };
 
@@ -1023,6 +1052,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     degradation,
     enemyMaxHPGainModifierTime,
     rewind,
+    absoluteRewind,
     skipStages,
     loneWolf,
     purist,
@@ -1039,4 +1069,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     absorb,
     megaDrain,
     perfectBalance,
+    trickRoom,
 ];

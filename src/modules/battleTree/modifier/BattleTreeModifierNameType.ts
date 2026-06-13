@@ -59,6 +59,7 @@ export type BattleTreeModifierNameType
     | 'degradation'
     | 'enemy_max_hp_modifier_time'
     | 'rewind'
+    | 'absolute_rewind'
     | 'skip_stages_3'
     | 'lone_wolf'
     | 'purist'
@@ -74,4 +75,5 @@ export type BattleTreeModifierNameType
     | 'vampire'
     | 'absorb'
     | 'perfect_balance'
-    | 'mega_drain';
+    | 'mega_drain'
+    | 'trick_room';
