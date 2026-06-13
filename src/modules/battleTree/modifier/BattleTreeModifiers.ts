@@ -12,7 +12,7 @@ import { AchievementOption, formatDuration } from '../../GameConstants';
 import { pokemonMap } from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
 import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
-import {BattleTreePokemon} from '../BattleTreePokemon';
+import { BattleTreePokemon } from '../BattleTreePokemon';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
