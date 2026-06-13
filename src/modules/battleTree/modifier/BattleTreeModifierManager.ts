@@ -7,7 +7,7 @@ import {
 import { ObservableArray, PureComputed } from 'knockout';
 import SeededRand from '../../utilities/SeededRand';
 import { TeamType } from '../BattleTreeSequence';
-import { BattleTreeEffect, BattleTreeEffectKey, BattleTreeEffectValue } from './BattleTreeEffect';
+import { BattleTreeEffect, BattleTreeEffectKey, BattleTreeEffectRuntimeContext, BattleTreeEffectValue } from './BattleTreeEffect';
 import GameHelper from '../../GameHelper';
 import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
 
@@ -18,7 +18,7 @@ type Active<Data> = {
 
 type IndexStamp<Data> = { active: Active<Data>; effect: BattleTreeEffect<Data>; };
 
-export interface ValueQuery {
+export interface ValueQuery extends BattleTreeEffectRuntimeContext {
     key: BattleTreeEffectKey;
     scope?: TeamType;
     base?: number;
@@ -138,12 +138,14 @@ export class BattleTreeModifierManager {
         const effects = Array.from(this.iterMatching(query));
         const base = query.base ?? 1;
 
-        const resolve = <D>(val: BattleTreeEffectValue<D>, data: D) => typeof val === 'function' ? (val as ((ctx: BattleTreeModifierContext, data: D) => number))(this._ctx, data) : val;
+        const resolve = <D>(val: BattleTreeEffectValue<D>, data: D, runtimeContext: BattleTreeEffectRuntimeContext) => typeof val === 'function'
+            ? (val as ((ctx: BattleTreeModifierContext, data: D, runtimeContext: BattleTreeEffectRuntimeContext) => number))(this._ctx, data, runtimeContext)
+            : val;
 
         let returnValue = base;
 
         effects.every(entry => {
-            const v = resolve(entry.effect.value, entry.active.data);
+            const v = resolve(entry.effect.value, entry.active.data, query);
 
             switch (entry.effect.operation) {
                 case 'multiplicative': {

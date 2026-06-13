@@ -1,5 +1,6 @@
 import { TeamType } from '../BattleTreeSequence';
 import { BattleTreeModifierContext } from './BattleTreeModifierContext';
+import type { BattleTreePokemon } from '../BattleTreePokemon';
 
 export type BattleTreeEffectKey
     = 'rewards'
@@ -21,7 +22,11 @@ export type BattleTreeEffectKey
     | 'life_steal_percertage';
 export type Operation = 'additive' | 'multiplicative' | 'reset' | 'override' | 'final';
 
-export type BattleTreeEffectValue<Data = unknown> = number | ((ctx: BattleTreeModifierContext, data: Data) => number);
+export interface BattleTreeEffectRuntimeContext {
+    pokemon?: BattleTreePokemon;
+}
+
+export type BattleTreeEffectValue<Data = unknown> = number | ((ctx: BattleTreeModifierContext, data: Data, runtimeContext: BattleTreeEffectRuntimeContext) => number);
 
 export interface BattleTreeEffectTarget {
     key: BattleTreeEffectKey;

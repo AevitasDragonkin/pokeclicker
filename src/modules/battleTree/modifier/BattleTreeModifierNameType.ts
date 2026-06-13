@@ -73,4 +73,5 @@ export type BattleTreeModifierNameType
     | 'heavy_armour'
     | 'vampire'
     | 'absorb'
+    | 'perfect_balance'
     | 'mega_drain';

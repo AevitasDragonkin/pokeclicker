@@ -12,6 +12,7 @@ import { AchievementOption, formatDuration } from '../../GameConstants';
 import { pokemonMap } from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
 import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
+import {BattleTreePokemon} from '../BattleTreePokemon';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -941,6 +942,24 @@ const megaDrain: BattleTreeModifierDefinition = {
     ],
 };
 
+const balancedFn = (p?: BattleTreePokemon) => {
+    if (!p) return false;
+    const { attack, defense, speed } = p.base;
+    return Math.max(attack, defense, speed) / Math.min(attack, defense, speed) <= 1.1;
+};
+const perfectBalance: BattleTreeModifierDefinition = {
+    id: 'perfect_balance',
+    name: 'Perfect Balance',
+    description: 'Pokémon whose Attack, Defense, and Speed are within 10% of each other gain 50% to those stats',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'attack', scope: ['Team_A', 'Team_B'] }, value: (_ctx, _data, { pokemon }) => balancedFn(pokemon) ? 1.5 : 1, operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A', 'Team_B'] }, value: (_ctx, _data, { pokemon }) => balancedFn(pokemon) ? 1.5 : 1, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A', 'Team_B'] }, value: (_ctx, _data, { pokemon }) => balancedFn(pokemon) ? 1.5 : 1, operation: 'multiplicative' },
+    ],
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1019,4 +1038,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     vampire,
     absorb,
     megaDrain,
+    perfectBalance,
 ];

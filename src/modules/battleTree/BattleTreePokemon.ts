@@ -20,6 +20,14 @@ export interface BattleTreePokemonSaveData {
     gender?: BattlePokemonGender;
 }
 
+export interface BattleTreePokemonStats {
+    level: number;
+    attack: number;
+    defense: number;
+    speed: number;
+    maxHitpoints: number;
+}
+
 export type DamageMapType = {
     [p: string]: {
         [p: string]: number
@@ -90,11 +98,16 @@ export class BattleTreePokemon {
     private _baseLevel: number;
     private _teamId: TeamType;
 
-    private _level: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'level', scope: this._teamId, base: this._baseLevel })));
-    private _attack: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: statPointFormula(averageStat(pokemonMap[this._name].base.attack, pokemonMap[this._name].base.specialAttack), this.level) })));
-    private _defense: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'defense', scope: this._teamId, base: statPointFormula(averageStat(pokemonMap[this._name].base.defense, pokemonMap[this._name].base.specialDefense), this.level) })));
-    private _speed: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'speed', scope: this._teamId, base: statPointFormula(pokemonMap[this._name].base.speed, this.level) })));
-    private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_hitpoints', scope: this._teamId, base: hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level) })));
+    private _baseAttack: PureComputed<number> = ko.pureComputed(() => statPointFormula(averageStat(pokemonMap[this._name].base.attack, pokemonMap[this._name].base.specialAttack), this.level));
+    private _baseDefense: PureComputed<number> = ko.pureComputed(() => statPointFormula(averageStat(pokemonMap[this._name].base.defense, pokemonMap[this._name].base.specialDefense), this.level));
+    private _baseSpeed: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.speed, this.level));
+    private _baseMaxHitpoints: PureComputed<number> = ko.pureComputed(() => hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level));
+
+    private _level: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'level', scope: this._teamId, base: this._baseLevel, pokemon: this })));
+    private _attack: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: this._baseAttack(), pokemon: this })));
+    private _defense: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'defense', scope: this._teamId, base: this._baseDefense(), pokemon: this })));
+    private _speed: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'speed', scope: this._teamId, base: this._baseSpeed(), pokemon: this })));
+    private _maxHitpoints: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'max_hitpoints', scope: this._teamId, base: this._baseMaxHitpoints(), pokemon: this })));
 
     private _hp: Observable<number> = ko.observable(0).extend({ numeric: 0 });
     private _shiny: Observable<boolean | undefined> = ko.observable(undefined);
@@ -138,16 +151,16 @@ export class BattleTreePokemon {
 
         for (const attackType in attackMap) {
             for (const defenseType in attackMap[attackType]) {
-                const effectivenessMultiplier = App.game.battleTree.sequence.modifierManager.getValue({ key: 'type_effectiveness', scope: this._teamId, base: TypeHelper.typeMatrix[attackType][defenseType] });
+                const effectivenessMultiplier = App.game.battleTree.sequence.modifierManager.getValue({ key: 'type_effectiveness', scope: this._teamId, base: TypeHelper.typeMatrix[attackType][defenseType], pokemon: this });
                 const rawDamage = (baseDamage / damagesCount) * effectivenessMultiplier;
 
-                attackMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_dealt_after_types', scope: this._teamId, base: rawDamage });
+                attackMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_dealt_after_types', scope: this._teamId, base: rawDamage, pokemon: this });
             }
         }
 
         const actualHitDamage = target.takeDamage(this, this._teamId, attackMap);
 
-        const lifeStealPercentage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'life_steal_percertage', scope: this._teamId, base: 0 });
+        const lifeStealPercentage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'life_steal_percertage', scope: this._teamId, base: 0, pokemon: this });
         const lifeStealAmount = Math.floor(actualHitDamage * lifeStealPercentage);
 
         if (lifeStealAmount > 0) {
@@ -158,7 +171,7 @@ export class BattleTreePokemon {
     public takeDamage(from: BattleTreePokemon, team: TeamType, damageMap: DamageMapType): number {
         for (const attackType in damageMap) {
             for (const defenseType in damageMap[attackType]) {
-                damageMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_taken_after_types', scope: this._teamId, base: damageMap[attackType][defenseType] });
+                damageMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_taken_after_types', scope: this._teamId, base: damageMap[attackType][defenseType], pokemon: this });
             }
         }
 
@@ -186,6 +199,16 @@ export class BattleTreePokemon {
 
     get power(): number {
         return 40;
+    }
+
+    get base(): BattleTreePokemonStats {
+        return {
+            level: this._baseLevel,
+            attack: this._baseAttack(),
+            defense: this._baseDefense(),
+            speed: this._baseSpeed(),
+            maxHitpoints: this._baseMaxHitpoints(),
+        };
     }
 
     get attack(): number {
