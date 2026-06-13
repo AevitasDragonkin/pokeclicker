@@ -300,10 +300,12 @@
                     <input class="" style="min-width: 100px;" id="battle-tree-dev-level" type="number" min="1" max="100" step="1" onchange="App.game.battleTree._experience(BattleTree.convertLevelToExperience(this.valueAsNumber))">
                 </div>
 
+                <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.PREPARATION -->
                 <div class="d-flex w-100 align-items-center">
                     <label class="text-left flex-grow-1" for="battle-tree-dev-seed">Change the seed (needs a page reload to revert)</label>
                     <input class="" style="min-width: 100px;" id="battle-tree-dev-seed" type="number" min="1" step="1" onchange="BattleTreeUtil.calculateSeed = () => this.valueAsNumber">
                 </div>
+                <!-- /ko -->
             </div>
         </section>
         <!-- /ko -->
