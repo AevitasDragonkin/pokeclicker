@@ -1,6 +1,8 @@
 export type BattleTreeModifierNameType
     = 'forfeit'
     | 'auto_pick_modifiers'
+    | 'development_game_speed'
+
     | 'player_attack_1'
     | 'player_attack_2'
     | 'player_attack_3'
@@ -16,8 +18,6 @@ export type BattleTreeModifierNameType
     | 'player_level_1'
     | 'player_level_2'
     | 'player_level_3'
-
-
     | 'enemy_attack_1'
     | 'enemy_attack_2'
     | 'enemy_attack_3'
@@ -33,7 +33,6 @@ export type BattleTreeModifierNameType
     | 'enemy_level_1'
     | 'enemy_level_2'
     | 'enemy_level_3'
-
     | 'heal_potion'
     | 'heal_potion_super'
     | 'heal_potion_hyper'

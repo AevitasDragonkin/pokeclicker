@@ -11,6 +11,7 @@ import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
 import { AchievementOption, formatDuration } from '../../GameConstants';
 import { pokemonMap } from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
+import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -87,6 +88,15 @@ export const AutoPickModifiers: BattleTreeModifierDefinition = {
     stack: { max: 1 },
     effects: [{ target: { key: 'auto_pick_modifier' }, value: 1, operation: 'final' }],
     requirement: BattleTreeAutoPickRequirement,
+};
+
+const developmentGameSpeed: BattleTreeModifierDefinition = {
+    id: 'development_game_speed',
+    name: 'Development Game Speed x1.5',
+    description: '[DEV] Gain x1.5 game speed',
+    weight: 0,
+    effects: [{ target: { key: 'game_speed' }, value: 1.5, operation: 'multiplicative' }],
+    requirement: new DevelopmentRequirement(),
 };
 
 const playerAttack1: BattleTreeModifierDefinition = {
@@ -935,6 +945,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
     AutoPickModifiers,
+    developmentGameSpeed,
 
     // Player picked
     playerAttack1,
