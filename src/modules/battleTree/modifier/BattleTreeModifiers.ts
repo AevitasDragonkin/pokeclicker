@@ -1,18 +1,20 @@
-import { BattleTreeModifierContext } from './BattleTreeModifierContext';
-import { BattleTreeEffect } from './BattleTreeEffect';
+import {BattleTreeModifierContext} from './BattleTreeModifierContext';
+import {BattleTreeEffect} from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
-    BattleTreeHighestStageRequirement, BattleTreeLevelRequirement, BattleTreeStageRequirement,
+    BattleTreeHighestStageRequirement,
+    BattleTreeLevelRequirement,
+    BattleTreeStageRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
-import { BattleTreeSequenceState } from '../types';
-import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
-import { AchievementOption, formatDuration } from '../../GameConstants';
-import { pokemonMap } from '../../pokemons/PokemonList';
+import {BattleTreeSequenceState} from '../types';
+import {BattleTreeModifierNameType} from './BattleTreeModifierNameType';
+import {AchievementOption, formatDuration} from '../../GameConstants';
+import {pokemonMap} from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
 import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
-import { BattleTreePokemon } from '../BattleTreePokemon';
+import {BattleTreePokemon} from '../BattleTreePokemon';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -21,6 +23,10 @@ export type BattleTreeModifierOperation = 'additive' | 'multiplicative';
 
 export type StageData = {
     acquiredStage: number;
+};
+
+export type CompleteData = {
+    effectComplete: boolean;
 };
 
 export type TimeData = {
@@ -48,7 +54,7 @@ export type BattleTreeModifierDescription<Data = unknown> = string | ((ctx: Batt
 export interface BattleTreeModifierDefinition<Data = unknown> {
     id: BattleTreeModifierNameType;
     name: string;
-    description: BattleTreeModifierDescription;
+    description: BattleTreeModifierDescription<Data>;
     image?: string;
     weight?: number;
     stack?: { max: number };
@@ -1107,6 +1113,27 @@ const speedup: BattleTreeModifierDefinition<StageData> = {
     createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
 };
 
+const TIME_RUNNING_DURATION_IN_SECONDS: number = 300;
+const timeRunning: BattleTreeModifierDefinition<TimeData & CompleteData> = {
+    id: 'time_running',
+    name: 'Time\'s Running',
+    description: (ctx, data) => `Your run ends after ${formatDuration(data.acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS - ctx.sequence.battleTime)} minutes of battle time. If it does, you gain 33% more rewards.`,
+    image: 'assets/images/battleTree/modifiers/time_running.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'rewards' }, value: (ctx, data) => data.effectComplete ? 1.33 : 1, operation: 'multiplicative' },
+    ],
+    stateScope: [BattleTreeSequenceState.BATTLE],
+    onTick: (ctx, { definitionData }) => {
+        if (ctx.sequence.battleTime > definitionData.acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS) {
+            definitionData.effectComplete = true;
+            ctx.endSequence('Time\'s up!');
+        }
+    },
+    createData: ctx => ({ acquiredEngagementTime: ctx.sequence.engagementTime, acquiredBattleTime: ctx.sequence.battleTime, effectComplete: false }),
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1198,4 +1225,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     paycut,
     slowButSteady,
     speedup,
+    timeRunning,
 ];

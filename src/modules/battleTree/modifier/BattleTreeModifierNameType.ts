@@ -86,4 +86,5 @@ export type BattleTreeModifierNameType
     | 'payday'
     | 'paycut'
     | 'slow_but_steady'
-    | 'speed_up';
+    | 'speed_up'
+    | 'time_running';
