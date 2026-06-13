@@ -645,6 +645,16 @@ const enemyAttackGrowth: BattleTreeModifierDefinition<TimeData> = {
     }),
 };
 
+const exit: BattleTreeModifierDefinition = {
+    id: 'exit',
+    name: 'Exit',
+    description: 'Immediately end the Battle Climb',
+    image: 'assets/images/battleTree/modifiers/exit.png',
+    weight: 1,
+    stack: { max: 1 },
+    onAcquire: ctx => ctx.endSequence('Exit'),
+};
+
 const cashIn: BattleTreeModifierDefinition = {
     id: 'cash_in',
     name: 'Cash In',
@@ -989,6 +999,114 @@ const trickRoom: BattleTreeModifierDefinition = {
     ],
 };
 
+const roomService: BattleTreeModifierDefinition = {
+    id: 'room_service',
+    name: 'Room Service',
+    description: 'Your Pokémon lose 25% Speed and gain 12.5% Attack and Defense',
+    image: 'assets/images/battleTree/modifiers/room_service.png',
+    weight: 1,
+    effects: [
+        { target: { key: 'speed', scope: ['Team_A'] }, value: 0.75, operation: 'multiplicative' },
+        { target: { key: 'attack', scope: ['Team_A'] }, value: 1.125, operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: 1.125, operation: 'multiplicative' },
+    ],
+};
+
+const finalGambit: BattleTreeModifierDefinition = {
+    id: 'final_gambit',
+    name: 'Final Gambit',
+    description: 'Your Pokémon use their current HP as their Attack',
+    image: 'assets/images/battleTree/modifiers/final_gambit.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data, { pokemon }) => pokemon.hitpoints, operation: 'override' },
+    ],
+};
+
+const momentum: BattleTreeModifierDefinition<StageData> = {
+    id: 'momentum',
+    name: 'Momentum',
+    description: 'Starting now, gain 1% rewards and 1% game speed for each platform cleared',
+    image: 'assets/images/battleTree/modifiers/momentum.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'rewards' }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'game_speed' }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
+    ],
+    createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
+};
+
+const overclock: BattleTreeModifierDefinition = {
+    id: 'overclock',
+    name: 'Overclock',
+    description: 'Game speed is doubled, but opponent Pokémon gain 20% Attack and Speed',
+    image: 'assets/images/battleTree/modifiers/overclock.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'game_speed' }, value: 2, operation: 'multiplicative' },
+        { target: { key: 'attack', scope: ['Team_B'] }, value: 1.2, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_B'] }, value: 1.2, operation: 'multiplicative' },
+    ],
+};
+
+const equalist: BattleTreeModifierDefinition = {
+    id: 'equalist',
+    name: 'Equalist',
+    description: 'Your opponent can only bring as many Pokémon as you have unfainted Pokémon',
+    image: 'assets/images/battleTree/modifiers/equalist.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'max_team_size', scope: ['Team_B'] }, value: ctx => ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints > 0).length, operation: 'override' },
+    ],
+};
+
+const payday: BattleTreeModifierDefinition = {
+    id: 'payday',
+    name: 'Payday',
+    description: 'Earn currency',
+    image: 'assets/images/battleTree/modifiers/payday.png',
+    weight: 1,
+    onAcquire: ctx => ctx.sequence.rollPool('currency', undefined, 1),
+};
+
+const paycut: BattleTreeModifierDefinition = {
+    id: 'paycut',
+    name: 'Paycut',
+    description: 'You earn 20% fewer rewards',
+    image: 'assets/images/battleTree/modifiers/paycut.png',
+    weight: 1,
+    effects: [{ target: { key: 'rewards' }, value: 0.8, operation: 'multiplicative' }],
+};
+
+const slowButSteady: BattleTreeModifierDefinition<StageData> = {
+    id: 'slow_but_steady',
+    name: 'Slow But Steady',
+    description: 'Starting now, your Pokémon gain 1% to all stats for each platform cleared',
+    image: 'assets/images/battleTree/modifiers/slow_but_steady.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: (ctx, data) => 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage), operation: 'multiplicative' },
+    ],
+    createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
+};
+
+const speedup: BattleTreeModifierDefinition<StageData> = {
+    id: 'speed_up',
+    name: 'Speed Up',
+    description: 'Game speed is tripled for the next 5 platforms',
+    image: 'assets/images/battleTree/modifiers/speed_up.png',
+    weight: 1,
+    effects: [{ target: { key: 'game_speed' }, value: (ctx, data) => ctx.sequence.stage - data.acquiredStage < 5 ? 3 : 1, operation: 'multiplicative' }],
+    createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1045,6 +1163,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     enemyPriority,
     rewardsVsSpeed,
     enemyAttackGrowth,
+    exit,
     cashIn,
     enemiesExtraStatsPerStage,
     fatigue,
@@ -1070,4 +1189,13 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     megaDrain,
     perfectBalance,
     trickRoom,
+    roomService,
+    finalGambit,
+    momentum,
+    overclock,
+    equalist,
+    payday,
+    paycut,
+    slowButSteady,
+    speedup,
 ];

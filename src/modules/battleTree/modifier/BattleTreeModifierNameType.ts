@@ -52,6 +52,7 @@ export type BattleTreeModifierNameType
     | 'enemy_priority'
     | 'rewards_vs_speed'
     | 'enemy_attack_growth'
+    | 'exit'
     | 'cash_in'
     | 'enemies_extra_stats_per_stage'
     | 'fatigue'
@@ -76,4 +77,13 @@ export type BattleTreeModifierNameType
     | 'absorb'
     | 'perfect_balance'
     | 'mega_drain'
-    | 'trick_room';
+    | 'trick_room'
+    | 'room_service'
+    | 'final_gambit'
+    | 'momentum'
+    | 'overclock'
+    | 'equalist'
+    | 'payday'
+    | 'paycut'
+    | 'slow_but_steady'
+    | 'speed_up';

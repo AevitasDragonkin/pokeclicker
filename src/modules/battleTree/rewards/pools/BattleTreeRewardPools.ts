@@ -35,6 +35,18 @@ export const BattleTreeRewardPools: Partial<Record<BattleTreeRewardPoolNameType,
             { item: 'Moonball', weight: 1, amount: 1 },
         ],
     }),
+    currency: new BattleTreeRewardPool({
+        id: 'currency',
+        entries: [
+            { item: 'Money', weight: 1, amount: 1000 },
+            { item: 'Quest Point', weight: 1, amount: 1000 },
+            { item: 'Dungeon Token', weight: 1, amount: 1000 },
+            { item: 'Diamond', weight: 1, amount: 1000 },
+            { item: 'Farm Point', weight: 1, amount: 1000 },
+            { item: 'Battle Point', weight: 1, amount: 1000 },
+            { item: 'Contest Token', weight: 1, amount: 1000 },
+        ],
+    }),
     evo_items: new BattleTreeRewardPool({
         id: 'evo_items',
         entries: [
