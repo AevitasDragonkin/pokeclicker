@@ -180,7 +180,7 @@ export class BattleTreeModifierManager {
             if (data) {
                 description += ' ' + modifier.dataDescription(this._ctx, data);
             } else if (create) {
-                description += ' ' + modifier.dataDescription(this._ctx, modifier.createData(this._ctx));
+                description += ' ' + modifier.dataDescription(this._ctx, modifier.createData?.(this._ctx));
             }
         }
 

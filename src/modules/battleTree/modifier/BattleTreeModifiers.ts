@@ -1046,7 +1046,8 @@ const momentumFn = (current, acquired) => Math.max(0, Math.min(MOMENTUM_MAX, MOM
 const momentum: BattleTreeModifierDefinition<StageData> = {
     id: 'momentum',
     name: 'Momentum',
-    description: `Gain ${MOMENTUM_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} rewards and game speed for each ${MOMENTUM_PLATFORMS} platforms above`,
+    description: `Gain ${MOMENTUM_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} rewards and game speed for each ${MOMENTUM_PLATFORMS} platforms above this stage, (max ${MOMENTUM_MAX.toLocaleString('en-US', { style: 'percent' })})`,
+    dataDescription: (ctx, { acquiredStage }) => `(Above ${acquiredStage}, ${momentumFn(ctx.sequence.stage, acquiredStage).toLocaleString('en-US', { style: 'percent' })})`,
     image: 'assets/images/battleTree/modifiers/momentum.png',
     weight: 1,
     stack: { max: 1 },
