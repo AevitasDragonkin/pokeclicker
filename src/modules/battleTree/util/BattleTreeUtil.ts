@@ -42,6 +42,14 @@ export class BattleTreeUtil {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static calculatePokemonLevelForOpponent(pokemon: PokemonNameType, stage: number): number {
         // TODO : BT : Calculate proper level for the opponent's pokemon
+        if (stage > 0 && (stage - 21) % 50 === 0) {
+            return stage + 5;
+        }
+
+        if (stage > 0 && (stage - 49) % 50 === 0) {
+            return stage + 10;
+        }
+
         return stage;
     }
 
