@@ -1030,16 +1030,20 @@ const finalGambit: BattleTreeModifierDefinition = {
     ],
 };
 
+const MOMENTUM_PERCENTAGE = 0.01;
+const MOMENTUM_MAX = 1;
+const MOMENTUM_PLATFORMS = 1;
+const momentumFn = (current, acquired) => Math.max(0, Math.min(MOMENTUM_MAX, MOMENTUM_PERCENTAGE * Math.floor((current - acquired) / MOMENTUM_PLATFORMS)));
 const momentum: BattleTreeModifierDefinition<StageData> = {
     id: 'momentum',
     name: 'Momentum',
-    description: 'Starting now, gain 1% rewards and 1% game speed for each platform cleared',
+    description: `Gain ${MOMENTUM_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} rewards and game speed for each ${MOMENTUM_PLATFORMS} platforms above`,
     image: 'assets/images/battleTree/modifiers/momentum.png',
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'rewards' }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
-        { target: { key: 'game_speed' }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
+        { target: { key: 'rewards' }, value: (ctx, data) => 1 + momentumFn(ctx.sequence.stage, data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'game_speed' }, value: (ctx, data) => 1 + momentumFn(ctx.sequence.stage, data.acquiredStage), operation: 'multiplicative' },
     ],
     createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
 };
