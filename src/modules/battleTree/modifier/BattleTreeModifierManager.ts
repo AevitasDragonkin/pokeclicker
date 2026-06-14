@@ -169,13 +169,13 @@ export class BattleTreeModifierManager {
         return this._history();
     }
 
-    public resolveModifierDescription(id: BattleTreeModifierNameType, d?: any) {
+    public resolveModifierDescription(id: BattleTreeModifierNameType, d?: any, ignoreData: boolean = false) {
         const modifier: BattleTreeModifierDefinition = this.getModifierById(id);
 
         if (!modifier) return 'Modifier not found';
 
         const resolve = <D>(des: BattleTreeModifierDescription<D>, data: D) => typeof des === 'function' ? (des as ((ctx: BattleTreeModifierContext, data: D) => string))(this._ctx, data) : des;
-        return resolve(modifier.description, d ?? modifier.createData?.(this._ctx));
+        return resolve(modifier.description, ignoreData ? undefined : (d ?? modifier.createData?.(this._ctx)));
     }
 
     public toJSON(): BattleTreeModifierManagerSaveData {

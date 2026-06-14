@@ -496,7 +496,7 @@ const LIMITED_TIME_DURATION_IN_SECONDS: number = 300;
 const limitedTime: BattleTreeModifierDefinition<TimeData> = {
     id: 'limited_time',
     name: 'Quickly now',
-    description: (ctx, data: TimeData) => `${formatDuration(data.acquiredBattleTime + LIMITED_TIME_DURATION_IN_SECONDS - ctx.sequence.battleTime)} Battle time left until your Battle Climb ends`,
+    description: (ctx, data: TimeData) => ctx && data ? `${formatDuration(data.acquiredBattleTime + LIMITED_TIME_DURATION_IN_SECONDS - ctx.sequence.battleTime)} Battle time left until your Battle Climb ends` : `${formatDuration(LIMITED_TIME_DURATION_IN_SECONDS)} Battle time left until your Battle Climb ends`,
     image: 'assets/images/battleTree/modifiers/quickly_now.png',
     weight: 1,
     stateScope: [BattleTreeSequenceState.BATTLE],
@@ -515,7 +515,7 @@ const CHALLENGE_ACCEPTED_ADDITIONAL_STAGES: number = 20;
 const challengeAccepted: BattleTreeModifierDefinition<StageData> = {
     id: 'challenge_accepted',
     name: 'Challenge Accepted',
-    description: (ctx, data: StageData) => ctx ? `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards. (Reach platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})` : `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards.`,
+    description: (ctx, data: StageData) => ctx && data ? `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards. (Reach platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})` : `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards.`,
     image: 'assets/images/battleTree/modifiers/challenge.png',
     weight: 1,
     effects: [{
@@ -636,7 +636,7 @@ const rewardsVsSpeed: BattleTreeModifierDefinition = {
 const enemyAttackGrowth: BattleTreeModifierDefinition<TimeData> = {
     id: 'enemy_attack_growth',
     name: 'Enemy Attack Growth',
-    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? `Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken (+${Math.floor(ctx.sequence.battleTime - acquiredBattleTime)})` : 'Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken',
+    description: (ctx, data: TimeData) => ctx && data ? `Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken (+${Math.floor(ctx.sequence.battleTime - data.acquiredBattleTime)})` : 'Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/enemy_attack_growth.png',
     weight: 1,
     stack: { max: 1 },
@@ -675,7 +675,7 @@ const cashIn: BattleTreeModifierDefinition = {
 const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
     id: 'enemies_extra_stats_per_stage',
     name: 'Growing enemies',
-    description: (ctx, { acquiredStage }: StageData) => ctx ? `Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken (${5 * (ctx.sequence.stage - acquiredStage)})` : 'Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken',
+    description: (ctx, data: StageData) => ctx && data ? `Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken (${5 * (ctx.sequence.stage - data.acquiredStage)})` : 'Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/enemies_extra_stats_per_stage.png',
     weight: 1,
     stack: { max: 1 },
@@ -693,7 +693,7 @@ const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
 const fatigue: BattleTreeModifierDefinition<StageData> = {
     id: 'fatigue',
     name: 'Fatigue',
-    description: (ctx, { acquiredStage }: StageData) => ctx ? `All Pokémon lose 1% attack speed for each platform after this modifier is taken (x${(0.99 ** (ctx.sequence.stage - acquiredStage)).toFixed(4)})` : 'All Pokémon lose 1% attack speed for each platform after this modifier is taken',
+    description: (ctx, data: StageData) => ctx && data ? `All Pokémon lose 1% attack speed for each platform after this modifier is taken (x${(0.99 ** (ctx.sequence.stage - data.acquiredStage)).toFixed(4)})` : 'All Pokémon lose 1% attack speed for each platform after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/fatigue.png',
     weight: 1,
     stack: { max: 1 },
@@ -719,7 +719,7 @@ const vengeance: BattleTreeModifierDefinition = {
 const degradation: BattleTreeModifierDefinition<TimeData> = {
     id: 'degradation',
     name: 'Degradation',
-    description: (ctx, { acquiredBattleTime }: TimeData) => ctx ? `Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken (${-1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5)})` : 'Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken',
+    description: (ctx, data: TimeData) => ctx && data ? `Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken (${-1 * Math.floor((ctx.sequence.battleTime - data.acquiredBattleTime) / 5)})` : 'Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken',
     image: 'assets/images/battleTree/modifiers/degradation.png',
     weight: 1,
     stack: { max: 5 },
@@ -1095,7 +1095,7 @@ const slowButSteadyFn = (current: number, acquired: number) => Math.max(0, Math.
 const slowButSteady: BattleTreeModifierDefinition<StageData> = {
     id: 'slow_but_steady',
     name: 'Slow But Steady',
-    description: (ctx, data) => ctx && data ? `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} platforms above ${data.acquiredStage} cleared (${slowButSteadyFn(ctx.sequence.stage, data.acquiredStage).toLocaleString('en-US', { style: 'percent', maximumFractionDigits: 2 })})` : `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} ${SLOW_BUT_STEADY_PLATFORMS} platforms above ${data.acquiredStage} cleared`,
+    description: (ctx, data) => ctx && data ? `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} platforms above ${data.acquiredStage} cleared (${slowButSteadyFn(ctx.sequence.stage, data.acquiredStage).toLocaleString('en-US', { style: 'percent', maximumFractionDigits: 2 })})` : `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} ${SLOW_BUT_STEADY_PLATFORMS} platforms above`,
     image: 'assets/images/battleTree/modifiers/slow_but_steady.png',
     weight: 1,
     stack: { max: 1 },
@@ -1121,7 +1121,7 @@ const TIME_RUNNING_DURATION_IN_SECONDS: number = 300;
 const timeRunning: BattleTreeModifierDefinition<TimeData & CompleteData> = {
     id: 'time_running',
     name: 'Time\'s Running',
-    description: (ctx, data) => `Your run ends after ${formatDuration(data.acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS - ctx.sequence.battleTime)} minutes of battle time. If it does, you gain 33% more rewards.`,
+    description: (ctx, data) => ctx && data ? `Your run ends after ${formatDuration(data.acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS - ctx.sequence.battleTime)} minutes of battle time. If it does, you gain 33% more rewards.` : `Your run ends after ${formatDuration(TIME_RUNNING_DURATION_IN_SECONDS)} minutes of battle time. If it does, you gain 33% more rewards.`,
     image: 'assets/images/battleTree/modifiers/time_running.png',
     weight: 1,
     stack: { max: 1 },
