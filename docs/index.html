@@ -2700,7 +2700,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
                         <div class="d-flex flex-column flex-grow-1 text-left">
                             <div class="font-weight-bold" data-bind="text: $data.name"></div>
-                            <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id)"></div>
+                            <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id, { create: true })"></div>
                         </div>
                     </div>
                     <!-- /ko -->
@@ -2711,6 +2711,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
 
             <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD -->
             <section class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
+                <div class="small font-italic" data-bind="text: App.game.battleTree.sequence.endReason"></div>
                 <button class="btn btn-success text-light" onclick="App.game.battleTree.sequence.claimRewards()">Claim rewards</button>
             </section>
             <!-- /ko -->
@@ -3299,7 +3300,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 <div class="position-relative p-1 border" data-bind="
                     tooltip: {
                         trigger: 'hover',
-                        title: `<strong><u>${$data.definition.name}</u></strong><br/>${App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.definition.id, $data.data)}`,
+                        title: `<strong><u>${$data.definition.name}</u></strong><br/>${App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.definition.id, { data: $data.data })}`,
                         placement: 'bottom',
                         html: true,
                         class: 'no-click'
@@ -3634,7 +3635,9 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                                 <thead class="thead-dark">
                                 <tr>
                                     <th colspan="2">Modifier</th>
+                                    <th>Stacks</th>
                                     <th>Requirement</th>
+                                    <th>Chance</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -3649,10 +3652,16 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                                     </td>
                                     <td class="vertical-middle">
                                         <div class="font-weight-bold" data-bind="text: $data.name"></div>
-                                        <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id, undefined, true)"></div>
+                                        <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id)"></div>
+                                    </td>
+                                    <td class="vertical-middle text-center">
+                                        <div class="small" data-bind="text: $data.stack?.max ?? '∞'"></div>
                                     </td>
                                     <td class="vertical-middle">
                                         <div class="small" data-bind="html: $data.requirement?.htmlHint() || '-'"></div>
+                                    </td>
+                                    <td class="vertical-middle text-center">
+                                        <div class="small" data-bind="text: ($data.weight / BattleTreeModifiers.map(v => v.weight).reduce((a, b) => a + b, 0)).toLocaleString('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 })"></div>
                                     </td>
                                 </tr>
                                 <!-- /ko -->
