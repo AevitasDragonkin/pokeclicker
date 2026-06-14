@@ -49,12 +49,13 @@ export interface TickData {
 //     data: Data;
 // }
 
-export type BattleTreeModifierDescription<Data = unknown> = string | ((ctx: BattleTreeModifierContext, data: Data) => string);
+export type BattleTreeModifierDataDescription<Data> = ((ctx: BattleTreeModifierContext, data: Data) => string);
 
 export interface BattleTreeModifierDefinition<Data = unknown> {
     id: BattleTreeModifierNameType;
     name: string;
-    description: BattleTreeModifierDescription<Data>;
+    description: string;
+    dataDescription?: BattleTreeModifierDataDescription<Data>;
     image?: string;
     weight?: number;
     stack?: { max: number };
@@ -82,7 +83,7 @@ const forfeit: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/forfeit.png',
     weight: 0, // System triggered only
     stack: { max: 1 },
-    onAcquire: ctx => ctx.endSequence('Forfeiting'),
+    onAcquire: ctx => ctx.endSequence('You have forfeited this Battle Climb'),
     effects: [{ target: { key: 'rewards' }, value: 0.25, operation: 'multiplicative' }],
 };
 
@@ -496,13 +497,14 @@ const LIMITED_TIME_DURATION_IN_SECONDS: number = 300;
 const limitedTime: BattleTreeModifierDefinition<TimeData> = {
     id: 'limited_time',
     name: 'Quickly now',
-    description: (ctx, data: TimeData) => ctx && data ? `${formatDuration(data.acquiredBattleTime + LIMITED_TIME_DURATION_IN_SECONDS - ctx.sequence.battleTime)} Battle time left until your Battle Climb ends` : `${formatDuration(LIMITED_TIME_DURATION_IN_SECONDS)} Battle time left until your Battle Climb ends`,
+    description: `${formatDuration(LIMITED_TIME_DURATION_IN_SECONDS)} Battle time left until your Battle Climb ends`,
+    dataDescription: (ctx, { acquiredBattleTime }) => `(${formatDuration(acquiredBattleTime + LIMITED_TIME_DURATION_IN_SECONDS - ctx.sequence.battleTime)})`,
     image: 'assets/images/battleTree/modifiers/quickly_now.png',
     weight: 1,
     stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData }) => {
         if (ctx.sequence.battleTime > definitionData.acquiredBattleTime + LIMITED_TIME_DURATION_IN_SECONDS) {
-            ctx.endSequence('Time\'s up!');
+            ctx.endSequence('Quickly now - Time is up!');
         }
     },
     createData: ctx => ({
@@ -515,7 +517,8 @@ const CHALLENGE_ACCEPTED_ADDITIONAL_STAGES: number = 20;
 const challengeAccepted: BattleTreeModifierDefinition<StageData> = {
     id: 'challenge_accepted',
     name: 'Challenge Accepted',
-    description: (ctx, data: StageData) => ctx && data ? `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards. (Reach platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})` : `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards.`,
+    description: `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards.`,
+    dataDescription: (ctx, data) => `(Reach platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})`,
     image: 'assets/images/battleTree/modifiers/challenge.png',
     weight: 1,
     effects: [{
@@ -636,7 +639,8 @@ const rewardsVsSpeed: BattleTreeModifierDefinition = {
 const enemyAttackGrowth: BattleTreeModifierDefinition<TimeData> = {
     id: 'enemy_attack_growth',
     name: 'Enemy Attack Growth',
-    description: (ctx, data: TimeData) => ctx && data ? `Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken (+${Math.floor(ctx.sequence.battleTime - data.acquiredBattleTime)})` : 'Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken',
+    description: 'Opponent Pokémon gain 1 Attack for every second of battle time after this modifier is taken',
+    dataDescription: (ctx, { acquiredBattleTime }) => `(+${Math.floor(ctx.sequence.battleTime - acquiredBattleTime)})`,
     image: 'assets/images/battleTree/modifiers/enemy_attack_growth.png',
     weight: 1,
     stack: { max: 1 },
@@ -658,7 +662,7 @@ const exit: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/exit.png',
     weight: 1,
     stack: { max: 1 },
-    onAcquire: ctx => ctx.endSequence('Exit'),
+    onAcquire: ctx => ctx.endSequence('You have exited the Battle Climb'),
 };
 
 const cashIn: BattleTreeModifierDefinition = {
@@ -669,13 +673,14 @@ const cashIn: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'rewards' }, value: 2, operation: 'multiplicative' }],
-    onAcquire: ctx => ctx.endSequence('Cash In'),
+    onAcquire: ctx => ctx.endSequence('You have cashed in!'),
 };
 
 const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
     id: 'enemies_extra_stats_per_stage',
     name: 'Growing enemies',
-    description: (ctx, data: StageData) => ctx && data ? `Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken (${5 * (ctx.sequence.stage - data.acquiredStage)})` : 'Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken',
+    description: 'Enemies will gain +5 Attack, Defense, Speed and Maximum Hitpoints for each platform after this modifier is taken',
+    dataDescription: (ctx, { acquiredStage }) => `(${5 * (ctx.sequence.stage - acquiredStage)})`,
     image: 'assets/images/battleTree/modifiers/enemies_extra_stats_per_stage.png',
     weight: 1,
     stack: { max: 1 },
@@ -693,7 +698,8 @@ const enemiesExtraStatsPerStage: BattleTreeModifierDefinition<StageData> = {
 const fatigue: BattleTreeModifierDefinition<StageData> = {
     id: 'fatigue',
     name: 'Fatigue',
-    description: (ctx, data: StageData) => ctx && data ? `All Pokémon lose 1% attack speed for each platform after this modifier is taken (x${(0.99 ** (ctx.sequence.stage - data.acquiredStage)).toFixed(4)})` : 'All Pokémon lose 1% attack speed for each platform after this modifier is taken',
+    description: 'All Pokémon lose 1% attack speed for each platform after this modifier is taken',
+    dataDescription: (ctx, { acquiredStage }) => `(x${(0.99 ** (ctx.sequence.stage - acquiredStage)).toFixed(4)})`,
     image: 'assets/images/battleTree/modifiers/fatigue.png',
     weight: 1,
     stack: { max: 1 },
@@ -719,7 +725,8 @@ const vengeance: BattleTreeModifierDefinition = {
 const degradation: BattleTreeModifierDefinition<TimeData> = {
     id: 'degradation',
     name: 'Degradation',
-    description: (ctx, data: TimeData) => ctx && data ? `Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken (${-1 * Math.floor((ctx.sequence.battleTime - data.acquiredBattleTime) / 5)})` : 'Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken',
+    description: 'Your Pokémon lose 1 maximum HP for every 5 seconds of battle time after this modifier is taken',
+    dataDescription: (ctx, { acquiredBattleTime }) => `(${-1 * Math.floor((ctx.sequence.battleTime - acquiredBattleTime) / 5)})`,
     image: 'assets/images/battleTree/modifiers/degradation.png',
     weight: 1,
     stack: { max: 5 },
@@ -733,7 +740,8 @@ const degradation: BattleTreeModifierDefinition<TimeData> = {
 const enemyMaxHPGainModifierTime: BattleTreeModifierDefinition = {
     id: 'enemy_max_hp_modifier_time',
     name: 'No time to think',
-    description: ctx => ctx ? `All your opponents\' Pokémon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers (+${10 * Math.floor(ctx.sequence.modifierTime / 30)})` : 'All your opponents\' Pokémon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers',
+    description: 'All your opponents\' Pokémon gain +10 Maximum Hitpoints for every 30 seconds you spend picking Modifiers',
+    dataDescription: ctx => `(+${10 * Math.floor(ctx.sequence.modifierTime / 30)})`,
     image: 'assets/images/battleTree/modifiers/no_time_to_think.png',
     weight: 1,
     stack: { max: 1 },
@@ -744,7 +752,8 @@ const REWIND_STAGES: number = 15;
 const rewind: BattleTreeModifierDefinition = {
     id: 'rewind',
     name: 'Rewind',
-    description: ctx => ctx ? `Move back ${REWIND_STAGES} platforms (platform ${ctx.sequence.stage - REWIND_STAGES})` : `Move back ${REWIND_STAGES} platforms`,
+    description: `Move back ${REWIND_STAGES} platforms`,
+    dataDescription: ctx => `(platform ${ctx.sequence.stage - REWIND_STAGES})`,
     image: 'assets/images/battleTree/modifiers/rewind.png',
     weight: 1,
     stack: { max: 1 },
@@ -1099,7 +1108,8 @@ const slowButSteadyFn = (current: number, acquired: number) => Math.max(0, Math.
 const slowButSteady: BattleTreeModifierDefinition<StageData> = {
     id: 'slow_but_steady',
     name: 'Slow But Steady',
-    description: (ctx, data) => ctx && data ? `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} platforms above ${data.acquiredStage} cleared (${slowButSteadyFn(ctx.sequence.stage, data.acquiredStage).toLocaleString('en-US', { style: 'percent', maximumFractionDigits: 2 })})` : `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} ${SLOW_BUT_STEADY_PLATFORMS} platforms above`,
+    description: `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} platforms above`,
+    dataDescription: (ctx, { acquiredStage }) => `(${slowButSteadyFn(ctx.sequence.stage, acquiredStage).toLocaleString('en-US', { style: 'percent', maximumFractionDigits: 2 })})`,
     image: 'assets/images/battleTree/modifiers/slow_but_steady.png',
     weight: 1,
     stack: { max: 1 },
@@ -1125,7 +1135,8 @@ const TIME_RUNNING_DURATION_IN_SECONDS: number = 300;
 const timeRunning: BattleTreeModifierDefinition<TimeData & CompleteData> = {
     id: 'time_running',
     name: 'Time\'s Running',
-    description: (ctx, data) => ctx && data ? `Your run ends after ${formatDuration(data.acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS - ctx.sequence.battleTime)} minutes of battle time. If it does, you gain 33% more rewards.` : `Your run ends after ${formatDuration(TIME_RUNNING_DURATION_IN_SECONDS)} minutes of battle time. If it does, you gain 33% more rewards.`,
+    description: `Your run ends after ${formatDuration(TIME_RUNNING_DURATION_IN_SECONDS)} minutes of battle time. If it does, you gain 33% more rewards.`,
+    dataDescription: (ctx, { acquiredBattleTime }) => `(${formatDuration(acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS - ctx.sequence.battleTime)})`,
     image: 'assets/images/battleTree/modifiers/time_running.png',
     weight: 1,
     stack: { max: 1 },
@@ -1136,7 +1147,7 @@ const timeRunning: BattleTreeModifierDefinition<TimeData & CompleteData> = {
     onTick: (ctx, { definitionData }) => {
         if (ctx.sequence.battleTime > definitionData.acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS) {
             definitionData.effectComplete = true;
-            ctx.endSequence('Time\'s up!');
+            ctx.endSequence('Time\'s Running - Time is up!');
         }
     },
     createData: ctx => ({ acquiredEngagementTime: ctx.sequence.engagementTime, acquiredBattleTime: ctx.sequence.battleTime, effectComplete: false }),

@@ -201,7 +201,7 @@
                 <div class="position-relative p-1 border" data-bind="
                     tooltip: {
                         trigger: 'hover',
-                        title: `<strong><u>${$data.definition.name}</u></strong><br/>${App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.definition.id, $data.data)}`,
+                        title: `<strong><u>${$data.definition.name}</u></strong><br/>${App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.definition.id, { data: $data.data })}`,
                         placement: 'bottom',
                         html: true,
                         class: 'no-click'
@@ -553,7 +553,7 @@
                                     </td>
                                     <td class="vertical-middle">
                                         <div class="font-weight-bold" data-bind="text: $data.name"></div>
-                                        <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id, undefined, true)"></div>
+                                        <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id)"></div>
                                     </td>
                                     <td class="vertical-middle text-center">
                                         <div class="small" data-bind="text: $data.stack?.max ?? '∞'"></div>

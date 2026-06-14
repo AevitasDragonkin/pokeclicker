@@ -185,7 +185,7 @@
 
                         <div class="d-flex flex-column flex-grow-1 text-left">
                             <div class="font-weight-bold" data-bind="text: $data.name"></div>
-                            <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id)"></div>
+                            <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id, { create: true })"></div>
                         </div>
                     </div>
                     <!-- /ko -->
@@ -196,6 +196,7 @@
 
             <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.REWARD -->
             <section class="d-flex flex-column flex-grow-1 justify-content-center align-items-center">
+                <div class="small font-italic" data-bind="text: App.game.battleTree.sequence.endReason"></div>
                 <button class="btn btn-success text-light" onclick="App.game.battleTree.sequence.claimRewards()">Claim rewards</button>
             </section>
             <!-- /ko -->

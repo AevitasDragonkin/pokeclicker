@@ -2,7 +2,7 @@ import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import {
     BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT,
     BattleTreeModifierDefinition,
-    BattleTreeModifierDescription, BattleTreeModifiers, BattleTreeModifierSource, TickData,
+    BattleTreeModifiers, BattleTreeModifierSource, TickData,
 } from './BattleTreeModifiers';
 import { ObservableArray, PureComputed } from 'knockout';
 import SeededRand from '../../utilities/SeededRand';
@@ -169,13 +169,22 @@ export class BattleTreeModifierManager {
         return this._history();
     }
 
-    public resolveModifierDescription(id: BattleTreeModifierNameType, d?: any, ignoreData: boolean = false) {
+    public resolveModifierDescription(id: BattleTreeModifierNameType, { data, create }: { data?: any, create?: boolean } = {}) {
         const modifier: BattleTreeModifierDefinition = this.getModifierById(id);
 
         if (!modifier) return 'Modifier not found';
 
-        const resolve = <D>(des: BattleTreeModifierDescription<D>, data: D) => typeof des === 'function' ? (des as ((ctx: BattleTreeModifierContext, data: D) => string))(this._ctx, data) : des;
-        return resolve(modifier.description, ignoreData ? undefined : (d ?? modifier.createData?.(this._ctx)));
+        let description: string = modifier.description;
+
+        if (modifier.dataDescription) {
+            if (data) {
+                description += ' ' + modifier.dataDescription(this._ctx, data);
+            } else if (create) {
+                description += ' ' + modifier.dataDescription(this._ctx, modifier.createData(this._ctx));
+            }
+        }
+
+        return description;
     }
 
     public toJSON(): BattleTreeModifierManagerSaveData {

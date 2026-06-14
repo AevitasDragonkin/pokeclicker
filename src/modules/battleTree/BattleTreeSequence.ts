@@ -30,6 +30,7 @@ interface BattleTreeSequenceSaveData {
     seed: number;
     state: BattleTreeSequenceState;
     stage: number;
+    endReason?: string;
 
     fight: BattleTreeFightSaveData | null;
     timers: Record<BattleTreeSequenceState, number>;
@@ -43,6 +44,7 @@ export class BattleTreeSequence {
     private _seed: Observable<number>;
     private _state: Observable<BattleTreeSequenceState>;
     private _stage: Observable<number>;
+    private _endReason: Observable<string | undefined>;
 
     private _fight: Observable<BattleTreeFight | null>;
     private _timers: Record<BattleTreeSequenceState, Observable<number>>;
@@ -66,6 +68,7 @@ export class BattleTreeSequence {
         this._seed = ko.observable(BattleTreeUtil.calculateSeed());
         this._state = ko.observable(BattleTreeSequenceState.PREPARATION);
         this._stage = ko.observable(0);
+        this._endReason = ko.observable(undefined);
 
         this._fight = ko.observable(null);
 
@@ -83,8 +86,9 @@ export class BattleTreeSequence {
     private createContext(): BattleTreeModifierContext {
         return {
             sequence: this,
-            endSequence: () => {
+            endSequence: (reason: string) => {
                 // console.log(`[BATTLE TREE] Context ending Battle Climb: ${reason}`);
+                this._endReason(reason);
                 this._state(BattleTreeSequenceState.REWARD);
             },
         };
@@ -191,6 +195,7 @@ export class BattleTreeSequence {
             }
         } else {
             // TODO : Handle defeat
+            this._endReason('You have been defeated!');
             this._state(BattleTreeSequenceState.REWARD);
         }
 
@@ -274,6 +279,10 @@ export class BattleTreeSequence {
         return this._modifierManager.getValue({ key: 'stage', base: this._stage() });
     }
 
+    get endReason(): string | undefined {
+        return this._endReason();
+    }
+
     get teams(): Record<TeamType, BattleTreeTeam> {
         return this._teams;
     }
@@ -341,6 +350,7 @@ export class BattleTreeSequence {
             seed: this._seed(),
             state: this._state(),
             stage: this._stage(),
+            endReason: this._endReason(),
             fight: this._fight()?.toJSON() ?? null,
             timers: ko.toJS(this._timers),
             teams: Object
@@ -358,6 +368,7 @@ export class BattleTreeSequence {
         sequence._seed(json.seed);
         sequence._state(json.state);
         sequence._stage(json.stage);
+        sequence._endReason(json.endReason);
 
         Object.keys(sequence._timers).forEach(key => sequence._timers[key](json.timers[key] ?? 0));
 
