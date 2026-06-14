@@ -1088,17 +1088,21 @@ const paycut: BattleTreeModifierDefinition = {
     effects: [{ target: { key: 'rewards' }, value: 0.8, operation: 'multiplicative' }],
 };
 
+const SLOW_BUT_STEADY_PERCENTAGE = 0.01;
+const SLOW_BUT_STEADY_MAX: number = 0.3;
+const SLOW_BUT_STEADY_PLATFORMS: number = 5;
+const slowButSteadyFn = (current: number, acquired: number) => Math.max(0, Math.min(SLOW_BUT_STEADY_MAX, SLOW_BUT_STEADY_PERCENTAGE * Math.floor((current - acquired) / SLOW_BUT_STEADY_PLATFORMS)));
 const slowButSteady: BattleTreeModifierDefinition<StageData> = {
     id: 'slow_but_steady',
     name: 'Slow But Steady',
-    description: 'Starting now, your Pokémon gain 1% to all stats for each platform cleared',
+    description: (ctx, data) => ctx && data ? `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} platforms above ${data.acquiredStage} cleared (${slowButSteadyFn(ctx.sequence.stage, data.acquiredStage).toLocaleString('en-US', { style: 'percent', maximumFractionDigits: 2 })})` : `Starting now, your Pokémon gain ${SLOW_BUT_STEADY_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} (max. ${SLOW_BUT_STEADY_MAX.toLocaleString('en-US', { style: 'percent' })}) to all stats for each ${SLOW_BUT_STEADY_PLATFORMS} ${SLOW_BUT_STEADY_PLATFORMS} platforms above ${data.acquiredStage} cleared`,
     image: 'assets/images/battleTree/modifiers/slow_but_steady.png',
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
-        { target: { key: 'defense', scope: ['Team_A'] }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
-        { target: { key: 'speed', scope: ['Team_A'] }, value: (ctx, data) => Math.max(1, 1 + 0.01 * (ctx.sequence.stage - data.acquiredStage)), operation: 'multiplicative' },
+        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data) => 1 + slowButSteadyFn(ctx.sequence.stage, data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: (ctx, data) => 1 + slowButSteadyFn(ctx.sequence.stage, data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: (ctx, data) => 1 + slowButSteadyFn(ctx.sequence.stage, data.acquiredStage), operation: 'multiplicative' },
     ],
     createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
 };
