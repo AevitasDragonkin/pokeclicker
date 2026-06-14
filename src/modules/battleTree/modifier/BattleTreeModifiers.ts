@@ -771,8 +771,8 @@ const absoluteRewind: BattleTreeModifierDefinition<StageData> = {
 const SKIP_STAGES: number = 3;
 const skipStages: BattleTreeModifierDefinition = {
     id: 'skip_stages_3',
-    name: `Skip ${SKIP_STAGES} stages`,
-    description: `Skip ${SKIP_STAGES} stages`,
+    name: `Skip ${SKIP_STAGES} platforms`,
+    description: `Skip ${SKIP_STAGES} platforms`,
     image: 'assets/images/battleTree/modifiers/skip_stages_3.png',
     weight: 1,
     stack: { max: 1 },
