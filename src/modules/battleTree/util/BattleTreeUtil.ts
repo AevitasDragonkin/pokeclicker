@@ -45,8 +45,12 @@ export class BattleTreeUtil {
         return stage;
     }
 
+    public static calculateGameSpeed(): number {
+        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'game_speed', base: 1 });
+    }
+
     public static calculateAttackSpeed(): number {
-        return 1;
+        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack_speed', base: 1 });
     }
 
     public static calculateBattleTreeExperienceForPokemonDefeat(pokemon: BattleTreePokemon): number {

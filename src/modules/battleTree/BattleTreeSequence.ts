@@ -129,8 +129,8 @@ export class BattleTreeSequence {
     }
 
     public update(delta: number): void {
-        const gameSpeedDelta = delta * this._modifierManager.getValue({ key: 'game_speed', base: 1 });
-        const attackSpeed = this._modifierManager.getValue({ key: 'attack_speed', base: 1 });
+        const gameSpeedDelta = delta * BattleTreeUtil.calculateGameSpeed();
+        const attackSpeed = BattleTreeUtil.calculateAttackSpeed();
 
         this.updateTimers(gameSpeedDelta);
 

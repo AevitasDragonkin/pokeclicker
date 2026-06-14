@@ -10,10 +10,17 @@
 
     <div class="card-body d-flex flex-column p-2" style="gap: 0.5rem;">
 
-        <section class="d-flex flex-column">
-            <small class="text-center" style="font-size: 0.675rem">State: <knockout data-bind="text: App.game.battleTree.sequence.state"></knockout></small>
-            <small class="text-center" style="font-size: 0.675rem">Seed: <knockout data-bind="text: App.game.battleTree.sequence.seed"></knockout></small>
-        </section>
+        <div class="d-flex flex-wrap justify-content-between">
+            <section class="d-flex flex-column align-items-start ">
+                <small class="text-center" style="font-size: 0.675rem">State: <knockout data-bind="text: App.game.battleTree.sequence.state"></knockout></small>
+                <small class="text-center" style="font-size: 0.675rem">Seed: <knockout data-bind="text: App.game.battleTree.sequence.seed"></knockout></small>
+            </section>
+
+            <section class="d-flex flex-column align-items-end">
+                <small class="text-center" style="font-size: 0.675rem">Game speed: <knockout data-bind="text: BattleTreeUtil.calculateGameSpeed()"></knockout></small>
+                <small class="text-center" style="font-size: 0.675rem">Attack speed: <knockout data-bind="text: BattleTreeUtil.calculateAttackSpeed()"></knockout></small>
+            </section>
+        </div>
 
         <!-- ko if: App.game.battleTree.sequence.state === BattleTreeSequenceState.PREPARATION -->
         <section>
