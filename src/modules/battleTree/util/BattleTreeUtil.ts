@@ -46,11 +46,11 @@ export class BattleTreeUtil {
     }
 
     public static calculateGameSpeed(): number {
-        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'game_speed', base: 1 });
+        return Math.min(10, Math.max(0.01, App.game.battleTree.sequence.modifierManager.getValue({ key: 'game_speed', base: 1 })));
     }
 
     public static calculateAttackSpeed(): number {
-        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack_speed', base: 1 });
+        return Math.min(10, Math.max(0.01, App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack_speed', base: 1 })));
     }
 
     public static calculateBattleTreeExperienceForPokemonDefeat(pokemon: BattleTreePokemon): number {
@@ -71,7 +71,7 @@ export class BattleTreeUtil {
     }
 
     public static calculateRewardMultiplier(): number {
-        return App.game.battleTree.sequence.modifierManager.getValue({ key: 'rewards', base: 1 });
+        return Math.max(0, App.game.battleTree.sequence.modifierManager.getValue({ key: 'rewards', base: 1 }));
     }
 
     private static tryAddPokemonToTeamA(name: PokemonNameType): void {
