@@ -3649,7 +3649,7 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                                     </td>
                                     <td class="vertical-middle">
                                         <div class="font-weight-bold" data-bind="text: $data.name"></div>
-                                        <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id)"></div>
+                                        <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id, undefined, true)"></div>
                                     </td>
                                     <td class="vertical-middle">
                                         <div class="small" data-bind="html: $data.requirement?.htmlHint() || '-'"></div>
