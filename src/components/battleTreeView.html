@@ -184,7 +184,10 @@
                         </div>
 
                         <div class="d-flex flex-column flex-grow-1 text-left">
-                            <div class="font-weight-bold" data-bind="text: $data.name"></div>
+                            <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                <div class="font-weight-bold" data-bind="text: $data.name"></div>
+                                <div style="font-size: 0.625rem;"><knockout data-bind="text: App.game.battleTree.sequence.modifierManager.history.filter(m => m.definition.id === $data.id).length"></knockout>/<knockout data-bind="text: $data.stack?.max ?? '∞'"></knockout></div>
+                            </div>
                             <div class="small" data-bind="text: App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.id, { create: true })"></div>
                         </div>
                     </div>
