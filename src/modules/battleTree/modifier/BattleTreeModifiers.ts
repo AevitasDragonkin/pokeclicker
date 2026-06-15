@@ -1200,7 +1200,7 @@ const enragedRewards: BattleTreeModifierDefinition<StageData & CompleteData> = {
     onTick: (ctx, { definitionData }) => {
         const { acquiredStage } = definitionData;
 
-        if (ctx.sequence.stage > acquiredStage + 5) {
+        if (ctx.sequence.stage >= acquiredStage + 5) {
             definitionData.effectComplete = true;
             ctx.endSequence('Enraged rewards - You survived the enraged enemies!');
         }
