@@ -1035,7 +1035,7 @@ const finalGambit: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data, { pokemon }) => pokemon.hitpoints, operation: 'override' },
+        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, data, { pokemon }) => pokemon.hitpoints, operation: 'final' },
     ],
 };
 
