@@ -89,4 +89,5 @@ export type BattleTreeModifierNameType
     | 'slow_but_steady'
     | 'speed_up'
     | 'time_running'
-    | 'inverse_battle';
+    | 'inverse_battle'
+    | 'enraged_rewards';

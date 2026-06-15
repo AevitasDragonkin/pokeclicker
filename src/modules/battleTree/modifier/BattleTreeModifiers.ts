@@ -1,5 +1,5 @@
-import { BattleTreeModifierContext } from './BattleTreeModifierContext';
-import { BattleTreeEffect } from './BattleTreeEffect';
+import {BattleTreeModifierContext} from './BattleTreeModifierContext';
+import {BattleTreeEffect} from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
@@ -8,13 +8,13 @@ import {
     BattleTreeStageRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
-import { BattleTreeSequenceState } from '../types';
-import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
-import { AchievementOption, formatDuration } from '../../GameConstants';
-import { pokemonMap } from '../../pokemons/PokemonList';
+import {BattleTreeSequenceState} from '../types';
+import {BattleTreeModifierNameType} from './BattleTreeModifierNameType';
+import {AchievementOption, formatDuration} from '../../GameConstants';
+import {pokemonMap} from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
 import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
-import { BattleTreePokemon } from '../BattleTreePokemon';
+import {BattleTreePokemon} from '../BattleTreePokemon';
 import SeededRand from '../../utilities/SeededRand';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
@@ -472,6 +472,7 @@ const healOverTime: BattleTreeModifierDefinition<TimeData & PulseData> = {
     id: 'heal_over_time',
     name: 'Heal over time',
     description: 'Your team heals 5% HP every 5 seconds of battle time, up to 15 times',
+    dataDescription: (ctx, { pulsesFired }) => ctx.sequence.totalTime && `(${pulsesFired}/15)`,
     image: 'assets/images/battleTree/modifiers/heal_over_time.png',
     weight: 1,
     stateScope: [BattleTreeSequenceState.BATTLE],
@@ -1159,12 +1160,12 @@ const timeRunning: BattleTreeModifierDefinition<TimeData & CompleteData> = {
     id: 'time_running',
     name: 'Time\'s Running',
     description: `Your run ends after ${formatDuration(TIME_RUNNING_DURATION_IN_SECONDS)} minutes of battle time. If it does, you gain 33% more rewards.`,
-    dataDescription: (ctx, { acquiredBattleTime }) => `(${formatDuration(acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS - ctx.sequence.battleTime)})`,
+    dataDescription: (ctx, { acquiredBattleTime }) => `(${formatDuration(Math.max(0, acquiredBattleTime + TIME_RUNNING_DURATION_IN_SECONDS - ctx.sequence.battleTime))})`,
     image: 'assets/images/battleTree/modifiers/time_running.png',
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'rewards' }, value: (ctx, data) => data.effectComplete ? 1.33 : 1, operation: 'multiplicative' },
+        { target: { key: 'rewards' }, value: (ctx, data) => ctx.sequence.totalTime && data.effectComplete ? 1.33 : 1, operation: 'multiplicative' },
     ],
     stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData }) => {
@@ -1183,7 +1184,29 @@ const inverseBattle: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/inverse_battle.png',
     weight: 1,
     effects: [{ target: { key: 'type_inversion' }, value: -1, operation: 'multiplicative' }],
-}
+};
+
+const enragedRewards: BattleTreeModifierDefinition<StageData & CompleteData> = {
+    id: 'enraged_rewards',
+    name: 'Enraged rewards',
+    description: 'Opponent Pokémon deal 10x damage. Your run ends in 5 platforms; if you survive, you gain 200% rewards.',
+    image: 'assets/images/battleTree/modifiers/enraged_rewards.png',
+    weight: 1,
+    effects: [
+        { target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: 10, operation: 'multiplicative' },
+        { target: { key: 'rewards' }, value: (ctx, { effectComplete }) => ctx.sequence.totalTime && effectComplete ? 2 : 1, operation: 'multiplicative' },
+    ],
+    stateScope: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER],
+    onTick: (ctx, { definitionData }) => {
+        const { acquiredStage } = definitionData;
+
+        if (ctx.sequence.stage > acquiredStage + 5) {
+            definitionData.effectComplete = true;
+            ctx.endSequence('Enraged rewards - You survived the enraged enemies!');
+        }
+    },
+    createData: ctx => ({ acquiredStage: ctx.sequence.stage, effectComplete: false }),
+};
 
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
@@ -1279,4 +1302,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     speedup,
     timeRunning,
     inverseBattle,
+    enragedRewards,
 ];
