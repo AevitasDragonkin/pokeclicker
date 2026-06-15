@@ -788,7 +788,7 @@ const teleport: BattleTreeModifierDefinition<StageData> = {
         return `(platform ${result + 1})`;
     },
     image: 'assets/images/battleTree/modifiers/teleport.png',
-    weight: 99,
+    weight: 1,
     stack: { max: 1 },
     requirement: new BattleTreeHighestStageRequirement(100, 'once'),
     effects: [{ target: { key: 'stage' }, value: (ctx, { acquiredStage }) => {
@@ -1176,6 +1176,15 @@ const timeRunning: BattleTreeModifierDefinition<TimeData & CompleteData> = {
     createData: ctx => ({ acquiredEngagementTime: ctx.sequence.engagementTime, acquiredBattleTime: ctx.sequence.battleTime, effectComplete: false }),
 };
 
+const inverseBattle: BattleTreeModifierDefinition = {
+    id: 'inverse_battle',
+    name: 'Inverse Battle',
+    description: 'Type effectiveness is inverted',
+    image: 'assets/images/battleTree/modifiers/inverse_battle.png',
+    weight: 1,
+    effects: [{ target: { key: 'type_inversion' }, value: -1, operation: 'multiplicative' }],
+}
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1269,4 +1278,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     slowButSteady,
     speedup,
     timeRunning,
+    inverseBattle,
 ];

@@ -5,6 +5,7 @@ import TypeHelper from '../types/TypeHelper';
 import Rand from '../utilities/Rand';
 import { TeamType } from './BattleTreeSequence';
 import { BattlePokemonGender } from '../GameConstants';
+import PokemonType from '../enums/PokemonType';
 
 interface BattleTreePokemonProperties {
     name: PokemonNameType;
@@ -29,9 +30,9 @@ export interface BattleTreePokemonStats {
 }
 
 export type DamageMapType = {
-    [p: string]: {
-        [p: string]: number
-    }
+    [p in PokemonType]?: {
+        [pd in PokemonType]?: number;
+    };
 };
 
 const hitPointFormula = (base: number, level: number) => Math.floor(0.01 * (2 * base) * level) + level + 10;
@@ -140,6 +141,15 @@ export class BattleTreePokemon {
         animateHeal(this.uuid, total);
     }
 
+    private calculateTypeEffectiveness(attack: PokemonType, defense: PokemonType): number {
+        const useDefault = Math.sign(App.game.battleTree.sequence.modifierManager.getValue({ key: 'type_inversion', base: 1 })) > 0;
+
+        if (useDefault) {
+            return TypeHelper.typeMatrix[attack][defense];
+        }
+        return TypeHelper.typeMatrix[defense][attack];
+    }
+
     public attackTarget(target: BattleTreePokemon): void {
         const baseDamage = ((2 * this.level / 5 + 2) * this.power * this.attack / target.defense / 50 + 2);
 
@@ -149,9 +159,11 @@ export class BattleTreePokemon {
         const attackMap: DamageMapType = Object.fromEntries(pokemonMap[attacker.name].type.map(at => [at, Object.fromEntries(pokemonMap[defender.name].type.map(dt => [dt, undefined]))]));
         const damagesCount = attacker.type.length * defender.type.length;
 
-        for (const attackType in attackMap) {
-            for (const defenseType in attackMap[attackType]) {
-                const effectivenessMultiplier = App.game.battleTree.sequence.modifierManager.getValue({ key: 'type_effectiveness', scope: this._teamId, base: TypeHelper.typeMatrix[attackType][defenseType], pokemon: this });
+        for (const at in attackMap) {
+            for (const dt in attackMap[at]) {
+                const attackType = Number(at) as PokemonType;
+                const defenseType = Number(dt) as PokemonType;
+                const effectivenessMultiplier = App.game.battleTree.sequence.modifierManager.getValue({ key: 'type_effectiveness', scope: this._teamId, base: this.calculateTypeEffectiveness(attackType, defenseType), pokemon: this });
                 const rawDamage = (baseDamage / damagesCount) * effectivenessMultiplier;
 
                 attackMap[attackType][defenseType] = App.game.battleTree.sequence.modifierManager.getValue({ key: 'damage_dealt_after_types', scope: this._teamId, base: rawDamage, pokemon: this });

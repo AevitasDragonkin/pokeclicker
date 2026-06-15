@@ -19,6 +19,7 @@ export type BattleTreeEffectKey
     | 'max_team_size'
     | 'stage'
     | 'type_effectiveness'
+    | 'type_inversion'
     | 'life_steal_percertage';
 export type Operation = 'additive' | 'multiplicative' | 'reset' | 'override' | 'final';
 

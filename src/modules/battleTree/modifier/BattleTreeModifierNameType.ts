@@ -88,4 +88,5 @@ export type BattleTreeModifierNameType
     | 'paycut'
     | 'slow_but_steady'
     | 'speed_up'
-    | 'time_running';
+    | 'time_running'
+    | 'inverse_battle';
