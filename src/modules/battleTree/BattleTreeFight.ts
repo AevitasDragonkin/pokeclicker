@@ -44,6 +44,10 @@ export class BattleTreeFight {
         const attackSpeed = BattleTreeUtil.calculateAttackSpeed();
 
         while (this._attackCounter >= attackSpeed) {
+            if (this.isFinished) {
+                return;
+            }
+
             if (this._attacker % 2 === 0) {
                 this.pokemonA.attackTarget(this.pokemonB);
             } else {

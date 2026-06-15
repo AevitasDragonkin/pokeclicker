@@ -134,17 +134,16 @@ export class BattleTreeSequence {
 
     public update(delta: number): void {
         const gameSpeedDelta = delta * BattleTreeUtil.calculateGameSpeed();
-        const attackSpeed = BattleTreeUtil.calculateAttackSpeed();
 
         this.updateTimers(gameSpeedDelta);
 
         this._modifierManager.update({
             engagementDeltaTime: gameSpeedDelta,
-            battleDeltaTime: this.state === BattleTreeSequenceState.BATTLE && this.fight ? gameSpeedDelta * attackSpeed : 0,
+            battleDeltaTime: this.state === BattleTreeSequenceState.BATTLE && this.fight ? gameSpeedDelta : 0,
         });
 
         if (this.state === BattleTreeSequenceState.BATTLE && this.fight) {
-            this.fight.update(gameSpeedDelta * attackSpeed);
+            this.fight.update(gameSpeedDelta);
 
             if (this.fight.isFinished) {
                 this.handleFightFinished();
