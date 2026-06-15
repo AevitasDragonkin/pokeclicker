@@ -15,6 +15,7 @@ import { pokemonMap } from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
 import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
 import { BattleTreePokemon } from '../BattleTreePokemon';
+import SeededRand from '../../utilities/SeededRand';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -777,6 +778,27 @@ const absoluteRewind: BattleTreeModifierDefinition<StageData> = {
     },
 };
 
+const teleport: BattleTreeModifierDefinition<StageData> = {
+    id: 'teleport',
+    name: 'Teleport',
+    description: 'Teleports you to a random platform between 1 and 100',
+    dataDescription: ctx => {
+        SeededRand.seed(ctx.sequence.seed);
+        const result = SeededRand.intBetween(0, 99);
+        return `(platform ${result + 1})`;
+    },
+    image: 'assets/images/battleTree/modifiers/teleport.png',
+    weight: 99,
+    stack: { max: 1 },
+    requirement: new BattleTreeHighestStageRequirement(100, 'once'),
+    effects: [{ target: { key: 'stage' }, value: (ctx, { acquiredStage }) => {
+        SeededRand.seed(ctx.sequence.seed);
+        const result = SeededRand.intBetween(0, 99);
+        return result - acquiredStage;
+    }, operation: 'additive' }],
+    createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
+};
+
 const SKIP_STAGES: number = 3;
 const skipStages: BattleTreeModifierDefinition = {
     id: 'skip_stages_3',
@@ -1219,6 +1241,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     enemyMaxHPGainModifierTime,
     rewind,
     absoluteRewind,
+    teleport,
     skipStages,
     loneWolf,
     purist,

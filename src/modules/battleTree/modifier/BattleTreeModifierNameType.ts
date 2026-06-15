@@ -61,6 +61,7 @@ export type BattleTreeModifierNameType
     | 'enemy_max_hp_modifier_time'
     | 'rewind'
     | 'absolute_rewind'
+    | 'teleport'
     | 'skip_stages_3'
     | 'lone_wolf'
     | 'purist'
