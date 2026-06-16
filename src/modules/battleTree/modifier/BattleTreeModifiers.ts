@@ -469,6 +469,23 @@ const revive: BattleTreeModifierDefinition = {
     onAcquire: ctx => ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: 0.15, allowRevive: true })),
 };
 
+const maxRevive: BattleTreeModifierDefinition = {
+    id: 'max_revive',
+    name: 'Max Revive',
+    description: 'Revive one fainted Pokémon to full HP. You earn 10% fewer rewards.',
+    image: 'assets/images/battleTree/modifiers/max_revive.png',
+    weight: 99,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'rewards' }, value: 0.9, operation: 'multiplicative' }],
+    onAcquire: ctx => {
+        const list = ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints === 0);
+        if (list.length === 0) return;
+
+        SeededRand.seed(ctx.sequence.stage);
+        SeededRand.fromArray(list)?.heal({ percentage: 1, allowRevive: true });
+    },
+};
+
 const healOverTime: BattleTreeModifierDefinition<TimeData & PulseData> = {
     id: 'heal_over_time',
     name: 'Heal over time',
@@ -1250,6 +1267,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     healPotionMax,
     fullHeal,
     revive,
+    maxRevive,
     healOverTime,
     limitedTime,
     challengeAccepted,

@@ -39,6 +39,7 @@ export type BattleTreeModifierNameType
     | 'heal_potion_max'
     | 'full_heal'
     | 'revive'
+    | 'max_revive'
     | 'heal_over_time'
     | 'limited_time'
     | 'challenge_accepted'
