@@ -861,6 +861,19 @@ const purist: BattleTreeModifierDefinition = {
     ],
 };
 
+const farReach: BattleTreeModifierDefinition = {
+    id: 'far_reach',
+    name: 'Far Reach',
+    description: 'Flying-type Pokémon take 25% less damage from non-Flying-type Pokémon',
+    image: 'assets/images/battleTree/modifiers/far_reach.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'damage_taken_after_types', scope: ['Team_A'] }, value: ctx => pokemonMap[ctx.sequence.fight.pokemonA.name].type.includes(PokemonType.Flying) && !pokemonMap[ctx.sequence.fight.pokemonB.name].type.includes(PokemonType.Flying) ? 0.75 : 1, operation: 'multiplicative' },
+        { target: { key: 'damage_taken_after_types', scope: ['Team_B'] }, value: ctx => pokemonMap[ctx.sequence.fight.pokemonB.name].type.includes(PokemonType.Flying) && !pokemonMap[ctx.sequence.fight.pokemonA.name].type.includes(PokemonType.Flying) ? 0.75 : 1, operation: 'multiplicative' },
+    ],
+};
+
 const blackSludge: BattleTreeModifierDefinition<TimeData & PulseData> = {
     id: 'black_sludge',
     name: 'Black Sludge',
@@ -1370,6 +1383,7 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     skipStages,
     loneWolf,
     purist,
+    farReach,
     blackSludge,
     voltorb,
     giantSlayer,

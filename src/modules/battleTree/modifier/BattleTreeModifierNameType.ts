@@ -66,6 +66,7 @@ export type BattleTreeModifierNameType
     | 'skip_stages_3'
     | 'lone_wolf'
     | 'purist'
+    | 'far_reach'
     | 'black_sludge'
     | 'voltorb'
     | 'giant_slayer'
