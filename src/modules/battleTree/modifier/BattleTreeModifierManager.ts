@@ -10,6 +10,7 @@ import { TeamType } from '../BattleTreeSequence';
 import { BattleTreeEffect, BattleTreeEffectKey, BattleTreeEffectRuntimeContext, BattleTreeEffectValue } from './BattleTreeEffect';
 import GameHelper from '../../GameHelper';
 import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
+import { BattleTreePokemon } from '../BattleTreePokemon';
 
 type Active<Data> = {
     definition: BattleTreeModifierDefinition<Data>;
@@ -97,6 +98,12 @@ export class BattleTreeModifierManager {
     public onStageCleared(): void {
         this._history().forEach(entry => {
             entry.definition.onStageCleared?.(this._ctx, { definitionData: entry.data });
+        });
+    }
+
+    public onPokemonFaint(pokemon: BattleTreePokemon): void {
+        this._history().forEach(entry => {
+            entry.definition.onPokemonFaint?.(this._ctx, { definitionData: entry.data, pokemon: pokemon });
         });
     }
 

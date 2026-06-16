@@ -158,6 +158,9 @@ export class BattleTreeSequence {
     private handleFightFinished(): void {
         if (!this.fight) return;
 
+        if (this.fight.winner === BattleTreeFightWinner.POKEMON_A) this._modifierManager.onPokemonFaint(this.fight.pokemonB);
+        if (this.fight.winner === BattleTreeFightWinner.POKEMON_B) this._modifierManager.onPokemonFaint(this.fight.pokemonA);
+
         if (this.fight.winner === BattleTreeFightWinner.POKEMON_A || this.fight.winner === BattleTreeFightWinner.DRAW) {
             // TODO : handle player winning this fight
             this.handleSinglePokemonDefeat(this.fight.pokemonB);

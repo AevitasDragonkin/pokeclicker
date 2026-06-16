@@ -205,6 +205,10 @@ export class BattleTreePokemon {
         return this._name;
     }
 
+    get team(): TeamType {
+        return this._teamId;
+    }
+
     get level(): number {
         return this._level();
     }

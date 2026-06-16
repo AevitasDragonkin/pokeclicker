@@ -91,4 +91,6 @@ export type BattleTreeModifierNameType
     | 'speed_up'
     | 'time_running'
     | 'inverse_battle'
-    | 'enraged_rewards';
+    | 'enraged_rewards'
+    | 'leftovers'
+    | 'leftovers_bad';

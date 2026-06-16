@@ -69,6 +69,8 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
     onStageCleared?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onTick?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, tickData: TickData }) => void;
 
+    onPokemonFaint?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, pokemon: BattleTreePokemon }) => void;
+
     stateScope?: BattleTreeSequenceState[];
     effects?: BattleTreeEffect<Data>[];
 
@@ -474,7 +476,7 @@ const maxRevive: BattleTreeModifierDefinition = {
     name: 'Max Revive',
     description: 'Revive one fainted Pokémon to full HP. You earn 10% fewer rewards.',
     image: 'assets/images/battleTree/modifiers/max_revive.png',
-    weight: 99,
+    weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'rewards' }, value: 0.9, operation: 'multiplicative' }],
     onAcquire: ctx => {
@@ -1224,6 +1226,80 @@ const enragedRewards: BattleTreeModifierDefinition<StageData & CompleteData> = {
     createData: ctx => ({ acquiredStage: ctx.sequence.stage, effectComplete: false }),
 };
 
+const LEFTOVERS_PULSE_DELAY_SECONDS = 5;
+const LEFTOVERS_PERCENTAGE = 0.01;
+const leftovers: BattleTreeModifierDefinition<TickData & PulseData & CompleteData> = {
+    id: 'leftovers',
+    name: 'Leftovers',
+    description: `Your Pokémon heal ${LEFTOVERS_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} HP per ${LEFTOVERS_PULSE_DELAY_SECONDS} seconds (while in Battle). This effect ends when one of your Pokémon faints`,
+    dataDescription: (ctx, { pulseTimer, pulsesFired, effectComplete }) => {
+        if (ctx.sequence.totalTime && effectComplete) return `(Done, ${pulsesFired} heals)`;
+        return `(${formatDuration(LEFTOVERS_PULSE_DELAY_SECONDS - pulseTimer)}, ${pulsesFired} heals)`;
+    },
+    image: 'assets/images/battleTree/modifiers/leftovers.png',
+    weight: 1,
+    stateScope: [BattleTreeSequenceState.BATTLE],
+    onTick: (ctx, { definitionData, tickData }) => {
+        if (definitionData.effectComplete) return;
+
+        definitionData.pulseTimer += tickData.battleDeltaTime;
+
+        if (definitionData.pulseTimer >= LEFTOVERS_PULSE_DELAY_SECONDS) {
+            ctx.sequence.teams.Team_A.list.forEach(p => p.heal({ percentage: LEFTOVERS_PERCENTAGE }));
+            definitionData.pulseTimer -= LEFTOVERS_PULSE_DELAY_SECONDS;
+            ++definitionData.pulsesFired;
+        }
+    },
+    onPokemonFaint: (ctx, { definitionData, pokemon }) => {
+        if (pokemon.team === 'Team_A') {
+            definitionData.effectComplete = true;
+        }
+    },
+    createData: ctx => ({
+        engagementDeltaTime: ctx.sequence.engagementTime,
+        battleDeltaTime: ctx.sequence.battleTime,
+        pulsesFired: 0,
+        pulseTimer: 0,
+        effectComplete: false,
+    }),
+};
+
+const leftoversBad: BattleTreeModifierDefinition<TickData & PulseData & CompleteData> = {
+    id: 'leftovers_bad',
+    name: 'Leftovers',
+    description: `Your Pokémon lose ${LEFTOVERS_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} HP per ${LEFTOVERS_PULSE_DELAY_SECONDS} seconds (while in Battle). This effect ends when one of your Pokémon faints`,
+    dataDescription: (ctx, { pulseTimer, pulsesFired, effectComplete }) => {
+        if (ctx.sequence.totalTime && effectComplete) return `(Done, ${pulsesFired} heals)`;
+        return `(${formatDuration(LEFTOVERS_PULSE_DELAY_SECONDS - pulseTimer)}, ${pulsesFired} hits)`;
+    },
+    image: 'assets/images/battleTree/modifiers/leftovers_bad.png',
+    weight: 1,
+    stateScope: [BattleTreeSequenceState.BATTLE],
+    onTick: (ctx, { definitionData, tickData }) => {
+        if (definitionData.effectComplete) return;
+
+        definitionData.pulseTimer += tickData.battleDeltaTime;
+
+        if (definitionData.pulseTimer >= LEFTOVERS_PULSE_DELAY_SECONDS) {
+            ctx.sequence.teams.Team_A.list.forEach(p => p.takeDamage(undefined, undefined, { [PokemonType.None]: { [PokemonType.None]: Math.ceil(p.maxHitpoints * LEFTOVERS_PERCENTAGE) } }));
+            definitionData.pulseTimer -= LEFTOVERS_PULSE_DELAY_SECONDS;
+            ++definitionData.pulsesFired;
+        }
+    },
+    onPokemonFaint: (ctx, { definitionData, pokemon }) => {
+        if (pokemon.team === 'Team_A') {
+            definitionData.effectComplete = true;
+        }
+    },
+    createData: ctx => ({
+        engagementDeltaTime: ctx.sequence.engagementTime,
+        battleDeltaTime: ctx.sequence.battleTime,
+        pulsesFired: 0,
+        pulseTimer: 0,
+        effectComplete: false,
+    }),
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1320,4 +1396,6 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     timeRunning,
     inverseBattle,
     enragedRewards,
+    leftovers,
+    leftoversBad,
 ];
