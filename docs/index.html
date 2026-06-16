@@ -3698,7 +3698,12 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                                     </td>
 
                                     <td class="vertical-middle">
-                                        <div data-bind="text: ItemList[$data.item].displayName"></div>
+                                        <div>
+                                            <knockout data-bind="text: ItemList[$data.item].displayName"></knockout>
+                                            <!-- ko if: $data.immediate -->
+                                            <knockout> (immediate)</knockout>
+                                            <!-- /ko -->
+                                        </div>
                                     </td>
 
                                     <td class="vertical-middle text-center">
