@@ -2,7 +2,6 @@ import Requirement from '../../../requirements/Requirement';
 import {
     BattleTreeHighestStageRequirement,
     BattleTreeLevelRequirement,
-    BattleTreeTotalStagesRequirement,
 } from '../../requirements/BattleTreeRequirements';
 import { ItemNameType } from '../../../items/ItemNameType';
 import { BattleTreeRecurrence } from '../../types';
