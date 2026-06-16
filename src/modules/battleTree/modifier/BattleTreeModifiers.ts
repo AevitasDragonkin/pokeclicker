@@ -66,6 +66,7 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
 
     onAcquire?: (ctx: BattleTreeModifierContext) => void;
     onStageStart?: (ctx: BattleTreeModifierContext) => void;
+    onStageCleared?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onTick?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, tickData: TickData }) => void;
 
     stateScope?: BattleTreeSequenceState[];
@@ -1197,11 +1198,8 @@ const enragedRewards: BattleTreeModifierDefinition<StageData & CompleteData> = {
         { target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: 10, operation: 'multiplicative' },
         { target: { key: 'rewards' }, value: (ctx, { effectComplete }) => ctx.sequence.totalTime && effectComplete ? 2 : 1, operation: 'multiplicative' },
     ],
-    stateScope: [BattleTreeSequenceState.BATTLE, BattleTreeSequenceState.MODIFIER],
-    onTick: (ctx, { definitionData }) => {
-        const { acquiredStage } = definitionData;
-
-        if (ctx.sequence.stage >= acquiredStage + 5) {
+    onStageCleared: (ctx, { definitionData }) => {
+        if (ctx.sequence.stage >= definitionData.acquiredStage + 5) {
             definitionData.effectComplete = true;
             ctx.endSequence('Enraged rewards - You survived the enraged enemies!');
         }

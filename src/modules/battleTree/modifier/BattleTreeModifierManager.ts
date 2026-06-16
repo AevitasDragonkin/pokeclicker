@@ -94,6 +94,12 @@ export class BattleTreeModifierManager {
         });
     }
 
+    public onStageCleared(): void {
+        this._history().forEach(entry => {
+            entry.definition.onStageCleared?.(this._ctx, { definitionData: entry.data });
+        });
+    }
+
     public addPlayerModifier(id: BattleTreeModifierNameType) {
         if (!this.candidates().includes(id)) return;
 

@@ -182,16 +182,7 @@ export class BattleTreeSequence {
             //     this.rollPool('generic', undefined, 1);
             // }
 
-            // TODO : Handle finishing the stage
-            if (this.stage % 5 === 0 && this.stage > 0) {
-                if (Math.random() < this._modifierManager.getValue({ key: 'auto_pick_modifier', base: 0 })) {
-                    this.pickModifier(Rand.fromArray(App.game.battleTree.sequence.modifierManager.candidates()));
-                } else {
-                    this._state(BattleTreeSequenceState.MODIFIER);
-                }
-            } else {
-                this.nextStage();
-            }
+            this._modifierManager.onStageCleared();
         } else {
             // TODO : Handle defeat
             this._endReason('You have been defeated!');
@@ -202,6 +193,18 @@ export class BattleTreeSequence {
             BattleTreeProgressionRewards
                 .filter(value => value.recurrence === 'per_sequence' && App.game.battleTree.rewardManager.canClaimReward(value))
                 .forEach(value => App.game.battleTree.rewardManager.claimReward(value));
+        }
+
+        if (this.state === BattleTreeSequenceState.BATTLE && this.fight.winner === BattleTreeFightWinner.POKEMON_A) {
+            if (this.stage % 5 === 0 && this.stage > 0) {
+                if (Math.random() < this._modifierManager.getValue({ key: 'auto_pick_modifier', base: 0 })) {
+                    this.pickModifier(Rand.fromArray(App.game.battleTree.sequence.modifierManager.candidates()));
+                } else {
+                    this._state(BattleTreeSequenceState.MODIFIER);
+                }
+            } else {
+                this.nextStage();
+            }
         }
     }
 
