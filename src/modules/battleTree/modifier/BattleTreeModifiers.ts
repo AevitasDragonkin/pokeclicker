@@ -1040,14 +1040,15 @@ const trickRoom: BattleTreeModifierDefinition = {
 const roomService: BattleTreeModifierDefinition = {
     id: 'room_service',
     name: 'Room Service',
-    description: 'Your Pokémon lose 25% Speed and gain 12.5% Attack and Defense',
+    description: 'Your Pokémon lose 25 Speed and gain 20 Attack and Defense',
     image: 'assets/images/battleTree/modifiers/room_service.png',
     weight: 1,
     effects: [
-        { target: { key: 'speed', scope: ['Team_A'] }, value: 0.75, operation: 'multiplicative' },
-        { target: { key: 'attack', scope: ['Team_A'] }, value: 1.125, operation: 'multiplicative' },
-        { target: { key: 'defense', scope: ['Team_A'] }, value: 1.125, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: -25, operation: 'additive' },
+        { target: { key: 'attack', scope: ['Team_A'] }, value: 20, operation: 'additive' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: 20, operation: 'additive' },
     ],
+    requirement: new BattleTreeLevelRequirement(75),
 };
 
 const finalGambit: BattleTreeModifierDefinition = {
