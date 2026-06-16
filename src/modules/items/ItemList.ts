@@ -536,6 +536,8 @@ ItemList['Evolution Item Pool'] = new BattleTreeRewardPoolItem('evo_items', 'Evo
 ItemList['Mismagius (Illusion)'] = new PokemonItem('Mismagius (Illusion)');
 ItemList['Shadow Mewtwo'] = new PokemonItem('Shadow Mewtwo');
 ItemList['Shadow Mewtwo Pool'] = new BattleTreeRewardPoolItem('shadow_mewtwo', 'Shadow Mewtwo Pool', 'Makes a roll in the Shadow Mewtwo Pool');
+ItemList.Venustoise = new PokemonItem('Gastly (Illusion)', undefined, undefined, undefined, 'Venustoise');
+ItemList['Venustoise Pool'] = new BattleTreeRewardPoolItem('venustoise', 'Venustoise Pool', 'Makes a roll in the Venustoise Pool');
 
 // Currencies
 ItemList.Money = new CurrencyItem(Currency.money);

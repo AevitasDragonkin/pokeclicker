@@ -220,6 +220,7 @@ export type PokemonNameType
     | 'Shellder'
     | 'Cloyster'
     | 'Gastly'
+    | 'Gastly (Illusion)'
     | 'Haunter'
     | 'Gengar'
     | 'Mega Gengar'

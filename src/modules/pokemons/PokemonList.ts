@@ -4075,6 +4075,23 @@ export const pokemonList = createPokemonArray(
         },
     },
     {
+        'id': 92.01,
+        'name': 'Gastly (Illusion)',
+        'catchRate': 190,
+        'type': [PokemonType.Grass, PokemonType.Water],
+        'levelType': LevelType.mediumslow,
+        'exp': 62,
+        'eggCycles': 20,
+        'base': {
+            'hitpoints': 30,
+            'attack': 35,
+            'specialAttack': 100,
+            'defense': 30,
+            'specialDefense': 35,
+            'speed': 80,
+        },
+    },
+    {
         'id': 93,
         'name': 'Haunter',
         'catchRate': 90,

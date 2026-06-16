@@ -87,4 +87,11 @@ export const BattleTreeRewardPools: Partial<Record<BattleTreeRewardPoolNameType,
             { item: 'Shadow_Synergy_Stone', weight: 1, amount: 1 },
         ],
     }),
+    venustoise: new BattleTreeRewardPool({
+        id: 'venustoise',
+        entries: [
+            { item: 'Venustoise', weight: 1, amount: 1 },
+            { item: 'Battle Point', weight: 99, amount: 100 },
+        ],
+    }),
 };

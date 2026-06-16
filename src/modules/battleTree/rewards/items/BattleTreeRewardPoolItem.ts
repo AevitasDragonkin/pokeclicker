@@ -15,6 +15,6 @@ export class BattleTreeRewardPoolItem extends Item {
     }
 
     get image() {
-        return '';
+        return `assets/images/battleTree/rewards/${this.name}.png`;
     }
 }

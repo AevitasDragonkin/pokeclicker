@@ -507,4 +507,6 @@ export type ItemNameType
     | 'Evolution Item Pool'
     | 'Mismagius (Illusion)'
     | 'Shadow Mewtwo Pool'
-    | 'Shadow Mewtwo';
+    | 'Shadow Mewtwo'
+    | 'Venustoise Pool'
+    | 'Venustoise';
