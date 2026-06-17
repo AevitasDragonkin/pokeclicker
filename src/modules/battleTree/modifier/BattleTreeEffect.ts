@@ -3,7 +3,8 @@ import { BattleTreeModifierContext } from './BattleTreeModifierContext';
 import type { BattleTreePokemon } from '../BattleTreePokemon';
 
 export type BattleTreeEffectKey
-    = 'rewards'
+    = 'reward_base_rate'
+    | 'reward_multiplier'
     | 'game_speed'
     | 'attack_speed'
     | 'attack'

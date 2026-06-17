@@ -78,8 +78,18 @@ export class BattleTreeUtil {
         return Math.floor(expGen7);
     }
 
+    public static calculateRewardBaseRate(): number {
+        // Start with 100%
+        return Math.max(0, App.game.battleTree.sequence.modifierManager.getValue({ key: 'reward_base_rate', base: 1 }));
+    }
+
+    public static calculateRewardBaseRateMultiplier(): number {
+        // Start with x1
+        return Math.max(0, App.game.battleTree.sequence.modifierManager.getValue({ key: 'reward_multiplier', base: 1 }));
+    }
+
     public static calculateRewardMultiplier(): number {
-        return Math.max(0, App.game.battleTree.sequence.modifierManager.getValue({ key: 'rewards', base: 1 }));
+        return Math.max(0, this.calculateRewardBaseRate() * this.calculateRewardBaseRateMultiplier());
     }
 
     private static tryAddPokemonToTeamA(name: PokemonNameType): void {

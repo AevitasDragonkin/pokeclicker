@@ -88,7 +88,7 @@ const forfeit: BattleTreeModifierDefinition = {
     weight: 0, // System triggered only
     stack: { max: 1 },
     onAcquire: ctx => ctx.endSequence('You have forfeited this Battle Climb'),
-    effects: [{ target: { key: 'rewards' }, value: 0.25, operation: 'multiplicative' }],
+    effects: [{ target: { key: 'reward_multiplier' }, value: 0.25, operation: 'multiplicative' }],
 };
 
 export const AutoPickModifiers: BattleTreeModifierDefinition = {
@@ -478,7 +478,7 @@ const maxRevive: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/max_revive.png',
     weight: 1,
     stack: { max: 1 },
-    effects: [{ target: { key: 'rewards' }, value: 0.9, operation: 'multiplicative' }],
+    effects: [{ target: { key: 'reward_multiplier' }, value: 0.9, operation: 'multiplicative' }],
     onAcquire: ctx => {
         const list = ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints === 0);
         if (list.length === 0) return;
@@ -543,11 +543,10 @@ const challengeAccepted: BattleTreeModifierDefinition<StageData> = {
     dataDescription: (ctx, data) => `(Reach platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})`,
     image: 'assets/images/battleTree/modifiers/challenge.png',
     weight: 1,
-    effects: [{
-        target: { key: 'rewards' },
-        value: (ctx, data) => ctx.sequence.stage > data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES ? 1.15 : 0.1,
-        operation: 'multiplicative',
-    }],
+    effects: [
+        { target: { key: 'reward_base_rate' }, value: (ctx, { acquiredStage }) => ctx.sequence.stage > acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES ? 0.15 : 0, operation: 'additive' },
+        { target: { key: 'reward_multiplier' }, value: (ctx, { acquiredStage }) => ctx.sequence.stage > acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES ? 1 : 0.1, operation: 'multiplicative' },
+    ],
     createData: ctx => ({
         acquiredStage: ctx.sequence.stage,
     }),
@@ -648,12 +647,12 @@ const enemyPriority: BattleTreeModifierDefinition = {
 const rewardsVsSpeed: BattleTreeModifierDefinition = {
     id: 'rewards_vs_speed',
     name: 'Rewards vs Speed',
-    description: 'Gain 25% more rewards, but the Battle Climb runs 15% slower',
+    description: 'Gain +25% more rewards, but the Battle Climb runs 15% slower',
     image: 'assets/images/battleTree/modifiers/rewards_vs_speed.png',
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'rewards' }, value: 1.25, operation: 'multiplicative' },
+        { target: { key: 'reward_base_rate' }, value: 0.25, operation: 'additive' },
         { target: { key: 'game_speed' }, value: 0.85, operation: 'multiplicative' },
     ],
 };
@@ -694,7 +693,7 @@ const cashIn: BattleTreeModifierDefinition = {
     image: 'assets/images/battleTree/modifiers/cash_in.png',
     weight: 1,
     stack: { max: 1 },
-    effects: [{ target: { key: 'rewards' }, value: 2, operation: 'multiplicative' }],
+    effects: [{ target: { key: 'reward_multiplier' }, value: 2, operation: 'multiplicative' }],
     onAcquire: ctx => ctx.endSequence('You have cashed in!'),
 };
 
@@ -968,7 +967,7 @@ const underleveled: BattleTreeModifierDefinition = {
     stack: { max: 1 },
     effects: [
         { target: { key: 'level', scope: ['Team_A'] }, value: -5, operation: 'additive' },
-        { target: { key: 'rewards' }, value: 1.35, operation: 'multiplicative' },
+        { target: { key: 'reward_base_rate' }, value: 0.35, operation: 'additive' },
     ],
     requirement: new BattleTreeLevelRequirement(10),
 };
@@ -982,7 +981,7 @@ const warOfAttrition: BattleTreeModifierDefinition = {
     stack: { max: 1 },
     effects: [
         { target: { key: 'damage_taken_after_types', scope: ['Team_A', 'Team_B'] }, value: 0.75, operation: 'multiplicative' },
-        { target: { key: 'rewards' }, value: 1.3, operation: 'multiplicative' },
+        { target: { key: 'reward_base_rate' }, value: 0.3, operation: 'additive' },
     ],
 };
 
@@ -1103,13 +1102,13 @@ const momentumFn = (current, acquired) => Math.max(0, Math.min(MOMENTUM_MAX, MOM
 const momentum: BattleTreeModifierDefinition<StageData> = {
     id: 'momentum',
     name: 'Momentum',
-    description: `Gain ${MOMENTUM_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} rewards and game speed for each ${MOMENTUM_PLATFORMS} platforms above this stage, (max ${MOMENTUM_MAX.toLocaleString('en-US', { style: 'percent' })})`,
+    description: `Gain +${MOMENTUM_PERCENTAGE.toLocaleString('en-US', { style: 'percent' })} rewards and game speed for each ${MOMENTUM_PLATFORMS} platforms above this stage, (max ${MOMENTUM_MAX.toLocaleString('en-US', { style: 'percent' })})`,
     dataDescription: (ctx, { acquiredStage }) => `(Above ${acquiredStage}, ${momentumFn(ctx.sequence.stage, acquiredStage).toLocaleString('en-US', { style: 'percent' })})`,
     image: 'assets/images/battleTree/modifiers/momentum.png',
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'rewards' }, value: (ctx, data) => 1 + momentumFn(ctx.sequence.stage, data.acquiredStage), operation: 'multiplicative' },
+        { target: { key: 'reward_base_rate' }, value: (ctx, data) => momentumFn(ctx.sequence.stage, data.acquiredStage), operation: 'additive' },
         { target: { key: 'game_speed' }, value: (ctx, data) => 1 + momentumFn(ctx.sequence.stage, data.acquiredStage), operation: 'multiplicative' },
     ],
     createData: ctx => ({ acquiredStage: ctx.sequence.stage }),
@@ -1157,7 +1156,7 @@ const paycut: BattleTreeModifierDefinition = {
     description: 'You earn 20% fewer rewards',
     image: 'assets/images/battleTree/modifiers/paycut.png',
     weight: 1,
-    effects: [{ target: { key: 'rewards' }, value: 0.8, operation: 'multiplicative' }],
+    effects: [{ target: { key: 'reward_base_rate' }, value: -0.2, operation: 'additive' }],
 };
 
 const SLOW_BUT_STEADY_PERCENTAGE = 0.01;
@@ -1200,7 +1199,7 @@ const timeRunning: BattleTreeModifierDefinition<TimeData & CompleteData> = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'rewards' }, value: (ctx, data) => ctx.sequence.totalTime && data.effectComplete ? 1.33 : 1, operation: 'multiplicative' },
+        { target: { key: 'reward_base_rate' }, value: (ctx, data) => ctx.sequence.totalTime && data.effectComplete ? 0.33 : 0, operation: 'additive' },
     ],
     stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData }) => {
@@ -1229,7 +1228,7 @@ const enragedRewards: BattleTreeModifierDefinition<StageData & CompleteData> = {
     weight: 1,
     effects: [
         { target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: 10, operation: 'multiplicative' },
-        { target: { key: 'rewards' }, value: (ctx, { effectComplete }) => ctx.sequence.totalTime && effectComplete ? 2 : 1, operation: 'multiplicative' },
+        { target: { key: 'reward_base_rate' }, value: (ctx, { effectComplete }) => ctx.sequence.totalTime && effectComplete ? 2 : 0, operation: 'additive' },
     ],
     onStageCleared: (ctx, { definitionData }) => {
         if (ctx.sequence.stage >= definitionData.acquiredStage + 5) {
