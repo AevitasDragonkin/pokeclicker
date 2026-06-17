@@ -25,7 +25,8 @@ export type BattleTreeProgressionRewardNameType =
     | 'per_sequence:magnets'
     | 'per_sequence:evo'
     | 'per_sequence:shadow_mewtwo'
-    | 'per_sequence:venustoise';
+    | 'per_sequence:venustoise'
+    | 'per_sequence:gems';
 
 export interface BattleTreeProgressionRewardDefinition {
     id: BattleTreeProgressionRewardNameType;
@@ -59,6 +60,7 @@ const PerSequenceProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
         new ObtainedPokemonRequirement('Venusaur'),
         new ObtainedPokemonRequirement('Blastoise'),
     ]), item: 'Venustoise Pool', amount: 1, immediate: true },
+    { id: 'per_sequence:gems', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(50, 'per_sequence'), item: 'Gems Pool', amount: 3, immediate: true },
 ];
 
 export const BattleTreeProgressionRewards: BattleTreeProgressionRewardDefinition[] = [

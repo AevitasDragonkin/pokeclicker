@@ -46,6 +46,8 @@ import AttackGainConsumable from './AttackGainConsumable';
 import { BattleTreeExperienceItem } from '../battleTree/rewards/items/BattleTreeExperienceItem';
 import { BattleTreeRewardPoolItem } from '../battleTree/rewards/items/BattleTreeRewardPoolItem';
 import CurrencyItem from './CurrencyItem';
+import GemItem from './GemItem';
+import PokemonType from '../enums/PokemonType';
 // eslint-disable-next-line import/prefer-default-export
 export const ItemList: { [name: string]: Item } = {};
 
@@ -538,6 +540,7 @@ ItemList['Shadow Mewtwo'] = new PokemonItem('Shadow Mewtwo');
 ItemList['Shadow Mewtwo Pool'] = new BattleTreeRewardPoolItem('shadow_mewtwo', 'Shadow Mewtwo Pool', 'Makes a roll in the Shadow Mewtwo Pool');
 ItemList.Venustoise = new PokemonItem('Gastly (Illusion)', undefined, undefined, undefined, 'Venustoise');
 ItemList['Venustoise Pool'] = new BattleTreeRewardPoolItem('venustoise', 'Venustoise Pool', 'Makes a roll in the Venustoise Pool');
+ItemList['Gems Pool'] = new BattleTreeRewardPoolItem('gems', 'Gems Pool', 'Makes a roll in the Gems Pool');
 
 // Currencies
 ItemList.Money = new CurrencyItem(Currency.money);
@@ -547,3 +550,23 @@ ItemList.Diamond = new CurrencyItem(Currency.diamond);
 ItemList['Farm Point'] = new CurrencyItem(Currency.farmPoint);
 ItemList['Battle Point'] = new CurrencyItem(Currency.battlePoint);
 ItemList['Contest Token'] = new CurrencyItem(Currency.contestToken);
+
+// Gems
+ItemList['Normal Gem'] = new GemItem(PokemonType.Normal);
+ItemList['Fire Gem'] = new GemItem(PokemonType.Fire);
+ItemList['Water Gem'] = new GemItem(PokemonType.Water);
+ItemList['Electric Gem'] = new GemItem(PokemonType.Electric);
+ItemList['Grass Gem'] = new GemItem(PokemonType.Grass);
+ItemList['Ice Gem'] = new GemItem(PokemonType.Ice);
+ItemList['Fighting Gem'] = new GemItem(PokemonType.Fighting);
+ItemList['Poison Gem'] = new GemItem(PokemonType.Poison);
+ItemList['Ground Gem'] = new GemItem(PokemonType.Ground);
+ItemList['Flying Gem'] = new GemItem(PokemonType.Flying);
+ItemList['Psychic Gem'] = new GemItem(PokemonType.Psychic);
+ItemList['Bug Gem'] = new GemItem(PokemonType.Bug);
+ItemList['Rock Gem'] = new GemItem(PokemonType.Rock);
+ItemList['Ghost Gem'] = new GemItem(PokemonType.Ghost);
+ItemList['Dragon Gem'] = new GemItem(PokemonType.Dragon);
+ItemList['Dark Gem'] = new GemItem(PokemonType.Dark);
+ItemList['Steel Gem'] = new GemItem(PokemonType.Steel);
+ItemList['Fairy Gem'] = new GemItem(PokemonType.Fairy);

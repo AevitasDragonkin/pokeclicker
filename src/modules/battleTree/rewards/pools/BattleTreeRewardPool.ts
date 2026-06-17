@@ -3,7 +3,7 @@ import SeededRand from '../../../utilities/SeededRand';
 import Rand from '../../../utilities/Rand';
 import Requirement from '../../../requirements/Requirement';
 
-export type BattleTreeRewardPoolNameType = 'generic' | 'mega_rare' | 'special_ball' | 'currency' | 'evo_items' | 'shadow_mewtwo' | 'venustoise';
+export type BattleTreeRewardPoolNameType = 'generic' | 'mega_rare' | 'special_ball' | 'currency' | 'evo_items' | 'shadow_mewtwo' | 'venustoise' | 'gems';
 
 interface BattleTreeRewardPoolEntry {
     item: ItemNameType | BattleTreeRewardPool;
