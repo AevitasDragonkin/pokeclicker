@@ -3331,7 +3331,16 @@ selectAllClick - (Optional) Function called when the Select All button is clicke
                 <thead>
                 <tr>
                     <th colspan="2">Rewards</th>
-                    <th data-bind="text: BattleTreeUtil.calculateRewardMultiplier().toLocaleString('en-US', { style: 'percent' })"></th>
+                    <th data-bind="
+                        text: BattleTreeUtil.calculateRewardMultiplier().toLocaleString('en-US', { style: 'percent' }),
+                        tooltip: {
+                            trigger: 'hover',
+                            title: `${BattleTreeUtil.calculateRewardBaseRate().toLocaleString('en-US', { style: 'percent' })} x ${BattleTreeUtil.calculateRewardBaseRateMultiplier()}`,
+                            placement: 'bottom',
+                            boundary: 'window',
+                            class: 'no-click'
+                        }
+                    "></th>
                 </tr>
                 </thead>
 
