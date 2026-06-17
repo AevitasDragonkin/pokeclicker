@@ -25,7 +25,7 @@ export default class OneFromManyRequirement extends Requirement {
     }
 
     public htmlHint(): string {
-        return `Requires any of the following:<ul>${this.requirements.map(req => `<li class="${req.isCompleted() ? 'text-success' : ''}">${req.htmlHint()}</li>`)}</ul>`;
+        return `Requires any of the following:<ul>${this.requirements.map(req => `<li class="${req.isCompleted() ? 'text-success' : (req.getProgress() > 0 ? 'text-warning' : '')}">${req.htmlHint()}</li>`)}</ul>`;
     }
 
     public getProgress() {

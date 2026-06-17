@@ -21,7 +21,7 @@ export default class MultiRequirement extends Requirement {
     }
 
     public htmlHint(): string {
-        const subReqs = this.requirements.map(req => (`<li class="${req.isCompleted() ? 'text-success' : ''}">${req.htmlHint()}</li>`));
+        const subReqs = this.requirements.map(req => (`<li class="${req.isCompleted() ? 'text-success' : (req.getProgress() > 0 ? 'text-warning' : '')}">${req.htmlHint()}</li>`));
 
         return `Requires all of the following (${this.requirements.filter(r => r.isCompleted()).length}/${this.requirements.length}):<ul>${subReqs.join('')}</ul>`;
     }
