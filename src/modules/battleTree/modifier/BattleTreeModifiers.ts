@@ -45,6 +45,10 @@ export interface TickData {
     battleDeltaTime: number;
 }
 
+export interface FixedValueData {
+    fixedValue: number;
+}
+
 // export interface BattleTreeModifierDefinitionSaveData<Data = unknown> {
 //     id: BattleTreeModifierNameType;
 //     data: Data;
@@ -111,6 +115,20 @@ const developmentGameSpeed: BattleTreeModifierDefinition = {
     requirement: new DevelopmentRequirement(),
 };
 
+const flatStatFn = (value: number) => Math.floor(value ** 0.6);
+const flatDamageFn = (value: number) => Math.floor(value ** 0.4);
+
+const playerFlatAttack: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'player_flat_attack',
+    name: 'Flat Attack',
+    description: 'All your Pokémon gain flat attack',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/player_flat_attack.png',
+    weight: 1,
+    effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
+};
+
 const playerAttack1: BattleTreeModifierDefinition = {
     id: 'player_attack_1',
     name: 'Attack+',
@@ -139,6 +157,17 @@ const playerAttack3: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'attack', scope: ['Team_A'] }, value: 1.25, operation: 'multiplicative' }],
+};
+
+const playerFlatDefense: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'player_flat_defense',
+    name: 'Flat Defense',
+    description: 'All your Pokémon gain flat defense',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/player_flat_defense.png',
+    weight: 1,
+    effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
 };
 
 const playerDefense1: BattleTreeModifierDefinition = {
@@ -171,6 +200,17 @@ const playerDefense3: BattleTreeModifierDefinition = {
     effects: [{ target: { key: 'defense', scope: ['Team_A'] }, value: 1.25, operation: 'multiplicative' }],
 };
 
+const playerFlatSpeed: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'player_flat_speed',
+    name: 'Flat Speed',
+    description: 'All your Pokémon gain flat speed',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/player_flat_speed.png',
+    weight: 1,
+    effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
+};
+
 const playerSpeed1: BattleTreeModifierDefinition = {
     id: 'player_speed_1',
     name: 'Speed+',
@@ -199,6 +239,17 @@ const playerSpeed3: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: 1.2, operation: 'multiplicative' }],
+};
+
+const playerFlatMaxHP: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'player_flat_max_hp',
+    name: 'Flat Maximum HP',
+    description: 'All your Pokémon gain flat maximum hitpoints',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/player_flat_max_hp.png',
+    weight: 1,
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_A'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
 };
 
 const playerMaxHP1: BattleTreeModifierDefinition = {
@@ -261,6 +312,28 @@ const playerLevel3: BattleTreeModifierDefinition = {
     effects: [{ target: { key: 'level', scope: ['Team_A'] }, value: 10, operation: 'additive' }],
 };
 
+const playerFlatDamage: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'player_flat_damage',
+    name: 'Flat Damage',
+    description: 'All your Pokémon gain flat damage (after types)',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/player_flat_damage.png',
+    weight: 1,
+    effects: [{ target: { key: 'damage_dealt_after_types', scope: ['Team_A'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatDamageFn(App.game.battleTree.level) }),
+};
+
+const enemyFlatAttack: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'enemy_flat_attack',
+    name: 'Opponent Flat Attack',
+    description: 'All your opponents\' Pokémon gain flat attack',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/enemy_flat_attack.png',
+    weight: 1,
+    effects: [{ target: { key: 'attack', scope: ['Team_B'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
+};
+
 const enemyAttack1: BattleTreeModifierDefinition = {
     id: 'enemy_attack_1',
     name: 'Opponent Attack+',
@@ -289,6 +362,17 @@ const enemyAttack3: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'attack', scope: ['Team_B'] }, value: 1.25, operation: 'multiplicative' }],
+};
+
+const enemyFlatDefense: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'enemy_flat_defense',
+    name: 'Opponent Flat Defense',
+    description: 'All your opponents\' Pokémon gain flat defense',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/enemy_flat_defense.png',
+    weight: 1,
+    effects: [{ target: { key: 'defense', scope: ['Team_B'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
 };
 
 const enemyDefense1: BattleTreeModifierDefinition = {
@@ -321,6 +405,17 @@ const enemyDefense3: BattleTreeModifierDefinition = {
     effects: [{ target: { key: 'defense', scope: ['Team_B'] }, value: 1.25, operation: 'multiplicative' }],
 };
 
+const enemyFlatSpeed: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'enemy_flat_speed',
+    name: 'Opponent Flat Speed',
+    description: 'All your opponents\' Pokémon gain flat speed',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/enemy_flat_speed.png',
+    weight: 1,
+    effects: [{ target: { key: 'speed', scope: ['Team_B'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
+};
+
 const enemySpeed1: BattleTreeModifierDefinition = {
     id: 'enemy_speed_1',
     name: 'Opponent Speed+',
@@ -349,6 +444,17 @@ const enemySpeed3: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'speed', scope: ['Team_B'] }, value: 1.2, operation: 'multiplicative' }],
+};
+
+const enemyFlatMaxHP: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'enemy_flat_max_hp',
+    name: 'Opponent Flat Maximum HP',
+    description: 'All your opponents\' Pokémon gain flat maximum hitpoints',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/enemy_flat_max_hp.png',
+    weight: 1,
+    effects: [{ target: { key: 'max_hitpoints', scope: ['Team_B'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatStatFn(App.game.battleTree.level) }),
 };
 
 const enemyMaxHP1: BattleTreeModifierDefinition = {
@@ -409,6 +515,17 @@ const enemyLevel3: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [{ target: { key: 'level', scope: ['Team_B'] }, value: 10, operation: 'additive' }],
+};
+
+const enemyFlatDamage: BattleTreeModifierDefinition<FixedValueData> = {
+    id: 'enemy_flat_damage',
+    name: 'Opponent Flat Damage',
+    description: 'All your opponents\' Pokémon gain flat damage (after types)',
+    dataDescription: (ctx, { fixedValue }) => `(+${fixedValue})`,
+    image: 'assets/images/battleTree/modifiers/enemy_flat_damage.png',
+    weight: 1,
+    effects: [{ target: { key: 'damage_dealt_after_types', scope: ['Team_B'] }, value: (ctx, { fixedValue }) => fixedValue, operation: 'additive' }],
+    createData: () => ({ fixedValue: flatDamageFn(App.game.battleTree.level) }),
 };
 
 const healPotion: BattleTreeModifierDefinition = {
@@ -1326,36 +1443,46 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     developmentGameSpeed,
 
     // Player picked
+    playerFlatAttack,
     playerAttack1,
     playerAttack2,
     playerAttack3,
+    playerFlatDefense,
     playerDefense1,
     playerDefense2,
     playerDefense3,
+    playerFlatSpeed,
     playerSpeed1,
     playerSpeed2,
     playerSpeed3,
+    playerFlatMaxHP,
     playerMaxHP1,
     playerMaxHP2,
     playerMaxHP3,
     playerLevel1,
     playerLevel2,
     playerLevel3,
+    playerFlatDamage,
+    enemyFlatAttack,
     enemyAttack1,
     enemyAttack2,
     enemyAttack3,
+    enemyFlatDefense,
     enemyDefense1,
     enemyDefense2,
     enemyDefense3,
+    enemyFlatSpeed,
     enemySpeed1,
     enemySpeed2,
     enemySpeed3,
+    enemyFlatMaxHP,
     enemyMaxHP1,
     enemyMaxHP2,
     enemyMaxHP3,
     enemyLevel1,
     enemyLevel2,
     enemyLevel3,
+    enemyFlatDamage,
     healPotion,
     healPotionSuper,
     healPotionHyper,
