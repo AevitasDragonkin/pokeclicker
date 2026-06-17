@@ -123,9 +123,13 @@ export class BattleTreeModifierManager {
         if (!definition) return;
 
         const data = definition.createData ? definition.createData(this._ctx) : (undefined as unknown);
-        this._history.push({ definition, data, source });
 
         definition.onAcquire?.(this._ctx);
+        this._history().forEach(entry => {
+            entry.definition.onAnyModifierAdded?.(this._ctx, id, source);
+        });
+
+        this._history.push({ definition, data, source });
     }
 
     public getModifierById(id: BattleTreeModifierNameType): BattleTreeModifierDefinition | undefined {

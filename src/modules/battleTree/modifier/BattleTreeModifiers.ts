@@ -73,6 +73,7 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
     onStageCleared?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onTick?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, tickData: TickData }) => void;
 
+    onAnyModifierAdded?: (ctx: BattleTreeModifierContext, modifier: BattleTreeModifierNameType, source: BattleTreeModifierSource) => void;
     onPokemonFaint?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, pokemon: BattleTreePokemon }) => void;
 
     stateScope?: BattleTreeSequenceState[];
@@ -1436,6 +1437,22 @@ const leftoversBad: BattleTreeModifierDefinition<TickData & PulseData & Complete
     }),
 };
 
+const MACHO_BRACE_CHANCE = 0.1;
+const machoBrace: BattleTreeModifierDefinition = {
+    id: 'macho_brace',
+    name: 'Macho Brace',
+    description: `Your Pokémon lose 50% Speed. Whenever you choose a modifier, there is a ${MACHO_BRACE_CHANCE.toLocaleString('en-US', { style: 'percent' })} chance that a held item is added to your rewards`,
+    image: 'assets/images/battleTree/modifiers/macho_brace.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'speed', scope: ['Team_A'] }, value: 0.5, operation: 'multiplicative' }],
+    onAnyModifierAdded: (ctx, modifier, source) => {
+        if (source === 'player' && Math.random() < MACHO_BRACE_CHANCE) {
+            ctx.sequence.rollPool('held_items', undefined, 1);
+        }
+    },
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1545,4 +1562,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     enragedRewards,
     leftovers,
     leftoversBad,
+    machoBrace,
 ];

@@ -35,6 +35,14 @@ export const BattleTreeRewardPools: Partial<Record<BattleTreeRewardPoolNameType,
             { item: 'Moonball', weight: 1, amount: 1 },
         ],
     }),
+    held_items: new BattleTreeRewardPool({
+        id: 'held_items',
+        entries: [
+            { item: 'Quest Point', weight: 99, amount: { min: 5, max: 10 } },
+            { item: 'Macho_Brace', weight: 1, amount: 1 },
+            { item: 'Power_Bracer', weight: 1, amount: 1 },
+        ],
+    }),
     currency: new BattleTreeRewardPool({
         id: 'currency',
         entries: [

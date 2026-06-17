@@ -104,4 +104,5 @@ export type BattleTreeModifierNameType
     | 'inverse_battle'
     | 'enraged_rewards'
     | 'leftovers'
-    | 'leftovers_bad';
+    | 'leftovers_bad'
+    | 'macho_brace';
