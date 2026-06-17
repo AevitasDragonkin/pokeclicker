@@ -172,7 +172,7 @@ export class BattleTreePokemon {
 
         const actualHitDamage = target.takeDamage(this, this._teamId, attackMap);
 
-        const lifeStealPercentage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'life_steal_percertage', scope: this._teamId, base: 0, pokemon: this });
+        const lifeStealPercentage = App.game.battleTree.sequence.modifierManager.getValue({ key: 'life_steal_percentage', scope: this._teamId, base: 0, pokemon: this });
         const lifeStealAmount = Math.floor(actualHitDamage * lifeStealPercentage);
 
         if (lifeStealAmount > 0) {

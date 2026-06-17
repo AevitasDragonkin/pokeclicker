@@ -965,7 +965,7 @@ const loneWolf: BattleTreeModifierDefinition = {
         { target: { key: 'attack', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 2 : 1, operation: 'multiplicative' },
         { target: { key: 'defense', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 2 : 1, operation: 'multiplicative' },
         { target: { key: 'speed', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 2 : 1, operation: 'multiplicative' },
-        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 0.05 : 0, operation: 'additive' },
+        { target: { key: 'life_steal_percentage', scope: ['Team_A'] }, value: ctx => ctx.sequence.teams.Team_A.list.length === 1 ? 0.05 : 0, operation: 'additive' },
     ],
 };
 
@@ -1130,7 +1130,7 @@ const vampire: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: 0.1, operation: 'additive' },
+        { target: { key: 'life_steal_percentage', scope: ['Team_A'] }, value: 0.1, operation: 'additive' },
         { target: { key: 'attack', scope: ['Team_A'] }, value: 0.9, operation: 'multiplicative' },
         { target: { key: 'defense', scope: ['Team_A'] }, value: 0.9, operation: 'multiplicative' },
         { target: { key: 'speed', scope: ['Team_A'] }, value: 0.9, operation: 'multiplicative' },
@@ -1145,7 +1145,7 @@ const absorb: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: 0.01, operation: 'additive' },
+        { target: { key: 'life_steal_percentage', scope: ['Team_A'] }, value: 0.01, operation: 'additive' },
     ],
 };
 
@@ -1157,7 +1157,7 @@ const megaDrain: BattleTreeModifierDefinition = {
     weight: 1,
     stack: { max: 1 },
     effects: [
-        { target: { key: 'life_steal_percertage', scope: ['Team_A'] }, value: 0.025, operation: 'additive' },
+        { target: { key: 'life_steal_percentage', scope: ['Team_A'] }, value: 0.025, operation: 'additive' },
     ],
 };
 
