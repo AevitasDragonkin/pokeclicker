@@ -536,19 +536,25 @@ const limitedTime: BattleTreeModifierDefinition<TimeData> = {
 };
 
 const CHALLENGE_ACCEPTED_ADDITIONAL_STAGES: number = 20;
-const challengeAccepted: BattleTreeModifierDefinition<StageData> = {
+const challengeAccepted: BattleTreeModifierDefinition<StageData & CompleteData> = {
     id: 'challenge_accepted',
     name: 'Challenge Accepted',
     description: `For the next ${CHALLENGE_ACCEPTED_ADDITIONAL_STAGES} platforms, losing reduces your rewards by 90%. Clear them to gain 15% more rewards.`,
-    dataDescription: (ctx, data) => `(Reach platform ${data.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})`,
+    dataDescription: (ctx, { acquiredStage }) => `(Defeat platform ${acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES})`,
     image: 'assets/images/battleTree/modifiers/challenge.png',
     weight: 1,
     effects: [
-        { target: { key: 'reward_base_rate' }, value: (ctx, { acquiredStage }) => ctx.sequence.stage > acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES ? 0.15 : 0, operation: 'additive' },
-        { target: { key: 'reward_multiplier' }, value: (ctx, { acquiredStage }) => ctx.sequence.stage > acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES ? 1 : 0.1, operation: 'multiplicative' },
+        { target: { key: 'reward_base_rate' }, value: (ctx, { effectComplete }) => ctx.sequence.totalTime && effectComplete ? 0.15 : 0, operation: 'additive' },
+        { target: { key: 'reward_multiplier' }, value: (ctx, { effectComplete }) => ctx.sequence.totalTime && effectComplete ? 1 : 0.1, operation: 'multiplicative' },
     ],
+    onStageCleared: (ctx, { definitionData }) => {
+        if (ctx.sequence.stage === definitionData.acquiredStage + CHALLENGE_ACCEPTED_ADDITIONAL_STAGES) {
+            definitionData.effectComplete = true;
+        }
+    },
     createData: ctx => ({
         acquiredStage: ctx.sequence.stage,
+        effectComplete: false,
     }),
 };
 
