@@ -1,5 +1,5 @@
-import { BattleTreeModifierContext } from './BattleTreeModifierContext';
-import { BattleTreeEffect } from './BattleTreeEffect';
+import {BattleTreeModifierContext} from './BattleTreeModifierContext';
+import {BattleTreeEffect} from './BattleTreeEffect';
 import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
@@ -8,13 +8,13 @@ import {
     BattleTreeStageRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
-import { BattleTreeSequenceState } from '../types';
-import { BattleTreeModifierNameType } from './BattleTreeModifierNameType';
-import { AchievementOption, formatDuration } from '../../GameConstants';
-import { pokemonMap } from '../../pokemons/PokemonList';
+import {BattleTreeSequenceState} from '../types';
+import {BattleTreeModifierNameType} from './BattleTreeModifierNameType';
+import {AchievementOption, formatDuration} from '../../GameConstants';
+import {pokemonMap} from '../../pokemons/PokemonList';
 import PokemonType from '../../enums/PokemonType';
 import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
-import { BattleTreePokemon } from '../BattleTreePokemon';
+import {BattleTreePokemon} from '../BattleTreePokemon';
 import SeededRand from '../../utilities/SeededRand';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
@@ -1139,6 +1139,7 @@ const equalist: BattleTreeModifierDefinition = {
     effects: [
         { target: { key: 'max_team_size', scope: ['Team_B'] }, value: ctx => ctx.sequence.teams.Team_A.list.filter(p => p.hitpoints > 0).length, operation: 'override' },
     ],
+    requirement: new BattleTreeTeamSizeRequirement(3, AchievementOption.more, 'Team_A'),
 };
 
 const payday: BattleTreeModifierDefinition = {
