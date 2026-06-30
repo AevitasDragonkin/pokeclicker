@@ -69,7 +69,7 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
     canOffer?: (ctx: BattleTreeModifierContext) => boolean;
 
     onAcquire?: (ctx: BattleTreeModifierContext) => void;
-    onStageStart?: (ctx: BattleTreeModifierContext) => void;
+    onStageStart?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onStageCleared?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onTick?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, tickData: TickData }) => void;
 
@@ -1453,6 +1453,39 @@ const machoBrace: BattleTreeModifierDefinition = {
     },
 };
 
+type DestinyDiceData = {
+    attack: number;
+    defense: number;
+    speed: number;
+};
+const destinyDice: BattleTreeModifierDefinition<DestinyDiceData> = {
+    id: 'destiny_dice',
+    name: 'Destiny Dice',
+    description: 'At the start of the stage, one of the following stats [Attack, Defence, Speed] is boosted by 10%, another stat is reduced by 5%',
+    dataDescription: (ctx, { attack, defense, speed }) => ctx.sequence.totalTime && `(ATK: x${attack}, DEF x${defense}, SPD x${speed})`,
+    image: 'assets/images/battleTree/modifiers/destiny_dice.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [
+        { target: { key: 'attack', scope: ['Team_A'] }, value: (ctx, { attack }) => ctx.sequence.totalTime ? attack : 1, operation: 'multiplicative' },
+        { target: { key: 'defense', scope: ['Team_A'] }, value: (ctx, { defense }) => ctx.sequence.totalTime ? defense : 1, operation: 'multiplicative' },
+        { target: { key: 'speed', scope: ['Team_A'] }, value: (ctx, { speed }) => ctx.sequence.totalTime ? speed : 1, operation: 'multiplicative' },
+    ],
+    onStageStart: (ctx, { definitionData }) => {
+        SeededRand.seed(ctx.sequence.stage + 100000);
+        const values = SeededRand.shuffleArray([1.1, 0.95, 1]);
+        definitionData.attack = values[0] ?? 1;
+        definitionData.defense = values[1] ?? 1;
+        definitionData.speed = values[2] ?? 1;
+    },
+    onStageCleared: (ctx, { definitionData }) => {
+        definitionData.attack = 1;
+        definitionData.defense = 1;
+        definitionData.speed = 1;
+    },
+    createData: () => ({ attack: 1, defense: 1, speed: 1 }),
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1563,4 +1596,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     leftovers,
     leftoversBad,
     machoBrace,
+    destinyDice,
 ];

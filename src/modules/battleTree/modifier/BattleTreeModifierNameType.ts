@@ -105,4 +105,5 @@ export type BattleTreeModifierNameType
     | 'enraged_rewards'
     | 'leftovers'
     | 'leftovers_bad'
-    | 'macho_brace';
+    | 'macho_brace'
+    | 'destiny_dice';

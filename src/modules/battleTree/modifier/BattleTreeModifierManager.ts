@@ -91,7 +91,7 @@ export class BattleTreeModifierManager {
 
     public onStageStart(): void {
         this._history().forEach(entry => {
-            entry.definition.onStageStart?.(this._ctx);
+            entry.definition.onStageStart?.(this._ctx, { definitionData: entry.data });
         });
     }
 
