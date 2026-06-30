@@ -1492,7 +1492,7 @@ type RealityRewriteData = {
 const realityRewrite: BattleTreeModifierDefinition<RealityRewriteData> = {
     id: 'reality_rewrite',
     name: 'Reality Rewrite',
-    description: 'Remove one previously selector modifier',
+    description: 'Removes one random modifier',
     dataDescription: (ctx, { index }) => ctx.sequence.totalTime && `(${ctx.sequence.modifierManager.history[index]?.definition.name ?? 'Unknown'})`,
     image: 'assets/images/battleTree/modifiers/reality_rewrite.png',
     weight: 1,

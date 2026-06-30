@@ -41,9 +41,10 @@ export class BattleTreeFight {
     public update(delta: number): void {
         this._attackCounter += delta;
 
-        const attackSpeed = BattleTreeUtil.calculateAttackSpeed();
+        const attacksPerSecond = BattleTreeUtil.calculateAttackSpeed();
+        const attackDelay = 1 / attacksPerSecond;
 
-        while (this._attackCounter >= attackSpeed) {
+        while (this._attackCounter >= attackDelay) {
             if (this.isFinished) {
                 return;
             }
@@ -56,7 +57,7 @@ export class BattleTreeFight {
 
             ++this._attacker;
 
-            this._attackCounter -= attackSpeed;
+            this._attackCounter -= attackDelay;
         }
     }
 

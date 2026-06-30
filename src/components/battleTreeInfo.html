@@ -17,8 +17,8 @@
             </section>
 
             <section class="d-flex flex-column align-items-end">
-                <small class="text-center" style="font-size: 0.675rem">Game speed: <knockout data-bind="text: BattleTreeUtil.calculateGameSpeed()"></knockout></small>
-                <small class="text-center" style="font-size: 0.675rem">Attack speed: <knockout data-bind="text: BattleTreeUtil.calculateAttackSpeed()"></knockout></small>
+                <small class="text-center" style="font-size: 0.675rem">Game speed: <knockout data-bind="text: BattleTreeUtil.calculateGameSpeed().toFixed(4)"></knockout></small>
+                <small class="text-center" style="font-size: 0.675rem">APS: <knockout data-bind="text: BattleTreeUtil.calculateAttackSpeed().toFixed(4)"></knockout></small>
             </section>
         </div>
 

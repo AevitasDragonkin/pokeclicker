@@ -58,7 +58,7 @@ export class BattleTreeUtil {
     }
 
     public static calculateAttackSpeed(): number {
-        return Math.min(10, Math.max(0.01, 1 / App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack_speed', base: 1 })));
+        return Math.min(10, Math.max(0.01, App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack_speed', base: 1 })));
     }
 
     public static calculateBattleTreeExperienceForPokemonDefeat(pokemon: BattleTreePokemon): number {
