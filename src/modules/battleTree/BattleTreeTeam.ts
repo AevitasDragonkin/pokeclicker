@@ -32,6 +32,10 @@ export class BattleTreeTeam {
         return this.list.findIndex(p => p.name === name) >= 0;
     }
 
+    public getPokemon(name: PokemonNameType): BattleTreePokemon | undefined {
+        return this.list.find(p => p.name === name);
+    }
+
     public getPokemonAvailableToFight(name?: PokemonNameType): BattleTreePokemon {
         return this.list.find(value => value.hitpoints > 0 && value.name === name) ??
             this.list.find(value => value.hitpoints > 0) ??

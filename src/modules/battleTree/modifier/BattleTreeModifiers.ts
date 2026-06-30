@@ -16,6 +16,7 @@ import PokemonType from '../../enums/PokemonType';
 import DevelopmentRequirement from '../../requirements/DevelopmentRequirement';
 import { BattleTreePokemon } from '../BattleTreePokemon';
 import SeededRand from '../../utilities/SeededRand';
+import { PokemonNameType } from '../../pokemons/PokemonNameType';
 
 export const BATTLE_TREE_MODIFIER_DEFAULT_WEIGHT = 1;
 
@@ -1508,6 +1509,38 @@ const realityRewrite: BattleTreeModifierDefinition<RealityRewriteData> = {
     },
 };
 
+type EvolveData = {
+    from: PokemonNameType;
+    into: PokemonNameType;
+};
+const evolve: BattleTreeModifierDefinition<EvolveData | undefined> = {
+    id: 'evolve',
+    name: 'Evolve',
+    description: 'Evolves one of your pokemon',
+    dataDescription: (ctx, data) => data ? `(${data.from} -> ${data.into})` : '(No evolutions available)',
+    image: 'assets/images/battleTree/modifiers/evolve.png',
+    weight: 99,
+    stack: { max: 2 },
+    onAcquire: (ctx, { definitionData }) => {
+        ctx.sequence.teams.Team_A.getPokemon(definitionData.from)?.evolve(definitionData.into);
+    },
+    createData: ctx => {
+        const options = ctx.sequence.teams.Team_A.list.filter(p => pokemonMap[p.name].evolutions);
+
+        if (options.length === 0)
+            return undefined;
+
+        SeededRand.seed(ctx.sequence.seed);
+        const fromBattleTreePokemon = SeededRand.fromArray(options);
+        const evolution = SeededRand.fromArray(pokemonMap[fromBattleTreePokemon.name].evolutions);
+
+        return {
+            from: evolution.basePokemon,
+            into: evolution.evolvedPokemon,
+        };
+    },
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1620,4 +1653,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     machoBrace,
     destinyDice,
     realityRewrite,
+    evolve,
 ];

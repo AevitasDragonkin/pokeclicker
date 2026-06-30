@@ -95,14 +95,14 @@ const animateHeal = (uuid: string, health: number) => {
 export class BattleTreePokemon {
     public readonly uuid: string;
 
-    private _name: PokemonNameType;
+    private _name: Observable<PokemonNameType> = ko.observable(undefined);
     private _baseLevel: number;
     private _teamId: TeamType;
 
-    private _baseAttack: PureComputed<number> = ko.pureComputed(() => statPointFormula(averageStat(pokemonMap[this._name].base.attack, pokemonMap[this._name].base.specialAttack), this.level));
-    private _baseDefense: PureComputed<number> = ko.pureComputed(() => statPointFormula(averageStat(pokemonMap[this._name].base.defense, pokemonMap[this._name].base.specialDefense), this.level));
-    private _baseSpeed: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this._name].base.speed, this.level));
-    private _baseMaxHitpoints: PureComputed<number> = ko.pureComputed(() => hitPointFormula(pokemonMap[this._name].base.hitpoints, this.level));
+    private _baseAttack: PureComputed<number> = ko.pureComputed(() => statPointFormula(averageStat(pokemonMap[this.name].base.attack, pokemonMap[this.name].base.specialAttack), this.level));
+    private _baseDefense: PureComputed<number> = ko.pureComputed(() => statPointFormula(averageStat(pokemonMap[this.name].base.defense, pokemonMap[this.name].base.specialDefense), this.level));
+    private _baseSpeed: PureComputed<number> = ko.pureComputed(() => statPointFormula(pokemonMap[this.name].base.speed, this.level));
+    private _baseMaxHitpoints: PureComputed<number> = ko.pureComputed(() => hitPointFormula(pokemonMap[this.name].base.hitpoints, this.level));
 
     private _level: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'level', scope: this._teamId, base: this._baseLevel, pokemon: this })));
     private _attack: PureComputed<number> = ko.pureComputed(() => Math.floor(App.game.battleTree.sequence.modifierManager.getValue({ key: 'attack', scope: this._teamId, base: this._baseAttack(), pokemon: this })));
@@ -117,7 +117,7 @@ export class BattleTreePokemon {
     constructor(properties: BattleTreePokemonProperties) {
         this.uuid = crypto.randomUUID();
 
-        this._name = properties.name;
+        this._name(properties.name);
         this._baseLevel = properties.level;
         this._teamId = properties.team;
 
@@ -126,6 +126,15 @@ export class BattleTreePokemon {
         this._maxHitpoints.subscribe(function () {
             this._hp(Math.min(this.maxHitpoints, this._hp()));
         }, this, 'spectate');
+    }
+
+    public evolve(into: PokemonNameType): void {
+        const evolutions = pokemonMap[this.name].evolutions;
+
+        if (!evolutions?.some(evo => evo.evolvedPokemon === into))
+            return;
+
+        this._name(into);
     }
 
     public heal(opts: { percentage?: number, flat?: number, allowRevive?: boolean }): void {
@@ -153,7 +162,7 @@ export class BattleTreePokemon {
     public attackTarget(target: BattleTreePokemon): void {
         const baseDamage = ((2 * this.level / 5 + 2) * this.power * this.attack / target.defense / 50 + 2);
 
-        const attacker = pokemonMap[this._name];
+        const attacker = pokemonMap[this.name];
         const defender = pokemonMap[target.name];
 
         const attackMap: DamageMapType = Object.fromEntries(pokemonMap[attacker.name].type.map(at => [at, Object.fromEntries(pokemonMap[defender.name].type.map(dt => [dt, undefined]))]));
@@ -202,7 +211,7 @@ export class BattleTreePokemon {
     }
 
     get name(): PokemonNameType {
-        return this._name;
+        return this._name();
     }
 
     get team(): TeamType {
@@ -265,7 +274,7 @@ export class BattleTreePokemon {
 
     public toJSON(): BattleTreePokemonSaveData {
         return {
-            name: this._name,
+            name: this._name(),
             level: this._baseLevel,
             hp: this._hp(),
             ...(this.shiny !== undefined ? { shiny: this.shiny } : { }),

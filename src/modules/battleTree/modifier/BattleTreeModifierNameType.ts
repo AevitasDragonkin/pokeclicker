@@ -107,4 +107,5 @@ export type BattleTreeModifierNameType
     | 'leftovers_bad'
     | 'macho_brace'
     | 'destiny_dice'
-    | 'reality_rewrite';
+    | 'reality_rewrite'
+    | 'evolve';
