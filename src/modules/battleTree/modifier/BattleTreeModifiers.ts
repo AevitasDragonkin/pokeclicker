@@ -1364,7 +1364,7 @@ const enragedRewards: BattleTreeModifierDefinition<StageData & CompleteData> = {
     createData: ctx => ({ acquiredStage: ctx.sequence.stage, effectComplete: false }),
 };
 
-const LEFTOVERS_PULSE_DELAY_SECONDS = 5;
+const LEFTOVERS_PULSE_DELAY_SECONDS = 2.5;
 const LEFTOVERS_PERCENTAGE = 0.01;
 const leftovers: BattleTreeModifierDefinition<TickData & PulseData & CompleteData> = {
     id: 'leftovers',
@@ -1376,6 +1376,7 @@ const leftovers: BattleTreeModifierDefinition<TickData & PulseData & CompleteDat
     },
     image: 'assets/images/battleTree/modifiers/leftovers.png',
     weight: 1,
+    stack: { max: 1 },
     stateScope: [BattleTreeSequenceState.BATTLE],
     onTick: (ctx, { definitionData, tickData }) => {
         if (definitionData.effectComplete) return;
