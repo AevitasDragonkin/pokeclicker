@@ -4,7 +4,7 @@ import Requirement from '../../requirements/Requirement';
 import {
     BattleTreeAutoPickRequirement,
     BattleTreeHighestStageRequirement,
-    BattleTreeLevelRequirement,
+    BattleTreeLevelRequirement, BattleTreeModifierSizeRequirement,
     BattleTreeStageRequirement,
     BattleTreeTeamSizeRequirement,
 } from '../requirements/BattleTreeRequirements';
@@ -68,7 +68,7 @@ export interface BattleTreeModifierDefinition<Data = unknown> {
     requirement?: Requirement;
     canOffer?: (ctx: BattleTreeModifierContext) => boolean;
 
-    onAcquire?: (ctx: BattleTreeModifierContext) => void;
+    onAcquire?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onStageStart?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onStageCleared?: (ctx: BattleTreeModifierContext, data: { definitionData: Data }) => void;
     onTick?: (ctx: BattleTreeModifierContext, data: { definitionData: Data, tickData: TickData }) => void;
@@ -1486,6 +1486,28 @@ const destinyDice: BattleTreeModifierDefinition<DestinyDiceData> = {
     createData: () => ({ attack: 1, defense: 1, speed: 1 }),
 };
 
+type RealityRewriteData = {
+    index: number;
+};
+const realityRewrite: BattleTreeModifierDefinition<RealityRewriteData> = {
+    id: 'reality_rewrite',
+    name: 'Reality Rewrite',
+    description: 'Remove one previously selector modifier',
+    dataDescription: (ctx, { index }) => ctx.sequence.totalTime && `(${ctx.sequence.modifierManager.history[index]?.definition.name ?? 'Unknown'})`,
+    image: 'assets/images/battleTree/modifiers/reality_rewrite.png',
+    weight: 1,
+    stack: { max: 2 },
+    requirement: new BattleTreeModifierSizeRequirement(5),
+    onAcquire: (ctx, { definitionData }) => ctx.sequence.modifierManager.disableModifierByIndex(definitionData.index),
+    createData: ctx => {
+        SeededRand.seed(ctx.sequence.seed);
+
+        return {
+            index: SeededRand.intBetween(0, ctx.sequence.modifierManager.history.length - 1),
+        };
+    },
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1597,4 +1619,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     leftoversBad,
     machoBrace,
     destinyDice,
+    realityRewrite,
 ];

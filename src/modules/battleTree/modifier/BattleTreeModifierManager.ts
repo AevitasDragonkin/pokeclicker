@@ -30,6 +30,7 @@ export interface BattleTreeModifierManagerSaveData {
         id: BattleTreeModifierNameType,
         data?: unknown,
         source?: BattleTreeModifierSource,
+        disabled?: boolean,
     }[]
 }
 
@@ -37,6 +38,7 @@ export interface BattleTreeModifierHistoryEntry<Data> {
     definition: BattleTreeModifierDefinition,
     data: Data,
     source: BattleTreeModifierSource,
+    disabled?: boolean,
 }
 
 export class BattleTreeModifierManager {
@@ -83,6 +85,8 @@ export class BattleTreeModifierManager {
 
     public update(tickData: TickData) {
         this._history().forEach(entry => {
+            if (entry.disabled) return;
+
             if (entry.definition.stateScope?.includes(this._ctx.sequence.state)) {
                 entry.definition.onTick?.(this._ctx, { definitionData: entry.data, tickData });
             }
@@ -91,18 +95,24 @@ export class BattleTreeModifierManager {
 
     public onStageStart(): void {
         this._history().forEach(entry => {
+            if (entry.disabled) return;
+
             entry.definition.onStageStart?.(this._ctx, { definitionData: entry.data });
         });
     }
 
     public onStageCleared(): void {
         this._history().forEach(entry => {
+            if (entry.disabled) return;
+
             entry.definition.onStageCleared?.(this._ctx, { definitionData: entry.data });
         });
     }
 
     public onPokemonFaint(pokemon: BattleTreePokemon): void {
         this._history().forEach(entry => {
+            if (entry.disabled) return;
+
             entry.definition.onPokemonFaint?.(this._ctx, { definitionData: entry.data, pokemon: pokemon });
         });
     }
@@ -124,12 +134,21 @@ export class BattleTreeModifierManager {
 
         const data = definition.createData ? definition.createData(this._ctx) : (undefined as unknown);
 
-        definition.onAcquire?.(this._ctx);
+        definition.onAcquire?.(this._ctx, { definitionData: data });
         this._history().forEach(entry => {
+            if (entry.disabled) return;
+
             entry.definition.onAnyModifierAdded?.(this._ctx, id, source);
         });
 
         this._history.push({ definition, data, source });
+    }
+
+    public disableModifierByIndex(index: number) {
+        const entry = this._history()[index];
+        if (!entry) return;
+
+        entry.disabled = true;
     }
 
     public getModifierById(id: BattleTreeModifierNameType): BattleTreeModifierDefinition | undefined {
@@ -138,8 +157,9 @@ export class BattleTreeModifierManager {
 
     private *iterMatching(query: ValueQuery): Iterable<IndexStamp<any>> {
         for (const historyEntry of this._history()) {
-            const { definition } = historyEntry;
+            const { definition, disabled } = historyEntry;
 
+            if (disabled) continue;
             if (!definition.effects) continue;
 
             for (const effect of definition.effects) {
@@ -207,7 +227,7 @@ export class BattleTreeModifierManager {
     public toJSON(): BattleTreeModifierManagerSaveData {
         return {
             entries: this._history().map(entry => {
-                return entry.data === undefined ? { id: entry.definition.id, ...(entry.source !== 'player' ? { source: entry.source } : { }) } : { id: entry.definition.id, data: entry.data, ...(entry.source !== 'player' ? { source: entry.source } : { }) };
+                return entry.data === undefined ? { id: entry.definition.id, ...(entry.source !== 'player' ? { source: entry.source } : { }), ...(entry.disabled ? { disabled: entry.disabled } : { }) } : { id: entry.definition.id, data: entry.data, ...(entry.source !== 'player' ? { source: entry.source } : { }), ...(entry.disabled ? { disabled: entry.disabled } : { }) };
             }),
         };
     }
@@ -220,7 +240,12 @@ export class BattleTreeModifierManager {
 
             if (!definition) return;
 
-            this._history.push({ definition, data: entry.data, source: entry.source ?? 'player' });
+            this._history.push({
+                definition,
+                data: entry.data,
+                source: entry.source ?? 'player',
+                ...(entry.disabled ? { disabled: true } : {}),
+            });
         });
     }
 }

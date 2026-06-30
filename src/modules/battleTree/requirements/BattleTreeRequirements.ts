@@ -178,6 +178,31 @@ export class BattleTreeTeamSizeRequirement extends Requirement {
     }
 }
 
+export class BattleTreeModifierSizeRequirement extends Requirement {
+    private _size: number;
+
+    constructor(size: number, option: AchievementOption = AchievementOption.more) {
+        super(size, option);
+        this._size = size;
+    }
+
+    getProgress(): number {
+        switch (this.option) {
+            case AchievementOption.more: return Math.min(App.game.battleTree.sequence.modifierManager.history.length, this.requiredValue);
+            case AchievementOption.less: return Math.max(App.game.battleTree.sequence.modifierManager.history.length, this.requiredValue);
+            case AchievementOption.equal: return App.game.battleTree.sequence.modifierManager.history.length === this.requiredValue ? 1 : 0;
+        }
+    }
+
+    hint(): string {
+        switch (this.option) {
+            case AchievementOption.more: return `You need to have at least ${this.requiredValue} modifiers applied in this Battle Climb.`;
+            case AchievementOption.less: return `You need to have at most ${this.requiredValue} modifiers applied in this Battle Climb.`;
+            case AchievementOption.equal: return `You need to have exactly ${this.requiredValue} modifiers applied in this Battle Climb.`;
+        }
+    }
+}
+
 export const BattleTreeAutoPickRequirement = new BattleTreeLevelRequirement(50);
 export const BattleTreePowerUpLootRequirement = new BattleTreeLevelRequirement(80);
 export const BattleTreePowerUpRequirement = new BattleTreeLevelRequirement(100);

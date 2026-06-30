@@ -199,6 +199,9 @@
 
                 <!-- ko foreach: App.game.battleTree.sequence.modifierManager.history -->
                 <div class="position-relative p-1 border" data-bind="
+                    style: {
+                        'opacity': App.game.battleTree.sequence.totalTime && $data.disabled ? 0.25 : 1
+                    },
                     tooltip: {
                         trigger: 'hover',
                         title: `<strong><u>${$data.definition.name}</u></strong><br/>${App.game.battleTree.sequence.modifierManager.resolveModifierDescription($data.definition.id, { data: $data.data })}`,
