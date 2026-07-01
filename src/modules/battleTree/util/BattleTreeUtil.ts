@@ -25,12 +25,21 @@ export class BattleTreeUtil {
     }
 
     public static getRandomTeamFromSubset({ subset, seed, stage = 0, amount = 3 }: { subset: BattleTreePokemonSubsetNameType, seed: number, stage?: number, amount?: number }): PokemonNameType[] {
-        SeededRand.seed(seed);
-        const uniqueIds = [...new Set(subsets[subset].subset.map(p => Math.floor(p.id)))];
+        if (subsets[subset].allowAlts) {
+            SeededRand.seed(seed);
+            const uniqueIds = [...new Set(subsets[subset].subset.map(p => p.id))];
 
-        SeededRand.seed(seed + stage);
-        const shuffledUniqueIds = SeededRand.shuffleArray(uniqueIds);
-        return shuffledUniqueIds.slice(0, amount).map(id => SeededRand.fromArray(subsets[subset].subset.filter(p => Math.floor(p.id) === id)).name);
+            SeededRand.seed(seed + stage);
+            const shuffledUniqueIds = SeededRand.shuffleArray(uniqueIds);
+            return shuffledUniqueIds.slice(0, amount).map(id => subsets[subset].subset.find(p => p.id === id).name);
+        } else {
+            SeededRand.seed(seed);
+            const uniqueIds = [...new Set(subsets[subset].subset.map(p => Math.floor(p.id)))];
+
+            SeededRand.seed(seed + stage);
+            const shuffledUniqueIds = SeededRand.shuffleArray(uniqueIds);
+            return shuffledUniqueIds.slice(0, amount).map(id => SeededRand.fromArray(subsets[subset].subset.filter(p => Math.floor(p.id) === id)).name);
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -50,13 +50,15 @@ export type BattleTreePokemonSubsetNameType = 'All'
 // | 'Pure Dark'
 // | 'Pure Steel'
 // | 'Pure Fairy';
-| 'Legendary';
+| 'Legendary'
+| 'Magikarp';
 
 interface BattleTreePokemonSubsetProperties {
     name: BattleTreePokemonSubsetNameType;
     customOpponentWeight?: Partial<Record<BattleTreePokemonSubsetNameType, number>>;
     weight?: number;
     requirement?: Requirement;
+    allowAlts?: boolean;
 }
 
 export abstract class BattleTreePokemonSubset {
@@ -65,12 +67,14 @@ export abstract class BattleTreePokemonSubset {
 
     protected _weight: number;
     protected _requirement?: Requirement;
+    protected _allowAlts: boolean;
 
     constructor(properties: BattleTreePokemonSubsetProperties) {
         this._name = properties.name;
         this._customOpponentWeight = properties.customOpponentWeight || { };
         this._weight = properties.weight ?? 1;
         this._requirement = properties.requirement;
+        this._allowAlts = properties.allowAlts ?? false;
     }
 
     getCustomSubsetWeight(name: BattleTreePokemonSubsetNameType): number | null {
@@ -89,6 +93,10 @@ export abstract class BattleTreePokemonSubset {
 
     get requirement(): Requirement | undefined {
         return this._requirement;
+    }
+
+    get allowAlts(): boolean {
+        return this._allowAlts;
     }
 }
 

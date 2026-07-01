@@ -80,6 +80,17 @@ export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonS
         },
         requirement: new BattleTreeLevelRequirement(100),
     }),
+    Magikarp: new CustomBattleTreePokemonSubset({
+        name: 'Magikarp',
+        customFilter: () => {
+            return pokemonMap.filter(p => {
+                if (Math.floor(p.id) !== 129)
+                    return false;
+                return PokemonLocations.isObtainable(p.name);
+            });
+        },
+        allowAlts: true,
+    }),
 };
 
 export const ProgressionLevelTable: { description: string; requirement: Requirement }[] = [
