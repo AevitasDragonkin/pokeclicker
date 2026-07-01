@@ -1523,7 +1523,9 @@ const evolve: BattleTreeModifierDefinition<EvolveData | undefined> = {
     weight: 99,
     stack: { max: 2 },
     onAcquire: (ctx, { definitionData }) => {
-        ctx.sequence.teams.Team_A.getPokemon(definitionData.from)?.evolve(definitionData.into);
+        if (definitionData?.from && definitionData?.into) {
+            ctx.sequence.teams.Team_A.getPokemon(definitionData.from)?.evolve(definitionData.into);
+        }
     },
     createData: ctx => {
         const options = ctx.sequence.teams.Team_A.list.filter(p => pokemonMap[p.name].evolutions);
