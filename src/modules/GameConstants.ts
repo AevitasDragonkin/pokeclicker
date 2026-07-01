@@ -2583,7 +2583,6 @@ export enum MegaStoneType {
     Salamencite,
     Sceptilite,
     Scizorite,
-    Shadow_Synergy_Stone,
     Sharpedonite,
     Slowbronite,
     Steelixite,

@@ -24,7 +24,6 @@ export type BattleTreeProgressionRewardNameType =
     | 'per_seed:mismagius_illusion'
     | 'per_sequence:magnets'
     | 'per_sequence:evo'
-    | 'per_sequence:shadow_mewtwo'
     | 'per_sequence:venustoise'
     | 'per_sequence:gems';
 
@@ -54,7 +53,6 @@ const PerSeedProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
 
 const PerSequenceProgressionRewards: BattleTreeProgressionRewardDefinition[] = [
     { id: 'per_sequence:evo', recurrence: 'per_sequence', requirement: new BattleTreeHighestStageRequirement(10, 'per_sequence'), item: 'Evolution Item Pool', amount: 3, immediate: true },
-    // { id: 'per_sequence:shadow_mewtwo', recurrence: 'per_sequence', requirement: new BattleTreeLevelRequirement(100), item: 'Shadow Mewtwo Pool', amount: 1 },
     { id: 'per_sequence:venustoise', recurrence: 'per_sequence', requirement: new MultiRequirement([
         new BattleTreeHighestStageRequirement(100, 'per_sequence'),
         new ObtainedPokemonRequirement('Venusaur'),

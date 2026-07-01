@@ -10,7 +10,6 @@ export type BattleTreeRewardPoolNameType =
     | 'held_items'
     | 'currency'
     | 'evo_items'
-    | 'shadow_mewtwo'
     | 'venustoise'
     | 'gems';
 
