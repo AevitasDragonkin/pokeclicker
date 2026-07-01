@@ -1544,6 +1544,17 @@ const evolve: BattleTreeModifierDefinition<EvolveData | undefined> = {
     },
 };
 
+const HELD_ITEM_DROP_CHANCE = 1 / 512;
+const heldItemDrop: BattleTreeModifierDefinition = {
+    id: 'held_item_drop',
+    name: 'Held Item Drop',
+    description: `Defeating a Pokémon has a 1 in ${Math.floor(1 / HELD_ITEM_DROP_CHANCE)} chance to drop its held item.`,
+    image: 'assets/images/battleTree/modifiers/held_item_drop.png',
+    weight: 1,
+    stack: { max: 1 },
+    effects: [{ target: { key: 'held_item_drop_chance' }, value: HELD_ITEM_DROP_CHANCE, operation: 'final' }],
+};
+
 export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     // System modifiers
     forfeit,
@@ -1657,4 +1668,5 @@ export const BattleTreeModifiers: BattleTreeModifierDefinition[] = [
     destinyDice,
     realityRewrite,
     evolve,
+    heldItemDrop,
 ];

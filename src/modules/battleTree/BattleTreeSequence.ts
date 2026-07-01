@@ -23,6 +23,7 @@ import { BattleTreeSequenceState } from './types';
 import { formatDuration, SHINY_CHANCE_BATTLE } from '../GameConstants';
 import { BattleTreeProgressionRewards } from './rewards/progression/BattleTreeProgressionRewards';
 import Settings from '../settings';
+import ItemType from '../enums/ItemType';
 
 export type TeamType = 'Team_A' | 'Team_B';
 
@@ -215,6 +216,10 @@ export class BattleTreeSequence {
         const experience = BattleTreeUtil.calculateBattleTreeExperienceForPokemonDefeat(pokemon);
 
         this.addReward('Battle Tree Experience', experience);
+
+        if (pokemonMap[pokemon.name].heldItem?.type === ItemType.item && Math.random() < this._modifierManager.getValue({ key: 'held_item_drop_chance', base: 0 })) {
+            this.addReward(pokemonMap[pokemon.name].heldItem.id as ItemNameType, 1);
+        }
     }
 
     public pickModifier(id: BattleTreeModifierNameType) {

@@ -108,4 +108,5 @@ export type BattleTreeModifierNameType
     | 'macho_brace'
     | 'destiny_dice'
     | 'reality_rewrite'
-    | 'evolve';
+    | 'evolve'
+    | 'held_item_drop';

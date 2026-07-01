@@ -51,7 +51,8 @@ export type BattleTreePokemonSubsetNameType = 'All'
 // | 'Pure Steel'
 // | 'Pure Fairy';
 | 'Legendary'
-| 'Magikarp';
+| 'Magikarp'
+| 'Held Item';
 
 interface BattleTreePokemonSubsetProperties {
     name: BattleTreePokemonSubsetNameType;

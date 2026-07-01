@@ -21,7 +21,8 @@ export type BattleTreeEffectKey
     | 'stage'
     | 'type_effectiveness'
     | 'type_inversion'
-    | 'life_steal_percentage';
+    | 'life_steal_percentage'
+    | 'held_item_drop_chance';
 export type Operation = 'additive' | 'multiplicative' | 'reset' | 'override' | 'final';
 
 export interface BattleTreeEffectRuntimeContext {

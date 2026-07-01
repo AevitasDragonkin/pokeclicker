@@ -91,6 +91,17 @@ export const subsets: Record<BattleTreePokemonSubsetNameType, BattleTreePokemonS
         },
         allowAlts: true,
     }),
+    'Held Item': new CustomBattleTreePokemonSubset({
+        name: 'Held Item',
+        customFilter: () => {
+            return pokemonMap.filter(p => {
+                if (!p.heldItem)
+                    return false;
+                return PokemonLocations.isObtainable(p.name);
+            });
+        },
+        allowAlts: true,
+    }),
 };
 
 export const ProgressionLevelTable: { description: string; requirement: Requirement }[] = [
