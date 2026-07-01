@@ -1520,7 +1520,7 @@ const evolve: BattleTreeModifierDefinition<EvolveData | undefined> = {
     description: 'Evolves one of your pokemon',
     dataDescription: (ctx, data) => data ? `(${data.from} -> ${data.into})` : '(No evolutions available)',
     image: 'assets/images/battleTree/modifiers/evolve.png',
-    weight: 99,
+    weight: 1,
     stack: { max: 2 },
     onAcquire: (ctx, { definitionData }) => {
         if (definitionData?.from && definitionData?.into) {
